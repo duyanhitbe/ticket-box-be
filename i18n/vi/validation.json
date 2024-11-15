@@ -1,0 +1,6 @@
+{
+  "IS_STRING": "{property} bắt buộc phải là kiểu chuỗi",
+  "IS_NOT_EMPTY": "{property} không được bỏ trống",
+  "EXISTS": "{property} đã tồn tại. Vui lòng kiểm tra lại!",
+  "NOT_EXISTS": "{property} không tồn tại. Vui lòng kiểm tra lại!"
+}

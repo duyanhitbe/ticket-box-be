@@ -6,17 +6,18 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm';
+import { camelToSnake } from '@lib/common/helpers';
 
 export class BaseTypeormEntity extends TypeormBaseEntity implements BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
 	id!: string;
 
-	@CreateDateColumn({ type: 'timestamptz' })
+	@CreateDateColumn({ name: camelToSnake('createdAt'), type: 'timestamptz' })
 	createdAt!: Date;
 
-	@UpdateDateColumn({ type: 'timestamptz' })
+	@UpdateDateColumn({ name: camelToSnake('updatedAt'), type: 'timestamptz' })
 	updatedAt!: Date;
 
-	@DeleteDateColumn({ type: 'timestamptz' })
+	@DeleteDateColumn({ name: camelToSnake('deletedAt'), type: 'timestamptz' })
 	deletedAt!: Date;
 }

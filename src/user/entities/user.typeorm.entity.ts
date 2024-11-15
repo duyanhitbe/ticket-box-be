@@ -1,15 +1,17 @@
 import { UserEntity } from './user.entity.abstract';
 import { BaseTypeormEntity } from '@lib/base/entities';
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Entity } from 'typeorm';
 import { hash } from 'argon2';
 import { Exclude } from 'class-transformer';
+import { TypeormColumn, TypeormUnique } from '@lib/common/decorators';
 
 @Entity('users')
 export class UserTypeormEntity extends BaseTypeormEntity implements UserEntity {
-	@Column()
+	@TypeormUnique()
+	@TypeormColumn()
 	username!: string;
 
-	@Column()
+	@TypeormColumn()
 	@Exclude()
 	password!: string;
 

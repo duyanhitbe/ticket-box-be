@@ -1,0 +1,6 @@
+{
+  "IS_STRING": "{property} must be a string",
+  "IS_NOT_EMPTY": "{property} must be not empty",
+  "EXISTS": "{property} already exists. Please try again!",
+  "NOT_EXISTS": "{property} is not exists. Please try again!"
+}

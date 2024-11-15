@@ -12,6 +12,15 @@ export function SwaggerResponseType<T>(type: Type<T>, status = 200) {
 		@ApiProperty({ example: 'success' })
 		message!: string;
 
+		@ApiProperty({ example: true })
+		success!: boolean;
+
+		@ApiProperty({ example: '/v1/api' })
+		path!: string;
+
+		@ApiProperty({ example: '0ms' })
+		duration!: string;
+
 		@ApiProperty({ type })
 		data!: T;
 	}
@@ -28,6 +37,15 @@ export function SwaggerListResponseType<T>(type: Type<T>) {
 
 		@ApiProperty({ example: 'success' })
 		message!: string;
+
+		@ApiProperty({ example: true })
+		success!: boolean;
+
+		@ApiProperty({ example: '/v1/api' })
+		path!: string;
+
+		@ApiProperty({ example: '0ms' })
+		duration!: string;
 
 		@ApiProperty({ type: [type] })
 		data!: T[];

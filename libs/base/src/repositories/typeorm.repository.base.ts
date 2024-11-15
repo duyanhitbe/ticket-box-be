@@ -19,9 +19,14 @@ import { BaseTypeormEntity } from '../entities';
 import { PaginationResponse } from '../dto';
 import { BaseRepository } from '../repositories/repository.base.abstract';
 import { NotFoundException } from '@nestjs/common';
+import { TranslateService } from '@lib/core/i18n/translate.service';
 
 export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseRepository<T> {
-	constructor(private readonly repository: Repository<T>) {}
+	constructor(
+		private readonly repository: Repository<T>,
+		private readonly entityName: string,
+		private readonly translateService: TranslateService
+	) {}
 
 	create(options: CreateOptions<T>): Promise<T> {
 		const { data } = options;
@@ -79,6 +84,28 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		return this.repository.findOne({ where });
 	}
 
+	async findByIdOrThrow(options: FindByIdOptions): Promise<T> {
+		const { id } = options;
+		const entity = await this.repository.findOne({ where: { id } } as any);
+		if (!entity) {
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
+		}
+		return entity;
+	}
+
+	async findOneOrThrow(options: FindOneOptions<T>): Promise<T> {
+		const { where } = options;
+		const entity = await this.repository.findOne({ where });
+		if (!entity) {
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
+		}
+		return entity;
+	}
+
 	async update(options: UpdateManyOptions<T>): Promise<T[]> {
 		const { where, data } = options;
 		const entities = await this.repository.find({ where });
@@ -95,7 +122,9 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		const entity = await this.findOne({ where });
 
 		if (!entity) {
-			throw new NotFoundException();
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
 		}
 
 		Object.assign(entity, data);
@@ -108,7 +137,9 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		const entity = await this.findById({ id });
 
 		if (!entity) {
-			throw new NotFoundException();
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
 		}
 
 		Object.assign(entity, data);
@@ -127,7 +158,9 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		const entity = await this.findOne({ where });
 
 		if (!entity) {
-			throw new NotFoundException();
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
 		}
 
 		return this.repository.remove(entity);
@@ -138,7 +171,9 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		const entity = await this.findById({ id });
 
 		if (!entity) {
-			throw new NotFoundException();
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
 		}
 
 		return this.repository.remove(entity);
@@ -155,7 +190,9 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		const entity = await this.findOne({ where });
 
 		if (!entity) {
-			throw new NotFoundException();
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
 		}
 
 		return this.repository.softRemove(entity);
@@ -166,9 +203,16 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		const entity = await this.findById({ id });
 
 		if (!entity) {
-			throw new NotFoundException();
+			const entityName = this.translateService.entityName(this.entityName);
+			const message = this.translateService.notExistsMessage(entityName);
+			throw new NotFoundException(message);
 		}
 
 		return this.repository.softRemove(entity);
+	}
+
+	async exists(options: FindOneOptions<T>): Promise<boolean> {
+		const { where } = options;
+		return this.repository.exists({ where });
 	}
 }

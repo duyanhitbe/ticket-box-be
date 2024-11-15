@@ -14,6 +14,10 @@ export type Order<T extends BaseEntity> = {
 	[P in keyof T]?: OrderType;
 };
 
+export type NotExistsMessage = {
+	notExistsMessage?: string;
+};
+
 export type CreateOptions<T extends BaseEntity> = {
 	data: Data<T>;
 };
@@ -79,4 +83,8 @@ export type SoftDeleteOneOptions<T extends BaseEntity> = {
 
 export type SoftDeleteByIdOptions<T extends BaseEntity> = {
 	id: string;
+};
+
+export type ExistOptions<T extends BaseEntity> = {
+	where?: Where<T>;
 };

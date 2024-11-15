@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { REPOSITORY_ENTITY } from './typeorm.decorator';
 import { Env } from '@lib/common/interfaces';
+import { TranslateService } from '@lib/core/i18n/translate.service';
 
 @Module({})
 export class TypeormModule {
@@ -34,11 +35,11 @@ export class TypeormModule {
 
 		const providers: Provider[] = repositories.map(({ provide, implementation }) => ({
 			provide,
-			inject: [DataSource],
-			useFactory: (dataSource: DataSource) => {
+			inject: [DataSource, TranslateService],
+			useFactory: (dataSource: DataSource, translateService: TranslateService) => {
 				const entity = Reflect.getOwnMetadata(REPOSITORY_ENTITY, implementation);
 				const repository = dataSource.getRepository(entity);
-				return new implementation(repository);
+				return new implementation(repository, entity.name, translateService);
 			}
 		}));
 
