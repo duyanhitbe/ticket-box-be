@@ -1,4 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, VERSION_NEUTRAL } from '@nestjs/common';
+import { ApiExcludeController } from '@nestjs/swagger';
+import * as project from '../package.json';
 
-@Controller()
-export class AppController {}
+@Controller({ version: VERSION_NEUTRAL })
+@ApiExcludeController()
+export class AppController {
+	@Get()
+	index(): string {
+		return `${project.name} v${project.version}`;
+	}
+}

@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { IQueryHandler } from '@lib/common/interfaces';
-import { UserEntity } from '../entities/user.entity.abstract';
-import { IUserRepository } from '../repositories/user.repository.abstract';
+import { UserEntity, UserRepository } from '@lib/modules/user';
+import { QueryHandler } from '@lib/common/abstracts';
 
 @Injectable()
-export class DetailUserUseCase implements IQueryHandler<UserEntity> {
-	constructor(private readonly userRepository: IUserRepository) {}
+export class DetailUserUseCase extends QueryHandler<UserEntity> {
+	constructor(private readonly userRepository: UserRepository) {
+		super();
+	}
 
 	async query(id: string): Promise<UserEntity> {
 		return this.userRepository.findByIdOrThrow({ id });

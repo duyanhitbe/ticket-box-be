@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
+    "resolveJsonModule": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -27,6 +28,12 @@
       ],
       "@lib/base/*": [
         "libs/base/src/*"
+      ],
+      "@lib/modules": [
+        "libs/modules/src"
+      ],
+      "@lib/modules/*": [
+        "libs/modules/src/*"
       ]
     }
   }

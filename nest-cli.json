@@ -2,6 +2,9 @@
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
+  "generateOptions": {
+    "spec": false
+  },
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
@@ -49,6 +52,15 @@
       "sourceRoot": "libs/base/src",
       "compilerOptions": {
         "tsConfigPath": "libs/base/tsconfig.lib.json"
+      }
+    },
+    "modules": {
+      "type": "library",
+      "root": "libs/modules",
+      "entryFile": "index",
+      "sourceRoot": "libs/modules/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/modules/tsconfig.lib.json"
       }
     }
   }

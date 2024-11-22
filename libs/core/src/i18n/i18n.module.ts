@@ -1,18 +1,16 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import * as path from 'path';
 import { HeaderResolver, I18nModule as NestI18nModule } from 'nestjs-i18n';
-import { I18nExceptionService } from '@lib/core/i18n/i18n-exception.service';
-import { TranslateService } from '@lib/core/i18n/translate.service';
+import { I18nExceptionService, TranslateService } from '@lib/core/i18n/i18n.abstract';
+import { I18nExceptionServiceImp } from '@lib/core/i18n/i18n-exception.service';
+import { TranslateServiceImp } from '@lib/core/i18n/translate.service';
 
-@Global()
-@Module({
-	providers: [I18nExceptionService, TranslateService],
-	exports: [I18nExceptionService, TranslateService]
-})
+@Module({})
 export class I18nModule {
 	static forRoot(): DynamicModule {
 		return {
 			module: I18nModule,
+			global: true,
 			imports: [
 				NestI18nModule.forRoot({
 					fallbackLanguage: 'vi',
@@ -22,7 +20,18 @@ export class I18nModule {
 					},
 					resolvers: [new HeaderResolver(['x-lang'])]
 				})
-			]
+			],
+			providers: [
+				{
+					provide: I18nExceptionService,
+					useClass: I18nExceptionServiceImp
+				},
+				{
+					provide: TranslateService,
+					useClass: TranslateServiceImp
+				}
+			],
+			exports: [I18nExceptionService, TranslateService]
 		};
 	}
 }

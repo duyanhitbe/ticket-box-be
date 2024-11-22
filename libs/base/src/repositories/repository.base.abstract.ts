@@ -25,11 +25,11 @@ export abstract class BaseRepository<T extends BaseEntity> {
 
 	abstract findPaginated(options: FindPaginatedOptions<T>): Promise<PaginationResponse<T>>;
 
-	abstract findById(options: FindByIdOptions): Promise<T | null>;
+	abstract findById(options: FindByIdOptions<T>): Promise<T | null>;
 
 	abstract findOne(options: FindOneOptions<T>): Promise<T | null>;
 
-	abstract findByIdOrThrow(options: FindByIdOptions): Promise<T>;
+	abstract findByIdOrThrow(options: FindByIdOptions<T>): Promise<T>;
 
 	abstract findOneOrThrow(options: FindOneOptions<T>): Promise<T>;
 

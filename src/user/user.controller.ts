@@ -1,20 +1,20 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto, FilterUserDto, UpdateUserDto, UserEntity } from '@lib/modules/user';
 import { CreateUserUseCase } from './usecases/create-user.usecase';
 import { UpdateUserUseCase } from './usecases/update-user.usecase';
 import { DeleteUserUseCase } from './usecases/delete-user.usecase';
 import { FindUserUseCase } from './usecases/find-user.usecase';
 import { DetailUserUseCase } from './usecases/detail-user.usecase';
-import { FilterUserDto } from './dto/filter-user.dto';
-import { UserEntity } from './entities/user.entity.abstract';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
-} from '@lib/common/swagger';
+	SwaggerOkResponse,
+	UseUserAuth
+} from '@lib/common/decorators';
+import { PaginationResponse } from '@lib/base/dto';
 
 @Controller('users')
+@UseUserAuth()
 export class UserController {
 	constructor(
 		private readonly createUserUseCase: CreateUserUseCase,
@@ -24,33 +24,59 @@ export class UserController {
 		private readonly detailUserUseCase: DetailUserUseCase
 	) {}
 
+	/**
+	 * @path POST /api/v1/users
+	 * @param data {CreateUserDto}
+	 * @returns {Promise<UserEntity>}
+	 */
 	@Post()
 	@SwaggerCreatedResponse({ summary: 'Create user', type: UserEntity })
-	create(@Body() data: CreateUserDto) {
+	create(@Body() data: CreateUserDto): Promise<UserEntity> {
 		return this.createUserUseCase.execute(data);
 	}
 
+	/**
+	 * @path GET /api/v1/users/:id
+	 * @param id {string}
+	 * @param data {UpdateUserDto}
+	 * @returns {Promise<UserEntity>}
+	 */
 	@Patch(':id')
 	@SwaggerOkResponse({ summary: 'Update user', type: UserEntity })
-	update(@Param('id') id: string, @Body() data: UpdateUserDto) {
+	update(@Param('id') id: string, @Body() data: UpdateUserDto): Promise<UserEntity> {
 		return this.updateUserUseCase.execute(id, data);
 	}
 
+	/**
+	 * @path DELETE /api/v1/users/:id
+	 * @param id {string}
+	 * @returns {Promise<UserEntity>}
+	 */
 	@Delete(':id')
 	@SwaggerOkResponse({ summary: 'Remove user', type: UserEntity })
-	remove(@Param('id') id: string) {
+	remove(@Param('id') id: string): Promise<UserEntity> {
 		return this.deleteUserUseCase.execute(id);
 	}
 
+	/**
+	 * @path GET /api/v1/users
+	 * @param filter {FilterUserDto}
+	 * @returns {Promise<PaginationResponse<UserEntity>>}
+	 */
 	@Get()
 	@SwaggerListResponse({ summary: 'List user', type: UserEntity })
-	findAll(@Query() filter: FilterUserDto) {
+	findAll(@Query() filter: FilterUserDto): Promise<PaginationResponse<UserEntity>> {
 		return this.findUserUseCase.query(filter);
 	}
 
+	/**
+	 * @path GET /api/v1/users/:id
+	 * @param id {string}
+	 * @returns {Promise<UserEntity>}
+	 */
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail user', type: UserEntity })
-	findOne(@Param('id') id: string) {
+	findOne(@Param('id') id: string): Promise<UserEntity> {
 		return this.detailUserUseCase.query(id);
 	}
 }

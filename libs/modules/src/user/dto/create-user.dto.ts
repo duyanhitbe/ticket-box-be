@@ -1,14 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { I18nIsNotEmpty, I18nIsString, Property } from '@lib/common/decorators';
+import { I18nIsNotEmpty, I18nIsString, Property, SwaggerProperty } from '@lib/common/decorators';
 
 export class CreateUserDto {
-	@ApiProperty()
+	@SwaggerProperty()
 	@I18nIsString()
 	@I18nIsNotEmpty()
 	@Property('Tài khoản')
 	username!: string;
 
-	@ApiProperty()
+	@SwaggerProperty()
 	@I18nIsString()
 	@I18nIsNotEmpty()
 	@Property('Mật khẩu')

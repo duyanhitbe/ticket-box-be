@@ -1,8 +1,10 @@
 import { BaseEntity } from '@lib/base/entities';
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty } from '@nestjs/swagger';
+import { Property, SwaggerProperty } from '@lib/common/decorators';
 
 export abstract class UserEntity extends BaseEntity {
-	@ApiProperty()
+	@SwaggerProperty()
+	@Property('Tài khoản')
 	username!: string;
 
 	@ApiHideProperty()

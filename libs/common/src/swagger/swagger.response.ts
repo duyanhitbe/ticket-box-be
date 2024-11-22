@@ -1,8 +1,7 @@
-import { SwaggerOptions } from './type';
-import { applyDecorators, Type } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiProperty } from '@nestjs/swagger';
+import { Type } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { IListResponse, IResponse } from '@lib/common/interfaces';
-import { PaginationMeta } from '@lib/base/dto';
+import { PaginationMeta } from '@lib/base/dto/pagination.dto';
 
 export function SwaggerResponseType<T>(type: Type<T>, status = 200) {
 	class ClassResponse implements IResponse {
@@ -57,31 +56,4 @@ export function SwaggerListResponseType<T>(type: Type<T>) {
 	Object.defineProperty(ClassListResponse, 'name', { value: `List${type.name}Response` });
 
 	return ClassListResponse;
-}
-
-export function SwaggerCreatedResponse(options: SwaggerOptions) {
-	const { summary, type } = options;
-
-	return applyDecorators(
-		ApiOperation({ summary }),
-		ApiCreatedResponse({ type: SwaggerResponseType(type, 201) })
-	);
-}
-
-export function SwaggerOkResponse(options: SwaggerOptions) {
-	const { summary, type } = options;
-
-	return applyDecorators(
-		ApiOperation({ summary }),
-		ApiOkResponse({ type: SwaggerResponseType(type) })
-	);
-}
-
-export function SwaggerListResponse(options: SwaggerOptions) {
-	const { summary, type } = options;
-
-	return applyDecorators(
-		ApiOperation({ summary }),
-		ApiOkResponse({ type: SwaggerListResponseType(type) })
-	);
 }

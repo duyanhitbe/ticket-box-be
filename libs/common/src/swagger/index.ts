@@ -1,3 +1,3 @@
-export * from './setup';
-export * from './response';
-export * from './type';
+export * from './swagger.setup';
+export * from './swagger.response';
+export * from './swagger.type';

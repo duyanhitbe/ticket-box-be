@@ -1,3 +1,4 @@
 {
+  "UserEntity": "User",
   "UserTypeormEntity": "User"
 }

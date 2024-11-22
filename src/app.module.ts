@@ -7,6 +7,10 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from '@lib/core/interceptors';
 import { I18nModule } from '@lib/core/i18n/i18n.module';
 import { HttpFilter, TypeormFilter } from '@lib/core/filters';
+import { JwtModule } from '@lib/core/jwt/jwt.module';
+import { AuthModule } from './auth/auth.module';
+import { HashModule } from '@lib/core/hash/hash.module';
+import { AppRepositoryModule } from './app.repository.module';
 
 @Module({
 	imports: [
@@ -14,9 +18,13 @@ import { HttpFilter, TypeormFilter } from '@lib/core/filters';
 			isGlobal: true,
 			envFilePath: '.env'
 		}),
-		TypeormModule.forRoot(),
 		I18nModule.forRoot(),
-		UserModule
+		JwtModule.forRoot(),
+		HashModule.forRoot(),
+		TypeormModule.forRoot(),
+		AppRepositoryModule,
+		UserModule,
+		AuthModule
 	],
 	controllers: [AppController],
 	providers: [

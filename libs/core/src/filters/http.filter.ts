@@ -1,15 +1,21 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { I18nService, I18nValidationException } from 'nestjs-i18n';
+import { loggingIncomingRequest } from '@lib/core/logger';
 
 @Catch(HttpException)
 export class HttpFilter implements ExceptionFilter {
+	private readonly logger = new Logger(this.constructor.name);
+
 	constructor(private readonly i18nService: I18nService) {}
 
 	catch(exception: any, host: ArgumentsHost) {
 		const ctx = host.switchToHttp();
 		const request = ctx.getRequest<Request>();
 		const response = ctx.getResponse<Response>();
+		const path = request.path;
+
+		loggingIncomingRequest(request, this.logger);
 
 		if (exception instanceof I18nValidationException) {
 			return this.handleValidation(exception, request, response);
@@ -17,7 +23,8 @@ export class HttpFilter implements ExceptionFilter {
 
 		const statusCode = exception.getStatus();
 		const exceptionResponse = exception.getResponse();
-		const path = request.path;
+
+		this.logger.error(exceptionResponse['message']);
 
 		response.status(statusCode).json({
 			statusCode,
@@ -53,6 +60,9 @@ export class HttpFilter implements ExceptionFilter {
 		});
 
 		const path = request.path;
+
+		this.logger.error('Validation error');
+		this.logger.error(JSON.stringify(errors, null, 2));
 
 		response.status(400).json({
 			statusCode: 400,

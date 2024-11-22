@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { IQueryHandler } from '@lib/common/interfaces';
-import { UserEntity } from '../entities/user.entity.abstract';
-import { FilterUserDto } from '../dto/filter-user.dto';
-import { IUserRepository } from '../repositories/user.repository.abstract';
+import { FilterUserDto, UserEntity, UserRepository } from '@lib/modules/user';
 import { PaginationResponse } from '@lib/base/dto';
+import { QueryHandler } from '@lib/common/abstracts';
 
 @Injectable()
-export class FindUserUseCase implements IQueryHandler<PaginationResponse<UserEntity>> {
-	constructor(private readonly userRepository: IUserRepository) {}
+export class FindUserUseCase extends QueryHandler<PaginationResponse<UserEntity>> {
+	constructor(private readonly userRepository: UserRepository) {
+		super();
+	}
 
 	async query(filter: FilterUserDto): Promise<PaginationResponse<UserEntity>> {
 		return this.userRepository.findPaginated(filter);

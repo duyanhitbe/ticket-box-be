@@ -7,5 +7,5 @@ export interface TypeormForFeaturesOptions {
 
 export interface TypeormForFeaturesRepositories {
 	provide: any;
-	implementation: Type;
+	useClass: Type;
 }

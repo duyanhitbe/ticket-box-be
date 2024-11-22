@@ -1,23 +1,35 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
 import { Request, Response } from 'express';
 import { IListResponse, IResponse } from '@lib/common/interfaces';
+import { loggingIncomingRequest } from '../logger';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
+	private readonly logger = new Logger(this.constructor.name);
+
 	intercept(context: ExecutionContext, next: CallHandler): Observable<IResponse | IListResponse> {
 		const response = context.switchToHttp().getResponse<Response>();
 		const request = context.switchToHttp().getRequest<Request>();
 		const statusCode = response.statusCode;
 		const start = performance.now();
 
+		const path = request.path;
+		const method = request.method;
+
+		loggingIncomingRequest(request, this.logger);
+
 		return next.handle().pipe(
 			map((data) => {
+				if (path === '/') return data;
+
 				const end = performance.now();
 				const message = 'success';
 				const success = true;
 				const duration = `${(end - start).toFixed(0)}ms`;
-				const path = request.path;
+
+				this.logger.log(`[${method}] ${path} | ${duration}`, 'Incoming Request');
+				this.logger.debug(data, 'Incoming Request');
 
 				if (data.data && data.meta) {
 					return {

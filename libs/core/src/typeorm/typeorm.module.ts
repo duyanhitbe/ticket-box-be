@@ -1,12 +1,14 @@
-import { DynamicModule, Module, Provider } from '@nestjs/common';
+import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { TypeormForFeaturesOptions } from './typeorm.interface';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { REPOSITORY_ENTITY } from './typeorm.decorator';
 import { Env } from '@lib/common/interfaces';
-import { TranslateService } from '@lib/core/i18n/translate.service';
+import { I18nExceptionService } from '@lib/core/i18n';
+import { TypeOrmLogger } from '@lib/core/logger';
 
+@Global()
 @Module({})
 export class TypeormModule {
 	static forRoot(): DynamicModule {
@@ -23,7 +25,8 @@ export class TypeormModule {
 						password: configService.get('POSTGRES_PASSWORD'),
 						database: configService.get('POSTGRES_DB'),
 						autoLoadEntities: true,
-						synchronize: true
+						synchronize: true,
+						logger: new TypeOrmLogger()
 					})
 				})
 			]
@@ -33,21 +36,29 @@ export class TypeormModule {
 	static forFeatures(options: TypeormForFeaturesOptions): DynamicModule {
 		const { entities, repositories } = options;
 
-		const providers: Provider[] = repositories.map(({ provide, implementation }) => ({
-			provide,
-			inject: [DataSource, TranslateService],
-			useFactory: (dataSource: DataSource, translateService: TranslateService) => {
-				const entity = Reflect.getOwnMetadata(REPOSITORY_ENTITY, implementation);
-				const repository = dataSource.getRepository(entity);
-				return new implementation(repository, entity.name, translateService);
-			}
-		}));
+		const exports: any[] = [];
+		const providers: Provider[] = repositories.map(({ provide, useClass: Repository }) => {
+			exports.push(provide);
+			return {
+				provide,
+				inject: [DataSource, I18nExceptionService],
+				useFactory: (
+					dataSource: DataSource,
+					i18nExceptionService: I18nExceptionService
+				) => {
+					const entity = Reflect.getOwnMetadata(REPOSITORY_ENTITY, Repository);
+					const repository = dataSource.getRepository(entity);
+					return new Repository(repository, entity.name, i18nExceptionService);
+				}
+			};
+		});
 
 		return {
 			module: TypeormModule,
+			global: true,
 			imports: [TypeOrmModule.forFeature(entities)],
 			providers,
-			exports: providers
+			exports
 		};
 	}
 }

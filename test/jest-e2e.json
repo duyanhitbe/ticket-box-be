@@ -16,6 +16,8 @@
     "@lib/core/(.*)": "<rootDir>/../libs/core/src/$1",
     "@lib/core": "<rootDir>/../libs/core/src",
     "@lib/base/(.*)": "<rootDir>/../libs/base/src/$1",
-    "@lib/base": "<rootDir>/../libs/base/src"
+    "@lib/base": "<rootDir>/../libs/base/src",
+    "@lib/modules/(.*)": "<rootDir>/../libs/modules/src/$1",
+    "@lib/modules": "<rootDir>/../libs/modules/src"
   }
 }

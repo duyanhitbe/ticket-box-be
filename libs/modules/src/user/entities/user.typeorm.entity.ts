@@ -1,9 +1,9 @@
 import { UserEntity } from './user.entity.abstract';
 import { BaseTypeormEntity } from '@lib/base/entities';
 import { BeforeInsert, Entity } from 'typeorm';
-import { hash } from 'argon2';
 import { Exclude } from 'class-transformer';
 import { TypeormColumn, TypeormUnique } from '@lib/common/decorators';
+import { Argon2Service } from '@lib/core/hash';
 
 @Entity('users')
 export class UserTypeormEntity extends BaseTypeormEntity implements UserEntity {
@@ -17,6 +17,7 @@ export class UserTypeormEntity extends BaseTypeormEntity implements UserEntity {
 
 	@BeforeInsert()
 	async beforeInsert() {
-		this.password = await hash(this.password);
+		const hashService = new Argon2Service();
+		this.password = await hashService.hash(this.password);
 	}
 }

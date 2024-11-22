@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { IExecuteHandler } from '@lib/common/interfaces';
-import { UserEntity } from '../entities/user.entity.abstract';
-import { IUserRepository } from '../repositories/user.repository.abstract';
+import { UserEntity, UserRepository } from '@lib/modules/user';
+import { ExecuteHandler } from '@lib/common/abstracts';
 
 @Injectable()
-export class DeleteUserUseCase implements IExecuteHandler<UserEntity> {
-	constructor(private readonly userRepository: IUserRepository) {}
+export class DeleteUserUseCase extends ExecuteHandler<UserEntity> {
+	constructor(private readonly userRepository: UserRepository) {
+		super();
+	}
 
 	async execute(id: string): Promise<UserEntity> {
 		return this.userRepository.softDeleteById({ id });

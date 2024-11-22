@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { IExecuteHandler } from '@lib/common/interfaces';
-import { UserEntity } from '../entities/user.entity.abstract';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { IUserRepository } from '../repositories/user.repository.abstract';
-import { I18nExceptionService } from '@lib/core/i18n/i18n-exception.service';
-import { TranslateService } from '@lib/core/i18n/translate.service';
+import { CreateUserDto, UserEntity, UserRepository } from '@lib/modules/user';
+import { I18nExceptionService, TranslateService } from '@lib/core/i18n';
+import { ExecuteHandler } from '@lib/common/abstracts';
 
 @Injectable()
-export class CreateUserUseCase implements IExecuteHandler<UserEntity> {
+export class CreateUserUseCase extends ExecuteHandler<UserEntity> {
 	constructor(
-		private readonly userRepository: IUserRepository,
+		private readonly userRepository: UserRepository,
 		private readonly translateService: TranslateService,
 		private readonly i18nExceptionService: I18nExceptionService
-	) {}
+	) {
+		super();
+	}
 
 	async execute(data: CreateUserDto): Promise<UserEntity> {
 		const exists = await this.userRepository.exists({

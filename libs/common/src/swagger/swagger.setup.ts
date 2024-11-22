@@ -13,7 +13,12 @@ export function setupSwagger(app: INestApplication) {
 				example: 'vi'
 			}
 		})
+		.addBearerAuth()
 		.build();
 	const documentFactory = () => SwaggerModule.createDocument(app, config);
-	SwaggerModule.setup('docs', app, documentFactory);
+	SwaggerModule.setup('docs', app, documentFactory, {
+		swaggerOptions: {
+			persistAuthorization: true
+		}
+	});
 }
