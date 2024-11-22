@@ -4,9 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { REPOSITORY_ENTITY } from './typeorm.decorator';
-import { Env } from '@lib/common/interfaces';
 import { I18nExceptionService } from '@lib/core/i18n';
-import { TypeOrmLogger } from '@lib/core/logger';
+import { options } from '@lib/core/typeorm/typeorm.config';
 
 @Global()
 @Module({})
@@ -17,17 +16,7 @@ export class TypeormModule {
 			imports: [
 				TypeOrmModule.forRootAsync({
 					inject: [ConfigService],
-					useFactory: (configService: ConfigService<Env>) => ({
-						type: 'postgres',
-						host: configService.get('POSTGRES_HOST'),
-						port: +configService.get('POSTGRES_PORT'),
-						username: configService.get('POSTGRES_USER'),
-						password: configService.get('POSTGRES_PASSWORD'),
-						database: configService.get('POSTGRES_DB'),
-						autoLoadEntities: true,
-						synchronize: true,
-						logger: new TypeOrmLogger()
-					})
+					useFactory: () => options
 				})
 			]
 		};

@@ -17,7 +17,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "repl": "npm run start -- --entryFile src/repl",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "typeorm:run": "npm run typeorm migration:run -- -d ./libs/core/src/typeorm/typeorm.config.ts",
+    "typeorm:generate": "npm run typeorm -- -d ./libs/core/src/typeorm/typeorm.config.ts migration:generate ./libs/core/src/typeorm/migrations/$npm_config_name",
+    "typeorm:create": "npm run typeorm -- migration:create ./libs/core/src/typeorm/migrations/$npm_config_name",
+    "typeorm:revert": "npm run typeorm -- -d ./libs/core/src/typeorm/typeorm.config.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -31,6 +37,7 @@
     "argon2": "^0.41.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
     "nestjs-i18n": "^10.5.0",
