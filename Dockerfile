@@ -34,6 +34,8 @@ COPY --from=builder /app/i18n ./i18n
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
+RUN mkdir /app/public
+
 # Expose the application's port
 EXPOSE 3000
 

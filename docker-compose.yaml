@@ -21,6 +21,8 @@ services:
       - JWT_SECRET=nx2Hb3PaSHAPVmyEdvznZCQ5aSaq4IUH
     depends_on:
       - postgres
+    volumes:
+      - ./public:/app/public
 
   postgres:
     image: postgres:16

@@ -11,12 +11,18 @@ import { JwtModule } from '@lib/core/jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { HashModule } from '@lib/core/hash/hash.module';
 import { AppRepositoryModule } from './app.repository.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
 			envFilePath: '.env'
+		}),
+		ServeStaticModule.forRoot({
+			rootPath: join(__dirname, '..', 'public'),
+			serveRoot: '/public'
 		}),
 		I18nModule.forRoot(),
 		JwtModule.forRoot(),
