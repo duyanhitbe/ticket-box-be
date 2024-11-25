@@ -6,6 +6,7 @@ import { I18nValidationPipe } from 'nestjs-i18n';
 import { ConfigService } from '@nestjs/config';
 import { Env } from '@lib/common/interfaces';
 import { LoggerService } from '@lib/core/logger';
+import { connectRabbitMQ, ENUM_QUEUE } from '@lib/core/rabbitmq';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
@@ -29,6 +30,10 @@ async function bootstrap() {
 		})
 	);
 	setupSwagger(app);
+
+	connectRabbitMQ(app, configService, [ENUM_QUEUE.MAIL]);
+
+	await app.startAllMicroservices();
 	await app.listen(port);
 
 	const logger = new Logger('NestApplication');

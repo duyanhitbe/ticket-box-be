@@ -13,6 +13,9 @@ import { HashModule } from '@lib/core/hash/hash.module';
 import { AppRepositoryModule } from './app.repository.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { RabbitMQModule } from '@lib/core/rabbitmq/rabbitmq.module';
+import { ENUM_QUEUE, ENUM_RABBITMQ_CLIENT } from '@lib/core/rabbitmq';
+import { MailModule } from './mail/mail.module';
 
 @Module({
 	imports: [
@@ -28,9 +31,16 @@ import { join } from 'path';
 		JwtModule.forRoot(),
 		HashModule.forRoot(),
 		TypeormModule.forRoot(),
+		RabbitMQModule.register([
+			{
+				name: ENUM_RABBITMQ_CLIENT.MAIL,
+				queue: ENUM_QUEUE.MAIL
+			}
+		]),
 		AppRepositoryModule,
 		UserModule,
-		AuthModule
+		AuthModule,
+		MailModule
 	],
 	controllers: [AppController],
 	providers: [

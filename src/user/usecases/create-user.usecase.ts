@@ -2,10 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UserEntity, UserRepository } from '@lib/modules/user';
 import { I18nExceptionService, TranslateService } from '@lib/core/i18n';
 import { ExecuteHandler } from '@lib/common/abstracts';
+import {
+	ENUM_RABBITMQ_CLIENT,
+	InjectClientRMQ,
+	RABBITMQ_PATTERNS,
+	RMQClientProxy
+} from '@lib/core/rabbitmq';
 
 @Injectable()
 export class CreateUserUseCase extends ExecuteHandler<UserEntity> {
 	constructor(
+		@InjectClientRMQ(ENUM_RABBITMQ_CLIENT.MAIL)
+		private readonly mailClient: RMQClientProxy,
 		private readonly userRepository: UserRepository,
 		private readonly translateService: TranslateService,
 		private readonly i18nExceptionService: I18nExceptionService
@@ -24,6 +32,10 @@ export class CreateUserUseCase extends ExecuteHandler<UserEntity> {
 			this.i18nExceptionService.throwExists(property);
 		}
 
-		return this.userRepository.create({ data });
+		const user = await this.userRepository.create({ data });
+
+		this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL, user);
+
+		return user;
 	}
 }
