@@ -98,5 +98,10 @@
       "^@lib/base(|/.*)$": "<rootDir>/libs/base/src/$1",
       "^@lib/modules(|/.*)$": "<rootDir>/libs/modules/src/$1"
     }
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@nestjs/schematics@10.2.3": "patches/@nestjs__schematics@10.2.3.patch"
+    }
   }
 }
