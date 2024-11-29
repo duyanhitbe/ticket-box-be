@@ -1,0 +1,9 @@
+export enum ENUM_DATE_TYPE {
+	FIXED = 'FIXED',
+	DURATION = 'DURATION'
+}
+
+export enum ENUM_DISCOUNT_TYPE {
+	FIXED = 'FIXED',
+	PERCENTAGE = 'PERCENTAGE'
+}

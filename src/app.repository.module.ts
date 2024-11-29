@@ -4,7 +4,6 @@ import { UserRepository, UserTypeormEntity, UserTypeormRepository } from '@lib/m
 import { EventRepository, EventTypeormRepository } from '@lib/modules/event';
 import { CustomerRepository, CustomerTypeormRepository } from '@lib/modules/customer';
 import { CustomerRoleRepository, CustomerRoleTypeormRepository } from '@lib/modules/customer-role';
-import { EventDateRepository, EventDateTypeormRepository } from '@lib/modules/event-date';
 import { NewsRepository, NewsTypeormRepository } from '@lib/modules/news';
 import { OrderRepository, OrderTypeormRepository } from '@lib/modules/order';
 import { OrderDetailRepository, OrderDetailTypeormRepository } from '@lib/modules/order-detail';
@@ -29,10 +28,6 @@ import { TicketPriceRepository, TicketPriceTypeormRepository } from '@lib/module
 				{
 					provide: EventRepository,
 					useClass: EventTypeormRepository
-				},
-				{
-					provide: EventDateRepository,
-					useClass: EventDateTypeormRepository
 				},
 				{
 					provide: NewsRepository,

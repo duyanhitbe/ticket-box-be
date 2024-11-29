@@ -7,3 +7,5 @@ export * from './entities/order.entity.abstract';
 
 export * from './repositories/order.typeorm.repository';
 export * from './repositories/order.repository.abstract';
+
+export * from './order.enum';

@@ -1,0 +1,6 @@
+export enum ENUM_EVENT_TYPE {
+	EVENT = 'EVENT',
+	PARK = 'PARK',
+	VOUCHER = 'VOUCHER',
+	OTHER = 'OTHER'
+}
