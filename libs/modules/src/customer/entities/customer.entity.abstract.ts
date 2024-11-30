@@ -32,6 +32,8 @@ export abstract class CustomerEntity extends BaseEntity {
 	 */
 	allowDebtPurchase!: boolean;
 
+	/* ========== Relations ========== */
+
 	/**
 	 * Nhóm quyền
 	 */

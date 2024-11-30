@@ -14,9 +14,9 @@ export abstract class EventEntity extends BaseEntity {
 	eventType!: ENUM_EVENT_TYPE;
 
 	/**
-	 * Hình banner
+	 * Hình ảnh
 	 */
-	banner!: string;
+	image!: string;
 
 	/**
 	 * Hình thumbnail

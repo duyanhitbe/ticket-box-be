@@ -34,17 +34,19 @@ export abstract class TicketPriceEntity extends BaseEntity {
 	/**
 	 * Loại giảm giá
 	 */
-	discountType!: ENUM_DISCOUNT_TYPE;
+	discountType?: ENUM_DISCOUNT_TYPE;
 
 	/**
 	 * Giá trị giảm
 	 */
-	discountValue!: number;
+	discountValue?: number;
 
 	/**
 	 * Giá sau giảm
 	 */
 	discountedPrice!: number;
+
+	/* ========== Relations ========== */
 
 	/**
 	 * Sự kiện

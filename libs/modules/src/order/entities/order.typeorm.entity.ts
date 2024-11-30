@@ -17,7 +17,7 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	@TypeormColumn()
 	code!: string;
 
-	@TypeormColumn()
+	@TypeormColumn({ nullable: true })
 	note?: string;
 
 	@TypeormColumn()
@@ -39,11 +39,11 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	})
 	paymentMethod!: ENUM_PAYMENT_METHOD;
 
-	@TypeormColumn()
-	cardId!: string;
+	@TypeormColumn({ nullable: true })
+	cardId?: string;
 
-	@TypeormColumn()
-	cardName!: string;
+	@TypeormColumn({ nullable: true })
+	cardName?: string;
 
 	@TypeormColumn()
 	totalPrice!: number;
@@ -51,7 +51,8 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	@TypeormColumn({
 		type: 'simple-enum',
 		enum: ENUM_ORDER_STATUS,
-		enumName: 'ENUM_ORDER_STATUS'
+		enumName: 'ENUM_ORDER_STATUS',
+		default: ENUM_ORDER_STATUS.RESERVED
 	})
 	orderStatus!: ENUM_ORDER_STATUS;
 

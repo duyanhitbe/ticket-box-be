@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { TypeOrmLogger } from '@lib/core/logger';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm/dist/interfaces/typeorm-options.interface';
+import { Initial1732946728321 } from '@lib/core/typeorm/migrations/1732946728321-initial';
 
 config();
 const configService = new ConfigService();
@@ -26,5 +27,5 @@ export default new DataSource({
 	migrationsTableName: 'migrations',
 	migrationsRun: false,
 	migrationsTransactionMode: 'each',
-	migrations: []
+	migrations: [Initial1732946728321]
 } as any);

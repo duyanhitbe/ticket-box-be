@@ -1,8 +1,9 @@
-import { Column, ColumnOptions, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, ColumnOptions, Index, JoinColumn, ManyToOne, Unique } from 'typeorm';
 import { camelToSnake } from '../helpers';
 import { JoinColumnOptions } from 'typeorm/decorator/options/JoinColumnOptions';
 import { ObjectType } from 'typeorm/common/ObjectType';
 import { RelationOptions } from 'typeorm/decorator/options/RelationOptions';
+import { UniqueOptions } from 'typeorm/decorator/options/UniqueOptions';
 
 export function TypeormUnique(name?: string): PropertyDecorator {
 	return function (target: any, propertyKey: string) {
@@ -11,6 +12,17 @@ export function TypeormUnique(name?: string): PropertyDecorator {
 		if (name) indexName = name;
 
 		Index(indexName, { unique: true, where: '"deleted_at" IS NULL' })(target, propertyKey);
+	};
+}
+
+export function TypeormUniqueMulti<T>(
+	properties: (keyof T)[],
+	options?: UniqueOptions
+): ClassDecorator {
+	return function (target: any) {
+		const indexName = `IDX_UNIQUE_${target.name}_${properties.map((property) => camelToSnake(property as string)).join('_')}`;
+
+		Unique(indexName, properties as string[], options)(target);
 	};
 }
 

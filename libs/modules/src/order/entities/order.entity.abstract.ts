@@ -52,12 +52,12 @@ export abstract class OrderEntity extends BaseEntity {
 	/**
 	 * STK thanh toán
 	 */
-	cardId!: string;
+	cardId?: string;
 
 	/**
 	 * Tên tài khoản thanh toán
 	 */
-	cardName!: string;
+	cardName?: string;
 
 	/**
 	 * Tổng giá trị đơn hàng
@@ -68,6 +68,8 @@ export abstract class OrderEntity extends BaseEntity {
 	 * Trạng thái đơn hàng
 	 */
 	orderStatus!: ENUM_ORDER_STATUS;
+
+	/* ========== Relations ========== */
 
 	/**
 	 * Sự kiện

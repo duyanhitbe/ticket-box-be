@@ -18,7 +18,7 @@ export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity
 	eventType!: ENUM_EVENT_TYPE;
 
 	@TypeormColumn()
-	banner!: string;
+	image!: string;
 
 	@TypeormColumn()
 	thumbnail!: string;
@@ -32,10 +32,10 @@ export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity
 	@TypeormColumn()
 	displayPrice!: number;
 
-	@TypeormColumn()
+	@TypeormColumn({ default: true })
 	isBanner!: boolean;
 
-	@TypeormColumn()
+	@TypeormColumn({ default: 1 })
 	order!: number;
 
 	@TypeormColumn({ nullable: true })

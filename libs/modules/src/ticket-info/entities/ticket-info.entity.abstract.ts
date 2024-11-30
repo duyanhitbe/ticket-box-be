@@ -23,6 +23,8 @@ export abstract class TicketInfoEntity extends BaseEntity {
 	 */
 	quantity?: number;
 
+	/* ========== Relations ========== */
+
 	/**
 	 * Sự kiện
 	 */

@@ -17,6 +17,8 @@ export abstract class TicketGroupEntity extends BaseEntity {
 	 */
 	description?: string;
 
+	/* ========== Relations ========== */
+
 	/**
 	 * Sự kiện
 	 */
