@@ -23,7 +23,7 @@ export class TicketPriceTypeormEntity extends BaseTypeormEntity implements Ticke
 	@TypeormColumn()
 	ticketGroupId!: string;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float' })
 	basePrice!: number;
 
 	@TypeormColumn({
@@ -34,10 +34,10 @@ export class TicketPriceTypeormEntity extends BaseTypeormEntity implements Ticke
 	})
 	discountType?: ENUM_DISCOUNT_TYPE;
 
-	@TypeormColumn({ nullable: true })
+	@TypeormColumn({ type: 'float', nullable: true })
 	discountValue?: number;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float' })
 	discountedPrice!: number;
 
 	/* ========== Relations ========== */

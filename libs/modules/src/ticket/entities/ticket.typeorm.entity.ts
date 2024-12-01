@@ -35,16 +35,16 @@ export class TicketTypeormEntity extends BaseTypeormEntity implements TicketEnti
 	@TypeormColumn()
 	expiresAt!: Date;
 
-	@TypeormColumn({ nullable: true })
+	@TypeormColumn({ type: 'float', nullable: true })
 	basePrice?: number;
 
 	@TypeormColumn({ nullable: true })
 	discountType?: ENUM_DISCOUNT_TYPE;
 
-	@TypeormColumn({ nullable: true })
+	@TypeormColumn({ type: 'float', nullable: true })
 	discountValue?: number;
 
-	@TypeormColumn({ nullable: true })
+	@TypeormColumn({ type: 'float', nullable: true })
 	discountedPrice?: number;
 
 	/* ========== Relations ========== */

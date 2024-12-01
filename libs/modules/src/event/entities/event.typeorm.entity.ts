@@ -3,7 +3,6 @@ import { BaseTypeormEntity } from '@lib/base/entities';
 import { Entity } from 'typeorm';
 import { ENUM_EVENT_TYPE } from '../event.enum';
 import { TypeormColumn } from '@lib/common/decorators';
-import { ENUM_DATE_TYPE } from '@lib/modules/common';
 
 @Entity('events')
 export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity {
@@ -26,10 +25,10 @@ export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity
 	@TypeormColumn({ nullable: true })
 	description?: string;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float', default: 5 })
 	ratingStar!: number;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float' })
 	displayPrice!: number;
 
 	@TypeormColumn({ default: true })
@@ -40,22 +39,6 @@ export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity
 
 	@TypeormColumn({ nullable: true })
 	location?: string;
-
-	@TypeormColumn({
-		type: 'simple-enum',
-		enum: ENUM_DATE_TYPE,
-		enumName: 'ENUM_DATE_TYPE'
-	})
-	dateType!: ENUM_DATE_TYPE;
-
-	@TypeormColumn({ type: 'jsonb', nullable: true })
-	dates?: Date[];
-
-	@TypeormColumn({ nullable: true })
-	fromDate?: Date;
-
-	@TypeormColumn({ nullable: true })
-	toDate?: Date;
 
 	/* ========== Relations ========== */
 }

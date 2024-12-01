@@ -1,4 +1,6 @@
 {
   "UserEntity": "User",
-  "UserTypeormEntity": "User"
+  "UserTypeormEntity": "User",
+  "EventEntity": "Event",
+  "EventTypeormEntity": "Event"
 }

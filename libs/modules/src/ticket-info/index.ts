@@ -7,3 +7,5 @@ export * from './entities/ticket-info.entity.abstract';
 
 export * from './repositories/ticket-info.typeorm.repository';
 export * from './repositories/ticket-info.repository.abstract';
+
+export * from './ticket-info.event';

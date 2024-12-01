@@ -8,4 +8,11 @@ export abstract class CustomerRoleEntity extends BaseEntity {
 	@SwaggerProperty()
 	@Property('Tên nhóm quyền')
 	name!: string;
+
+	/**
+	 * Mã nhóm quyền
+	 */
+	@SwaggerProperty()
+	@Property('Mã nhóm quyền')
+	code!: string;
 }

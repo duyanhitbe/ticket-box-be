@@ -14,6 +14,7 @@ import { join } from 'path';
 import { RabbitMQModule } from '@lib/core/rabbitmq/rabbitmq.module';
 import { ENUM_QUEUE, ENUM_RABBITMQ_CLIENT } from '@lib/core/rabbitmq';
 import { AppTransportModule } from './app.transport.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
 	imports: [
@@ -35,6 +36,9 @@ import { AppTransportModule } from './app.transport.module';
 				queue: ENUM_QUEUE.MAIL
 			}
 		]),
+		EventEmitterModule.forRoot({
+			maxListeners: 10
+		}),
 		AppRepositoryModule,
 		AppTransportModule
 	],

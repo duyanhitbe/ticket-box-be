@@ -45,7 +45,7 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	@TypeormColumn({ nullable: true })
 	cardName?: string;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float' })
 	totalPrice!: number;
 
 	@TypeormColumn({

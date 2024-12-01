@@ -5,10 +5,13 @@ import { UpdateTicketPriceUseCase } from './usecases/update-ticket-price.usecase
 import { DeleteTicketPriceUseCase } from './usecases/delete-ticket-price.usecase';
 import { FindTicketPriceUseCase } from './usecases/find-ticket-price.usecase';
 import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase';
+import { TicketPriceService } from './ticket-price.service';
+import { TicketPriceConsumer } from './ticket-price.consumer';
 
 @Module({
-	controllers: [TicketPriceController],
+	controllers: [TicketPriceController, TicketPriceConsumer],
 	providers: [
+		TicketPriceService,
 		CreateTicketPriceUseCase,
 		UpdateTicketPriceUseCase,
 		DeleteTicketPriceUseCase,

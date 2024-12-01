@@ -1,6 +1,5 @@
 import { BaseEntity } from '@lib/base/entities';
-import { ENUM_EVENT_TYPE } from '@lib/modules/event/event.enum';
-import { ENUM_DATE_TYPE } from '@lib/modules/common';
+import { ENUM_EVENT_TYPE } from '../event.enum';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
 
 export abstract class EventEntity extends BaseEntity {
@@ -76,35 +75,4 @@ export abstract class EventEntity extends BaseEntity {
 	@SwaggerProperty({ required: false })
 	@Property('Địa điểm')
 	location?: string;
-
-	/**
-	 * Loại ngày diễn ra sự kiện
-	 */
-	@SwaggerProperty({
-		enum: ENUM_DATE_TYPE,
-		enumName: 'ENUM_DATE_TYPE'
-	})
-	@Property('Loại ngày diễn ra sự kiện')
-	dateType!: ENUM_DATE_TYPE;
-
-	/**
-	 * Danh sách diễn ra sự kiện
-	 */
-	@SwaggerProperty({ type: [Date], required: false })
-	@Property('Danh sách diễn ra sự kiện')
-	dates?: Date[];
-
-	/**
-	 * Ngày bắt đầu sự kiện
-	 */
-	@SwaggerProperty({ required: false })
-	@Property('Ngày bắt đầu sự kiện')
-	fromDate?: Date;
-
-	/**
-	 * Ngày kết thúc sự kiện
-	 */
-	@SwaggerProperty({ required: false })
-	@Property('Ngày kết thúc sự kiện')
-	toDate?: Date;
 }

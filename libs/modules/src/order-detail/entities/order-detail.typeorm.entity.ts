@@ -21,22 +21,22 @@ export class OrderDetailTypeormEntity extends BaseTypeormEntity implements Order
 	@TypeormColumn()
 	ticketName!: string;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float' })
 	ticketBasePrice!: number;
 
 	@TypeormColumn({ nullable: true })
 	ticketDiscountType?: ENUM_DISCOUNT_TYPE;
 
-	@TypeormColumn({ nullable: true })
+	@TypeormColumn({ type: 'float', nullable: true })
 	ticketDiscountValue?: number;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float' })
 	ticketDiscountedPrice!: number;
 
 	@TypeormColumn()
 	quantity!: number;
 
-	@TypeormColumn()
+	@TypeormColumn({ type: 'float' })
 	totalPrice!: number;
 
 	/* ========== Relations ========== */

@@ -5,14 +5,44 @@ import {
 	TicketPriceRepository
 } from '@lib/modules/ticket-price';
 import { ExecuteHandler } from '@lib/common/abstracts';
+import { TicketInfoRepository } from '@lib/modules/ticket-info';
+import { TicketPriceService } from '../ticket-price.service';
 
 @Injectable()
 export class CreateTicketPriceUseCase extends ExecuteHandler<TicketPriceEntity> {
-	constructor(private readonly ticketPriceRepository: TicketPriceRepository) {
+	constructor(
+		private readonly ticketPriceRepository: TicketPriceRepository,
+		private readonly ticketInfoRepository: TicketInfoRepository,
+		private readonly ticketPriceService: TicketPriceService
+	) {
 		super();
 	}
 
 	async execute(data: CreateTicketPriceDto): Promise<TicketPriceEntity> {
-		return this.ticketPriceRepository.create({ data });
+		const { ticketInfoId, customerRoleId, basePrice, discountType, discountValue } = data;
+
+		const { eventId, ticketGroupId } = await this.ticketInfoRepository.findByIdOrThrow({
+			id: ticketInfoId,
+			select: ['eventId', 'ticketGroupId']
+		});
+
+		const discountedPrice = this.ticketPriceService.calculateDiscountedPrice(
+			basePrice,
+			discountType,
+			discountValue
+		);
+
+		return this.ticketPriceRepository.create({
+			data: {
+				eventId,
+				ticketGroupId,
+				ticketInfoId,
+				customerRoleId,
+				basePrice,
+				discountType,
+				discountValue,
+				discountedPrice
+			}
+		});
 	}
 }
