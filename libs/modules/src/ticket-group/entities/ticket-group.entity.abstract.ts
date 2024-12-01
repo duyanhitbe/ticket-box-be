@@ -2,6 +2,7 @@ import { BaseEntity } from '@lib/base/entities';
 import { EventEntity } from '@lib/modules/event';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
+import { TicketGroupDateEntity } from '@lib/modules/ticket-group-date';
 
 export abstract class TicketGroupEntity extends BaseEntity {
 	/**
@@ -36,13 +37,6 @@ export abstract class TicketGroupEntity extends BaseEntity {
 	dateType!: ENUM_DATE_TYPE;
 
 	/**
-	 * Danh sách diễn ra sự kiện
-	 */
-	@SwaggerProperty({ type: [Date], required: false })
-	@Property('Danh sách diễn ra sự kiện')
-	dates?: Date[];
-
-	/**
 	 * Ngày bắt đầu sự kiện
 	 */
 	@SwaggerProperty({ required: false })
@@ -62,4 +56,9 @@ export abstract class TicketGroupEntity extends BaseEntity {
 	 * Sự kiện
 	 */
 	event?: EventEntity;
+
+	/**
+	 * Ngày diễn ra sự kiện
+	 */
+	dates?: TicketGroupDateEntity[];
 }

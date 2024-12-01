@@ -20,20 +20,20 @@ export class TicketTypeormEntity extends BaseTypeormEntity implements TicketEnti
 	@TypeormColumn()
 	ticketInfoId!: string;
 
-	@TypeormColumn()
-	orderId!: string;
+	@TypeormColumn({ nullable: true })
+	orderId?: string;
 
-	@TypeormColumn()
-	customerId!: string;
+	@TypeormColumn({ nullable: true })
+	customerId?: string;
 
 	@TypeormColumn()
 	code!: string;
 
-	@TypeormColumn({ nullable: true })
+	@TypeormColumn({ nullable: true, type: 'timestamptz' })
 	useAt?: Date;
 
-	@TypeormColumn()
-	expiresAt!: Date;
+	@TypeormColumn({ nullable: true })
+	expiresAt?: Date;
 
 	@TypeormColumn({ type: 'float', nullable: true })
 	basePrice?: number;
@@ -58,9 +58,9 @@ export class TicketTypeormEntity extends BaseTypeormEntity implements TicketEnti
 	@TypeormManyToOne(() => TicketInfoTypeormEntity)
 	ticketInfo?: TicketInfoTypeormEntity;
 
-	@TypeormManyToOne(() => OrderTypeormEntity)
+	@TypeormManyToOne(() => OrderTypeormEntity, undefined, { nullable: true })
 	order?: OrderTypeormEntity;
 
-	@TypeormManyToOne(() => CustomerTypeormEntity)
+	@TypeormManyToOne(() => CustomerTypeormEntity, undefined, { nullable: true })
 	customer?: CustomerTypeormEntity;
 }

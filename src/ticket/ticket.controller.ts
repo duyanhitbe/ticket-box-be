@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import {
 	CreateTicketDto,
 	FilterTicketDto,
-	UpdateTicketDto,
-	TicketEntity
+	TicketEntity,
+	UpdateTicketDto
 } from '@lib/modules/ticket';
 import { CreateTicketUseCase } from './usecases/create-ticket.usecase';
 import { UpdateTicketUseCase } from './usecases/update-ticket.usecase';
@@ -16,6 +16,7 @@ import {
 	SwaggerOkResponse
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller('tickets')
 export class TicketController {
@@ -34,7 +35,8 @@ export class TicketController {
 	 */
 	@Post()
 	@SwaggerCreatedResponse({ summary: 'Create ticket', type: TicketEntity })
-	create(@Body() data: CreateTicketDto): Promise<TicketEntity> {
+	@ApiExcludeEndpoint()
+	create(@Body() data: CreateTicketDto): Promise<(TicketEntity | null)[] | null> {
 		return this.createTicketUseCase.execute(data);
 	}
 
@@ -46,6 +48,7 @@ export class TicketController {
 	 */
 	@Patch(':id')
 	@SwaggerOkResponse({ summary: 'Update ticket', type: TicketEntity })
+	@ApiExcludeEndpoint()
 	update(@Param('id') id: string, @Body() data: UpdateTicketDto): Promise<TicketEntity> {
 		return this.updateTicketUseCase.execute(id, data);
 	}
@@ -57,6 +60,7 @@ export class TicketController {
 	 */
 	@Delete(':id')
 	@SwaggerOkResponse({ summary: 'Remove ticket', type: TicketEntity })
+	@ApiExcludeEndpoint()
 	remove(@Param('id') id: string): Promise<TicketEntity> {
 		return this.deleteTicketUseCase.execute(id);
 	}

@@ -1,7 +1,7 @@
 import { Controller, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TICKET_INFO_EVENTS, TicketInfoCreatedPayload } from '@lib/modules/ticket-info';
-import { CustomerRoleRepository, ENUM_CUSTOMER_ROLE_CODE } from '@lib/modules/customer-role';
+import { CustomerRoleRepository } from '@lib/modules/customer-role';
 import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
 import { CreateTicketPriceDto } from '@lib/modules/ticket-price';
 
@@ -18,24 +18,23 @@ export class TicketPriceConsumer {
 	async onTicketInfoCreated(payload: TicketInfoCreatedPayload) {
 		const { ticketInfoId } = payload;
 
-		const customerRole = await this.customerRoleRepository.findOne({
-			where: {
-				code: ENUM_CUSTOMER_ROLE_CODE.NORMAL_CUSTOMER
-			},
+		const customerRoles = await this.customerRoleRepository.find({
 			select: ['id']
 		});
-		if (!customerRole) {
-			this.logger.error('NORMAL_CUSTOMER role not found');
-			return;
+
+		try {
+			return Promise.all(
+				customerRoles.map((customerRole) => {
+					const data: CreateTicketPriceDto = {
+						ticketInfoId,
+						basePrice: 0,
+						customerRoleId: customerRole.id
+					};
+					return this.createTicketPriceUsecase.execute(data);
+				})
+			);
+		} finally {
+			this.logger.log(`${customerRoles} ticket price was created successfully!`);
 		}
-
-		const data: CreateTicketPriceDto = {
-			ticketInfoId,
-			basePrice: 0,
-			customerRoleId: customerRole.id
-		};
-		await this.createTicketPriceUsecase.execute(data);
-
-		this.logger.log('Create ticket price successfully!');
 	}
 }

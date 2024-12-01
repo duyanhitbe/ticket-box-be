@@ -1,18 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import {
+	TICKET_GROUP_EVENTS,
 	TicketGroupEntity,
 	TicketGroupRepository,
+	TicketGroupUpdatedPayload,
 	UpdateTicketGroupDto
 } from '@lib/modules/ticket-group';
 import { ExecuteHandler } from '@lib/common/abstracts';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class UpdateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> {
-	constructor(private readonly ticketGroupRepository: TicketGroupRepository) {
+	constructor(
+		private readonly ticketGroupRepository: TicketGroupRepository,
+		private readonly eventEmitter: EventEmitter2
+	) {
 		super();
 	}
 
 	async execute(id: string, data: UpdateTicketGroupDto): Promise<TicketGroupEntity> {
-		return this.ticketGroupRepository.updateById({ id, data });
+		const { dates, ...updateData } = data;
+		const ticketGroup = await this.ticketGroupRepository.updateById({
+			id,
+			data: updateData,
+			select: ['id', 'eventId']
+		});
+
+		const payload: TicketGroupUpdatedPayload = {
+			eventId: ticketGroup.eventId,
+			ticketGroupId: ticketGroup.id,
+			dates: dates || []
+		};
+		this.eventEmitter.emit(TICKET_GROUP_EVENTS.UPDATED, payload);
+
+		return ticketGroup;
 	}
 }

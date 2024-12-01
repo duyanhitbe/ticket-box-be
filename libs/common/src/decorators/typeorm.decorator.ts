@@ -1,4 +1,4 @@
-import { Column, ColumnOptions, Index, JoinColumn, ManyToOne, Unique } from 'typeorm';
+import { Column, ColumnOptions, Index, JoinColumn, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { camelToSnake } from '../helpers';
 import { JoinColumnOptions } from 'typeorm/decorator/options/JoinColumnOptions';
 import { ObjectType } from 'typeorm/common/ObjectType';
@@ -49,5 +49,15 @@ export function TypeormManyToOne<T>(
 		const name = camelToSnake(propertyKey + 'Id');
 		ManyToOne(typeFunctionOrTarget, inverseSide, options)(target, propertyKey);
 		JoinColumn({ ...options, name })(target, propertyKey);
+	};
+}
+
+export function TypeormOneToMany<T>(
+	typeFunctionOrTarget: string | ((type?: any) => ObjectType<T>),
+	inverseSide: string | ((object: T) => any),
+	options?: RelationOptions
+): PropertyDecorator {
+	return function (target: any, propertyKey: string) {
+		OneToMany(typeFunctionOrTarget, inverseSide, options)(target, propertyKey);
 	};
 }

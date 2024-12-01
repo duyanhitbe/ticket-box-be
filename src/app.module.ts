@@ -15,6 +15,7 @@ import { RabbitMQModule } from '@lib/core/rabbitmq/rabbitmq.module';
 import { ENUM_QUEUE, ENUM_RABBITMQ_CLIENT } from '@lib/core/rabbitmq';
 import { AppTransportModule } from './app.transport.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.module';
 
 @Module({
 	imports: [
@@ -40,7 +41,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 			maxListeners: 10
 		}),
 		AppRepositoryModule,
-		AppTransportModule
+		AppTransportModule,
+		TicketGroupDateModule
 	],
 	controllers: [AppController],
 	providers: [

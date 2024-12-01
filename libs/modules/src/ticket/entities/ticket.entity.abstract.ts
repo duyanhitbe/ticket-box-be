@@ -32,16 +32,16 @@ export abstract class TicketEntity extends BaseEntity {
 	/**
 	 * Mã đơn hàng
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Mã đơn hàng')
-	orderId!: string;
+	orderId?: string;
 
 	/**
 	 * Mã khách hàng
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Mã khách hàng')
-	customerId!: string;
+	customerId?: string;
 
 	/**
 	 * Mã code đơn vé
@@ -60,9 +60,9 @@ export abstract class TicketEntity extends BaseEntity {
 	/**
 	 * Ngày hết hạn của vé
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Ngày hết hạn của vé')
-	expiresAt!: Date;
+	expiresAt?: Date;
 
 	/**
 	 * Giá gốc của vé

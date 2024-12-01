@@ -38,7 +38,8 @@ export class CreateTicketInfoUseCase extends ExecuteHandler<TicketInfoEntity> {
 		});
 
 		const payload: TicketInfoCreatedPayload = {
-			ticketInfoId: ticketInfo.id
+			ticketInfoId: ticketInfo.id,
+			quantity
 		};
 		this.eventEmitter.emit(TICKET_INFO_EVENTS.CREATED, payload);
 

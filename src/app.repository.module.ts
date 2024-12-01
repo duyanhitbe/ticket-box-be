@@ -38,6 +38,11 @@ import {
 	TicketPriceTypeormEntity,
 	TicketPriceTypeormRepository
 } from '@lib/modules/ticket-price';
+import {
+	TicketGroupDateRepository,
+	TicketGroupDateTypeormEntity,
+	TicketGroupDateTypeormRepository
+} from '@lib/modules/ticket-group-date';
 
 @Module({
 	imports: [
@@ -50,6 +55,7 @@ import {
 				OrderDetailTypeormEntity,
 				TicketTypeormEntity,
 				TicketGroupTypeormEntity,
+				TicketGroupDateTypeormEntity,
 				TicketInfoTypeormEntity,
 				TicketPriceTypeormEntity,
 				UserTypeormEntity
@@ -82,6 +88,10 @@ import {
 				{
 					provide: TicketGroupRepository,
 					useClass: TicketGroupTypeormRepository
+				},
+				{
+					provide: TicketGroupDateRepository,
+					useClass: TicketGroupDateTypeormRepository
 				},
 				{
 					provide: TicketInfoRepository,
