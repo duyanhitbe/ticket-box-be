@@ -19,10 +19,11 @@ import { BaseTypeormEntity } from '../entities';
 import { PaginationResponse } from '../dto';
 import { BaseRepository } from '../repositories/repository.base.abstract';
 import { I18nExceptionService } from '@lib/core/i18n';
+import { getMeta, getOffset } from '@lib/common/helpers';
 
 export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseRepository<T> {
 	constructor(
-		private readonly repository: Repository<T>,
+		protected readonly repository: Repository<T>,
 		private readonly entityName: string,
 		private readonly i18nExceptionService: I18nExceptionService
 	) {}
@@ -51,7 +52,7 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		const limit = +(options.limit || 25);
 		const page = +(options.page || 1);
 		const take = limit || 10;
-		const skip = offset || limit * (page - 1) || 0;
+		const skip = offset || getOffset(limit, page);
 
 		const [data, totalItem] = await this.repository.findAndCount({
 			where,
@@ -62,20 +63,11 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 			relations: relations as any
 		});
 
-		const totalPage = totalItem < limit ? 1 : Math.floor(totalItem / limit);
-		const prevPage = page === 1 ? null : page - 1;
-		const nextPage = page === totalPage ? null : page + 1;
+		const meta = getMeta(limit, page, totalItem);
 
 		return {
 			data,
-			meta: {
-				limit,
-				page,
-				totalItem,
-				totalPage,
-				prevPage,
-				nextPage
-			}
+			meta: meta as any
 		};
 	}
 

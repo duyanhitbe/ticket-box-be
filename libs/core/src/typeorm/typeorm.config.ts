@@ -13,6 +13,7 @@ import { CreateCustomerRole1733033714090 } from '@lib/core/typeorm/migrations/17
 import { UpdateFloat1733035105344 } from '@lib/core/typeorm/migrations/1733035105344-update-float';
 import { SealCustomerRole1733036829839 } from '@lib/core/typeorm/migrations/1733036829839-seal-customer-role';
 import { TicketGroupDate1733060760460 } from '@lib/core/typeorm/migrations/1733060760460-ticket-group-date';
+import { RenameTable1733111751522 } from '@lib/core/typeorm/migrations/1733111751522-rename-table';
 
 config();
 const configService = new ConfigService();
@@ -44,6 +45,7 @@ export default new DataSource({
 		CreateCustomerRole1733033714090,
 		UpdateFloat1733035105344,
 		SealCustomerRole1733036829839,
-		TicketGroupDate1733060760460
+		TicketGroupDate1733060760460,
+		RenameTable1733111751522
 	]
 } as any);

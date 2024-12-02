@@ -10,13 +10,9 @@ import { UpdateTicketGroupDateUseCase } from './usecases/update-ticket-group-dat
 import { DeleteTicketGroupDateUseCase } from './usecases/delete-ticket-group-date.usecase';
 import { FindTicketGroupDateUseCase } from './usecases/find-ticket-group-date.usecase';
 import { DetailTicketGroupDateUseCase } from './usecases/detail-ticket-group-date.usecase';
-import {
-	SwaggerCreatedResponse,
-	SwaggerListResponse,
-	SwaggerOkResponse
-} from '@lib/common/decorators';
-import { PaginationResponse } from '@lib/base/dto';
+import { SwaggerCreatedResponse, SwaggerOkResponse } from '@lib/common/decorators';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { EventTicketGroupDateEntity } from '@lib/modules/ticket-group-date/entities/event-ticket-group-date.entity.abstact';
 
 @Controller('ticket-group-dates')
 export class TicketGroupDateController {
@@ -71,13 +67,11 @@ export class TicketGroupDateController {
 	/**
 	 * @path GET /api/v1/ticket-group-dates
 	 * @param filter {FilterTicketGroupDateDto}
-	 * @returns {Promise<PaginationResponse<TicketGroupDateEntity>>}
+	 * @returns {Promise<EventTicketGroupDateEntity>}
 	 */
 	@Get()
-	@SwaggerListResponse({ summary: 'List ticket-group-date', type: TicketGroupDateEntity })
-	findAll(
-		@Query() filter: FilterTicketGroupDateDto
-	): Promise<PaginationResponse<TicketGroupDateEntity>> {
+	@SwaggerOkResponse({ summary: 'List ticket-group-date', type: EventTicketGroupDateEntity })
+	findAll(@Query() filter: FilterTicketGroupDateDto): Promise<EventTicketGroupDateEntity> {
 		return this.findTicketGroupDateUseCase.query(filter);
 	}
 
@@ -88,6 +82,7 @@ export class TicketGroupDateController {
 	 */
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail ticket-group-date', type: TicketGroupDateEntity })
+	@ApiExcludeEndpoint()
 	findOne(@Param('id') id: string): Promise<TicketGroupDateEntity> {
 		return this.detailTicketGroupDateUseCase.query(id);
 	}

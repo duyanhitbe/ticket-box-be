@@ -14,6 +14,6 @@ export class FindTicketGroupUseCase extends QueryHandler<PaginationResponse<Tick
 	}
 
 	async query(filter: FilterTicketGroupDto): Promise<PaginationResponse<TicketGroupEntity>> {
-		return this.ticketGroupRepository.findPaginated(filter);
+		return this.ticketGroupRepository.findAllPaginated(filter);
 	}
 }

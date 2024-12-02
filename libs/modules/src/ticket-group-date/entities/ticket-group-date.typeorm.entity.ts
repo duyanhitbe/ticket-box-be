@@ -5,7 +5,7 @@ import { TypeormColumn, TypeormManyToOne } from '@lib/common/decorators';
 import { EventTypeormEntity } from '@lib/modules/event';
 import { TicketGroupTypeormEntity } from '@lib/modules/ticket-group';
 
-@Entity('ticket-group-dates')
+@Entity('ticket_group_dates')
 export class TicketGroupDateTypeormEntity
 	extends BaseTypeormEntity
 	implements TicketGroupDateEntity
