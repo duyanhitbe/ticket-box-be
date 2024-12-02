@@ -1,9 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
 	CreateTicketGroupDto,
+	FilterTicketGroupByEventDto,
 	FilterTicketGroupDto,
-	UpdateTicketGroupDto,
-	TicketGroupEntity
+	TicketGroupByEventEntity,
+	TicketGroupEntity,
+	UpdateTicketGroupDto
 } from '@lib/modules/ticket-group';
 import { CreateTicketGroupUseCase } from './usecases/create-ticket-group.usecase';
 import { UpdateTicketGroupUseCase } from './usecases/update-ticket-group.usecase';
@@ -16,6 +18,7 @@ import {
 	SwaggerOkResponse
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { FindTicketGroupByEventUseCase } from './usecases/find-ticket-group-by-event.usecase';
 
 @Controller('ticket-groups')
 export class TicketGroupController {
@@ -24,6 +27,7 @@ export class TicketGroupController {
 		private readonly updateTicketGroupUseCase: UpdateTicketGroupUseCase,
 		private readonly deleteTicketGroupUseCase: DeleteTicketGroupUseCase,
 		private readonly findTicketGroupUseCase: FindTicketGroupUseCase,
+		private readonly findTicketGroupByEventUseCase: FindTicketGroupByEventUseCase,
 		private readonly detailTicketGroupUseCase: DetailTicketGroupUseCase
 	) {}
 
@@ -73,6 +77,23 @@ export class TicketGroupController {
 	@SwaggerListResponse({ summary: 'List ticket-group', type: TicketGroupEntity })
 	findAll(@Query() filter: FilterTicketGroupDto): Promise<PaginationResponse<TicketGroupEntity>> {
 		return this.findTicketGroupUseCase.query(filter);
+	}
+
+	/**
+	 * @path GET /api/v1/ticket-groups/event
+	 * @param filter {FilterTicketGroupByEventDto}
+	 * @returns {Promise<TicketGroupByEventEntity[]>}
+	 */
+	@Get('event')
+	@SwaggerListResponse({
+		summary: 'List ticket-group by event',
+		type: TicketGroupByEventEntity,
+		paginated: false
+	})
+	findAllByEvent(
+		@Query() filter: FilterTicketGroupByEventDto
+	): Promise<TicketGroupByEventEntity[]> {
+		return this.findTicketGroupByEventUseCase.query(filter);
 	}
 
 	/**

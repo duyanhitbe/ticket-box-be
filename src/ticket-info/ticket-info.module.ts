@@ -5,6 +5,7 @@ import { UpdateTicketInfoUseCase } from './usecases/update-ticket-info.usecase';
 import { DeleteTicketInfoUseCase } from './usecases/delete-ticket-info.usecase';
 import { FindTicketInfoUseCase } from './usecases/find-ticket-info.usecase';
 import { DetailTicketInfoUseCase } from './usecases/detail-ticket-info.usecase';
+import { FindTicketInfoByGroupUseCase } from './usecases/find-ticket-info-by-group.usecase';
 
 @Module({
 	controllers: [TicketInfoController],
@@ -13,6 +14,7 @@ import { DetailTicketInfoUseCase } from './usecases/detail-ticket-info.usecase';
 		UpdateTicketInfoUseCase,
 		DeleteTicketInfoUseCase,
 		FindTicketInfoUseCase,
+		FindTicketInfoByGroupUseCase,
 		DetailTicketInfoUseCase
 	]
 })

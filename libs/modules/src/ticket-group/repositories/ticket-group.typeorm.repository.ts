@@ -3,9 +3,8 @@ import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { TicketGroupTypeormEntity } from '../entities/ticket-group.typeorm.entity';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
-import { FilterTicketGroupDto, TicketGroupEntity } from '@lib/modules/ticket-group';
-import { PaginationResponse } from '@lib/base/dto';
-import { getMeta, getOffset, getStartAndEndOfDay } from '@lib/common/helpers';
+import { FilterTicketGroupByEventDto, TicketGroupByEventEntity } from '@lib/modules/ticket-group';
+import { getStartAndEndOfDay } from '@lib/common/helpers';
 
 @Repository(TicketGroupTypeormEntity)
 export class TicketGroupTypeormRepository
@@ -61,55 +60,24 @@ export class TicketGroupTypeormRepository
 		};
 	}
 
-	async findAllPaginated(
-		filter: FilterTicketGroupDto
-	): Promise<PaginationResponse<TicketGroupEntity>> {
+	async findPaginatedByEvent(
+		filter: FilterTicketGroupByEventDto
+	): Promise<TicketGroupByEventEntity[]> {
 		const { eventId, date } = filter;
-		const limit = +(filter.limit || 25);
-		const page = +(filter.page || 1);
+		const { startOfDay, endOfDay } = getStartAndEndOfDay(date);
 
-		const offset = getOffset(limit, page);
 		const queryBuilder = this.repository
 			.createQueryBuilder('tg')
-			.select([
-				'tg.id as "id"',
-				'tg.created_at as "createdAt"',
-				'tg.updated_at as "updatedAt"',
-				'tg.deleted_at as "deletedAt"',
-				'tg.status as "status"',
-				'tg.event_id as "eventId"',
-				'tg.name as "name"',
-				'tg.description as "description"',
-				'tg.date_type as "dateType"',
-				'tg.from_date as "fromDate"',
-				'tg.to_date as "toDate"'
-			])
+			.select(['tg.id as "id"', 'tg.name as "name"', 'tg.description as "description"'])
+			.leftJoin('ticket_group_dates', 'tgd', 'tgd.ticket_group_id = tg.id')
+			.where(`tg.event_id = :eventId`, { eventId })
+			.andWhere(`(tg.from_date <= :startOfDay AND tg.to_date >= :endOfDay)`, {
+				startOfDay,
+				endOfDay
+			})
+			.orWhere(`(tgd.date BETWEEN :startOfDay AND :endOfDay)`, { startOfDay, endOfDay })
 			.orderBy('tg.created_at', 'DESC');
 
-		if (eventId) {
-			queryBuilder.where(`tg.event_id = :eventId`, { eventId });
-		}
-
-		if (date) {
-			const { startOfDay, endOfDay } = getStartAndEndOfDay(date);
-			queryBuilder
-				.leftJoin('ticket_group_dates', 'tgd', 'tgd.ticket_group_id = tg.id')
-				.where(`(tg.from_date <= :startOfDay AND tg.to_date >= :endOfDay)`, {
-					startOfDay,
-					endOfDay
-				})
-				.orWhere(`(tgd.date BETWEEN :startOfDay AND :endOfDay)`, { startOfDay, endOfDay });
-		}
-
-		const [data, totalItem] = await Promise.all([
-			queryBuilder.limit(limit).offset(offset).getRawMany(),
-			queryBuilder.getCount()
-		]);
-		const meta = getMeta(limit, page, totalItem);
-
-		return {
-			data,
-			meta: meta as any
-		};
+		return queryBuilder.getRawMany();
 	}
 }

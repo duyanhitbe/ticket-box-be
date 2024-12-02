@@ -5,6 +5,8 @@ import { UpdateEventUseCase } from './usecases/update-event.usecase';
 import { DeleteEventUseCase } from './usecases/delete-event.usecase';
 import { FindEventUseCase } from './usecases/find-event.usecase';
 import { DetailEventUseCase } from './usecases/detail-event.usecase';
+import { FindBannerUseCase } from './usecases/find-banner.usecase';
+import { FindLocationUseCase } from './usecases/find-location.usecase';
 
 @Module({
 	controllers: [EventController],
@@ -12,7 +14,9 @@ import { DetailEventUseCase } from './usecases/detail-event.usecase';
 		CreateEventUseCase,
 		UpdateEventUseCase,
 		DeleteEventUseCase,
+		FindBannerUseCase,
 		FindEventUseCase,
+		FindLocationUseCase,
 		DetailEventUseCase
 	]
 })

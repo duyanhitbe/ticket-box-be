@@ -28,11 +28,11 @@ export function SwaggerOkResponse(options: SwaggerOptions) {
 }
 
 export function SwaggerListResponse(options: SwaggerOptions) {
-	const { summary, type } = options;
+	const { summary, type, paginated = true, isEnum = false, enumName = '' } = options;
 
 	return applyDecorators(
 		ApiOperation({ summary }),
-		ApiOkResponse({ type: SwaggerListResponseType(type) })
+		ApiOkResponse({ type: SwaggerListResponseType(type, paginated, isEnum, enumName) })
 	);
 }
 

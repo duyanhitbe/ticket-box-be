@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import {
 	CreateTicketInfoDto,
 	FilterTicketInfoDto,
-	UpdateTicketInfoDto,
-	TicketInfoEntity
+	TicketInfoEntity,
+	UpdateTicketInfoDto
 } from '@lib/modules/ticket-info';
 import { CreateTicketInfoUseCase } from './usecases/create-ticket-info.usecase';
 import { UpdateTicketInfoUseCase } from './usecases/update-ticket-info.usecase';
@@ -16,6 +16,9 @@ import {
 	SwaggerOkResponse
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { FilterTicketInfoByGroupDto } from '@lib/modules/ticket-info/dto/filter-ticket-info-by-group.dto';
+import { FindTicketInfoByGroupUseCase } from './usecases/find-ticket-info-by-group.usecase';
+import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity.abstract';
 
 @Controller('ticket-infos')
 export class TicketInfoController {
@@ -24,6 +27,7 @@ export class TicketInfoController {
 		private readonly updateTicketInfoUseCase: UpdateTicketInfoUseCase,
 		private readonly deleteTicketInfoUseCase: DeleteTicketInfoUseCase,
 		private readonly findTicketInfoUseCase: FindTicketInfoUseCase,
+		private readonly findTicketInfoByGroupUseCase: FindTicketInfoByGroupUseCase,
 		private readonly detailTicketInfoUseCase: DetailTicketInfoUseCase
 	) {}
 
@@ -70,6 +74,23 @@ export class TicketInfoController {
 	@SwaggerListResponse({ summary: 'List ticket-info', type: TicketInfoEntity })
 	findAll(@Query() filter: FilterTicketInfoDto): Promise<PaginationResponse<TicketInfoEntity>> {
 		return this.findTicketInfoUseCase.query(filter);
+	}
+
+	/**
+	 * @path GET /api/v1/ticket-infos/group
+	 * @param filter {FilterTicketInfoByGroupDto}
+	 * @returns {Promise<TicketInfoByGroupEntity[]>}
+	 */
+	@Get('group')
+	@SwaggerListResponse({
+		summary: 'List ticket-info',
+		type: TicketInfoByGroupEntity,
+		paginated: false
+	})
+	findAllByGroup(
+		@Query() filter: FilterTicketInfoByGroupDto
+	): Promise<TicketInfoByGroupEntity[]> {
+		return this.findTicketInfoByGroupUseCase.query(filter);
 	}
 
 	/**
