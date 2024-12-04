@@ -2,7 +2,7 @@ import { TicketInfoRepository } from './ticket-info.repository.abstract';
 import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { TicketInfoTypeormEntity } from '../entities/ticket-info.typeorm.entity';
-import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity.abstract';
+import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity';
 import { TicketInfoEntity } from '@lib/modules/ticket-info';
 
 @Repository(TicketInfoTypeormEntity)

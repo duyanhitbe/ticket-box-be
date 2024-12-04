@@ -12,7 +12,7 @@ import { FindTicketGroupDateUseCase } from './usecases/find-ticket-group-date.us
 import { DetailTicketGroupDateUseCase } from './usecases/detail-ticket-group-date.usecase';
 import { SwaggerCreatedResponse, SwaggerOkResponse } from '@lib/common/decorators';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
-import { EventTicketGroupDateEntity } from '@lib/modules/ticket-group-date/entities/event-ticket-group-date.entity.abstact';
+import { EventTicketGroupDateEntity } from '@lib/modules/ticket-group-date/entities/event-ticket-group-date.entity';
 
 @Controller('ticket-group-dates')
 export class TicketGroupDateController {

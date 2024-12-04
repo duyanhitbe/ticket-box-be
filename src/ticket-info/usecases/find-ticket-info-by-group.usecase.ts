@@ -3,7 +3,7 @@ import { TicketInfoRepository } from '@lib/modules/ticket-info';
 import { QueryHandler } from '@lib/common/abstracts';
 import { FilterTicketInfoByGroupDto } from '@lib/modules/ticket-info/dto/filter-ticket-info-by-group.dto';
 import { CustomerRoleRepository, ENUM_CUSTOMER_ROLE_CODE } from '@lib/modules/customer-role';
-import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity.abstract';
+import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity';
 
 @Injectable()
 export class FindTicketInfoByGroupUseCase extends QueryHandler<TicketInfoByGroupEntity[]> {

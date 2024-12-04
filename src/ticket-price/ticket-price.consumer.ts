@@ -15,8 +15,10 @@ import {
 } from '@lib/modules/customer-role/customer-role.event';
 import { EventRepository } from '@lib/modules/event';
 import { In } from 'typeorm';
+import { Logging } from '@lib/common/decorators';
 
 @Controller()
+@Logging()
 export class TicketPriceConsumer {
 	private readonly logger = new Logger(this.constructor.name);
 

@@ -31,7 +31,7 @@ async function bootstrap() {
 	);
 	setupSwagger(app);
 
-	connectRabbitMQ(app, configService, [ENUM_QUEUE.MAIL]);
+	connectRabbitMQ(app, configService, [ENUM_QUEUE.MAIL, ENUM_QUEUE.ORDER]);
 
 	await app.startAllMicroservices();
 	await app.listen(port);

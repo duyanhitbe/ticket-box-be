@@ -1,5 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { CreateOrderDto, FilterOrderDto, UpdateOrderDto, OrderEntity } from '@lib/modules/order';
+import {
+	CreateOrderDto,
+	FilterOrderDto,
+	OrderCreatedEntity,
+	OrderEntity,
+	UpdateOrderDto
+} from '@lib/modules/order';
 import { CreateOrderUseCase } from './usecases/create-order.usecase';
 import { UpdateOrderUseCase } from './usecases/update-order.usecase';
 import { DeleteOrderUseCase } from './usecases/delete-order.usecase';
@@ -11,6 +17,8 @@ import {
 	SwaggerOkResponse
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { ProcessPaymentOrderUseCase } from './usecases/process-payment-order.usecase';
 
 @Controller('orders')
 export class OrderController {
@@ -19,18 +27,28 @@ export class OrderController {
 		private readonly updateOrderUseCase: UpdateOrderUseCase,
 		private readonly deleteOrderUseCase: DeleteOrderUseCase,
 		private readonly findOrderUseCase: FindOrderUseCase,
-		private readonly detailOrderUseCase: DetailOrderUseCase
+		private readonly detailOrderUseCase: DetailOrderUseCase,
+		private readonly processPaymentOrderUseCase: ProcessPaymentOrderUseCase
 	) {}
 
 	/**
 	 * @path POST /api/v1/orders
 	 * @param data {CreateOrderDto}
-	 * @returns {Promise<OrderEntity>}
+	 * @returns {Promise<OrderCreatedEntity>}
 	 */
 	@Post()
-	@SwaggerCreatedResponse({ summary: 'Create order', type: OrderEntity })
-	create(@Body() data: CreateOrderDto): Promise<OrderEntity> {
+	@SwaggerCreatedResponse({
+		summary: 'Create order',
+		type: OrderCreatedEntity
+	})
+	create(@Body() data: CreateOrderDto): Promise<OrderCreatedEntity> {
 		return this.createOrderUseCase.execute(data);
+	}
+
+	@Post('process-payment')
+	@ApiExcludeEndpoint()
+	processPayment() {
+		return this.processPaymentOrderUseCase.execute();
 	}
 
 	/**
@@ -52,6 +70,7 @@ export class OrderController {
 	 */
 	@Delete(':id')
 	@SwaggerOkResponse({ summary: 'Remove order', type: OrderEntity })
+	@ApiExcludeEndpoint()
 	remove(@Param('id') id: string): Promise<OrderEntity> {
 		return this.deleteOrderUseCase.execute(id);
 	}

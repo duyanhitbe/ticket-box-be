@@ -20,7 +20,7 @@ import {
 import { PaginationResponse } from '@lib/base/dto';
 import { FilterTicketInfoByGroupDto } from '@lib/modules/ticket-info/dto/filter-ticket-info-by-group.dto';
 import { FindTicketInfoByGroupUseCase } from './usecases/find-ticket-info-by-group.usecase';
-import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity.abstract';
+import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity';
 import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('ticket-infos')

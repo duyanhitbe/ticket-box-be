@@ -35,6 +35,10 @@ import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.mod
 			{
 				name: ENUM_RABBITMQ_CLIENT.MAIL,
 				queue: ENUM_QUEUE.MAIL
+			},
+			{
+				name: ENUM_RABBITMQ_CLIENT.ORDER,
+				queue: ENUM_QUEUE.ORDER
 			}
 		]),
 		EventEmitterModule.forRoot({

@@ -5,7 +5,7 @@ import {
 } from '@lib/modules/ticket-group-date';
 import { QueryHandler } from '@lib/common/abstracts';
 import { TicketGroupRepository } from '@lib/modules/ticket-group';
-import { EventTicketGroupDateEntity } from '@lib/modules/ticket-group-date/entities/event-ticket-group-date.entity.abstact';
+import { EventTicketGroupDateEntity } from '@lib/modules/ticket-group-date/entities/event-ticket-group-date.entity';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
 
 @Injectable()

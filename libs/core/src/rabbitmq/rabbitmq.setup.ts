@@ -15,6 +15,7 @@ export function connectRabbitMQ(
 			options: {
 				urls: [configService.get('RABBIT_MQ_URL') as string],
 				queue,
+				noAck: false,
 				queueOptions: {
 					durable: true
 				}

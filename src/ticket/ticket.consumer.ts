@@ -2,8 +2,10 @@ import { Controller, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { TICKET_INFO_EVENTS, TicketInfoCreatedPayload } from '@lib/modules/ticket-info';
 import { CreateTicketUseCase } from './usecases/create-ticket.usecase';
+import { Logging } from '@lib/common/decorators';
 
 @Controller()
+@Logging()
 export class TicketConsumer {
 	private readonly logger = new Logger(this.constructor.name);
 

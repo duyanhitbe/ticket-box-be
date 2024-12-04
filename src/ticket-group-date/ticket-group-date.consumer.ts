@@ -7,8 +7,10 @@ import {
 } from '@lib/modules/ticket-group';
 import { CreateTicketGroupDateUseCase } from './usecases/create-ticket-group-date.usecase';
 import { TicketGroupDateRepository } from '@lib/modules/ticket-group-date';
+import { Logging } from '@lib/common/decorators';
 
 @Controller()
+@Logging()
 export class TicketGroupDateConsumer {
 	private readonly logger = new Logger(this.constructor.name);
 
