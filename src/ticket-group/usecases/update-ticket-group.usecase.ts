@@ -7,13 +7,13 @@ import {
 	UpdateTicketGroupDto
 } from '@lib/modules/ticket-group';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitterService } from '@lib/core/event';
 
 @Injectable()
 export class UpdateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> {
 	constructor(
 		private readonly ticketGroupRepository: TicketGroupRepository,
-		private readonly eventEmitter: EventEmitter2
+		private readonly eventEmitterService: EventEmitterService
 	) {
 		super();
 	}
@@ -31,7 +31,7 @@ export class UpdateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> 
 			ticketGroupId: ticketGroup.id,
 			dates: dates || []
 		};
-		this.eventEmitter.emit(TICKET_GROUP_EVENTS.UPDATED, payload);
+		this.eventEmitterService.emit(TICKET_GROUP_EVENTS.UPDATED, payload);
 
 		return ticketGroup;
 	}

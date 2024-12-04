@@ -1,19 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOrderDto, OrderCreatedEntity, OrderRepository } from '@lib/modules/order';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { uuid } from 'uuidv4';
-import {
-	ENUM_RABBITMQ_CLIENT,
-	InjectClientRMQ,
-	RABBITMQ_PATTERNS,
-	RMQClientProxy
-} from '@lib/core/rabbitmq';
+import { v4 as uuid } from 'uuid';
+import { ENUM_RABBITMQ_CLIENT, InjectClientRMQ, RABBITMQ_PATTERNS } from '@lib/core/rabbitmq';
+import { RabbitmqService } from '@lib/core/rabbitmq/rabbitmq.service.abstract';
 
 @Injectable()
 export class CreateOrderUseCase extends ExecuteHandler<OrderCreatedEntity> {
 	constructor(
 		@InjectClientRMQ(ENUM_RABBITMQ_CLIENT.ORDER)
-		private readonly orderClient: RMQClientProxy,
+		private readonly orderClient: RabbitmqService,
 		private readonly orderRepository: OrderRepository
 	) {
 		super();

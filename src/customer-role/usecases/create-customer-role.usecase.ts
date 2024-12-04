@@ -5,17 +5,17 @@ import {
 	CustomerRoleRepository
 } from '@lib/modules/customer-role';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
 	CUSTOMER_ROLE_EVENTS,
 	CustomerRoleCreatedPayload
 } from '@lib/modules/customer-role/customer-role.event';
+import { EventEmitterService } from '@lib/core/event';
 
 @Injectable()
 export class CreateCustomerRoleUseCase extends ExecuteHandler<CustomerRoleEntity> {
 	constructor(
 		private readonly customerRoleRepository: CustomerRoleRepository,
-		private readonly eventEmitter: EventEmitter2
+		private readonly eventEmitterService: EventEmitterService
 	) {
 		super();
 	}
@@ -30,7 +30,7 @@ export class CreateCustomerRoleUseCase extends ExecuteHandler<CustomerRoleEntity
 			const payload: CustomerRoleCreatedPayload = {
 				customerRoleId
 			};
-			this.eventEmitter.emit(CUSTOMER_ROLE_EVENTS.CREATED, payload);
+			this.eventEmitterService.emit(CUSTOMER_ROLE_EVENTS.CREATED, payload);
 		}
 	}
 }

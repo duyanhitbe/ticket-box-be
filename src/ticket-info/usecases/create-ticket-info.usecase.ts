@@ -8,14 +8,14 @@ import {
 } from '@lib/modules/ticket-info';
 import { ExecuteHandler } from '@lib/common/abstracts';
 import { TicketGroupRepository } from '@lib/modules/ticket-group';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitterService } from '@lib/core/event';
 
 @Injectable()
 export class CreateTicketInfoUseCase extends ExecuteHandler<TicketInfoEntity> {
 	constructor(
 		private readonly ticketInfoRepository: TicketInfoRepository,
 		private readonly ticketGroupRepository: TicketGroupRepository,
-		private readonly eventEmitter: EventEmitter2
+		private readonly eventEmitterService: EventEmitterService
 	) {
 		super();
 	}
@@ -41,7 +41,7 @@ export class CreateTicketInfoUseCase extends ExecuteHandler<TicketInfoEntity> {
 			ticketInfoId: ticketInfo.id,
 			quantity
 		};
-		this.eventEmitter.emit(TICKET_INFO_EVENTS.CREATED, payload);
+		this.eventEmitterService.emit(TICKET_INFO_EVENTS.CREATED, payload);
 
 		return ticketInfo;
 	}

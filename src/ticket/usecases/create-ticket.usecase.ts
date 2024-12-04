@@ -10,7 +10,7 @@ import { ExecuteHandler } from '@lib/common/abstracts';
 import { TicketInfoRepository } from '@lib/modules/ticket-info';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EventEmitterService } from '@lib/core/event';
 
 @Injectable()
 export class CreateTicketUseCase extends ExecuteHandler<TicketEntity[]> {
@@ -19,7 +19,7 @@ export class CreateTicketUseCase extends ExecuteHandler<TicketEntity[]> {
 		private readonly dataSource: DataSource,
 		private readonly ticketRepository: TicketRepository,
 		private readonly ticketInfoRepository: TicketInfoRepository,
-		private readonly eventEmitter: EventEmitter2
+		private readonly eventEmitterService: EventEmitterService
 	) {
 		super();
 	}
@@ -52,7 +52,7 @@ export class CreateTicketUseCase extends ExecuteHandler<TicketEntity[]> {
 			const payload: TicketRollbackPayload = {
 				ticketInfoId
 			};
-			this.eventEmitter.emit(TICKET_EVENTS.ROLLBACK, payload);
+			this.eventEmitterService.emit(TICKET_EVENTS.ROLLBACK, payload);
 			throw err;
 		} finally {
 			await queryRunner.release();

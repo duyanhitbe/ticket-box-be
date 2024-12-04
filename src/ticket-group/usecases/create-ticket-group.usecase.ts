@@ -7,14 +7,14 @@ import {
 	TicketGroupRepository
 } from '@lib/modules/ticket-group';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
+import { EventEmitterService } from '@lib/core/event';
 
 @Injectable()
 export class CreateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> {
 	constructor(
 		private readonly ticketGroupRepository: TicketGroupRepository,
-		private readonly eventEmitter: EventEmitter2
+		private readonly eventEmitterService: EventEmitterService
 	) {
 		super();
 	}
@@ -29,7 +29,7 @@ export class CreateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> 
 				eventId: ticketGroup.eventId,
 				dates
 			};
-			this.eventEmitter.emit(TICKET_GROUP_EVENTS.CREATED, payload);
+			this.eventEmitterService.emit(TICKET_GROUP_EVENTS.CREATED, payload);
 		}
 
 		return ticketGroup;

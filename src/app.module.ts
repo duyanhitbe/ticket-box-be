@@ -14,8 +14,8 @@ import { join } from 'path';
 import { RabbitMQModule } from '@lib/core/rabbitmq/rabbitmq.module';
 import { ENUM_QUEUE, ENUM_RABBITMQ_CLIENT } from '@lib/core/rabbitmq';
 import { AppTransportModule } from './app.transport.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.module';
+import { EventModule } from '@lib/core/event/event.module';
 
 @Module({
 	imports: [
@@ -41,9 +41,7 @@ import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.mod
 				queue: ENUM_QUEUE.ORDER
 			}
 		]),
-		EventEmitterModule.forRoot({
-			maxListeners: 10
-		}),
+		EventModule.forRoot(),
 		AppRepositoryModule,
 		AppTransportModule,
 		TicketGroupDateModule
