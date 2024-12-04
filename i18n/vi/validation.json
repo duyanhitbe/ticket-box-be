@@ -1,5 +1,8 @@
 {
   "IS_STRING": "{property} bắt buộc phải một chuỗi",
+  "IS_NUMBER_STRING": "{property} bắt buộc phải một chuỗi số",
+  "IS_UUID": "{property} bắt buộc phải một uuid",
+  "IS_EMAIL": "{property} bắt buộc có dạng email",
   "IS_NOT_EMPTY": "{property} không được bỏ trống",
   "IS_NUMBER": "{property} bắt buộc phải một số",
   "IS_BOOLEAN": "{property} bắt buộc phải là kiểu boolean",

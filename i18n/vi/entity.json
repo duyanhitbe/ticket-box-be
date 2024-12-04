@@ -2,5 +2,7 @@
   "UserEntity": "Người dùng",
   "UserTypeormEntity": "Người dùng",
   "EventEntity": "Sự kiện",
-  "EventTypeormEntity": "Sự kiện"
+  "EventTypeormEntity": "Sự kiện",
+  "CustomerEntity": "Người dùng",
+  "CustomerTypeormEntity": "Người dùng"
 }

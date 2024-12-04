@@ -15,6 +15,8 @@ export class UserTypeormEntity extends BaseTypeormEntity implements UserEntity {
 	@Exclude()
 	password!: string;
 
+	/* ========== Hooks ========== */
+
 	@BeforeInsert()
 	async beforeInsert() {
 		const hashService = new Argon2Service();

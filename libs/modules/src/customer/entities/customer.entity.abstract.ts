@@ -34,7 +34,6 @@ export abstract class CustomerEntity extends BaseEntity {
 	/**
 	 * Mật khẩu
 	 */
-	@SwaggerProperty()
 	@Property('Mật khẩu')
 	password!: string;
 

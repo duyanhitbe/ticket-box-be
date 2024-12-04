@@ -1,7 +1,11 @@
-import { applyDecorators, UseGuards } from '@nestjs/common';
+import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { AuthenticationUserGuard } from '@lib/core/guards';
+import { AuthenticationGuard, PUBLIC_METADATA_KEY } from '@lib/core/guards';
 
-export function UseUserAuth() {
-	return applyDecorators(ApiBearerAuth(), UseGuards(AuthenticationUserGuard));
+export function UseAuth(isPublic = false) {
+	return applyDecorators(
+		ApiBearerAuth(),
+		SetMetadata(PUBLIC_METADATA_KEY, isPublic),
+		UseGuards(AuthenticationGuard)
+	);
 }

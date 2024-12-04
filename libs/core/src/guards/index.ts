@@ -1,1 +1,1 @@
-export * from './authentication-user.guard';
+export * from './authentication.guard';

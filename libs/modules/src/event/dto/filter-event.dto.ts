@@ -10,8 +10,17 @@ export class FilterEventDto extends BaseFilterDto {
 	@IsOptional()
 	@SwaggerProperty({
 		enum: ENUM_EVENT_TYPE,
-		enumName: 'ENUM_EVENT_TYPE'
+		enumName: 'ENUM_EVENT_TYPE',
+		required: false
 	})
 	@Property('Loại sự kiện')
 	eventType?: ENUM_EVENT_TYPE;
+
+	/**
+	 * Tên sự kiện
+	 */
+	@IsOptional()
+	@SwaggerProperty({ required: false })
+	@Property('Tên sự kiện')
+	name?: string;
 }

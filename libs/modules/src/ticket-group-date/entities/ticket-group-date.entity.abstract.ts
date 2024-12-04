@@ -1,5 +1,7 @@
 import { BaseEntity } from '@lib/base/entities';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
+import { EventEntity } from '@lib/modules/event';
+import { TicketGroupEntity } from '@lib/modules/ticket-group';
 
 export abstract class TicketGroupDateEntity extends BaseEntity {
 	/**
@@ -22,4 +24,16 @@ export abstract class TicketGroupDateEntity extends BaseEntity {
 	@SwaggerProperty()
 	@Property('Ngày diễn ra sự kiện')
 	date!: Date;
+
+	/* ========== Relations ========== */
+
+	/**
+	 * Sự kiện
+	 */
+	event?: EventEntity;
+
+	/**
+	 * Nhóm vé
+	 */
+	ticketGroup?: TicketGroupEntity;
 }

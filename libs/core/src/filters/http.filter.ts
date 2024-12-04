@@ -13,7 +13,6 @@ export class HttpFilter implements ExceptionFilter {
 		const ctx = host.switchToHttp();
 		const request = ctx.getRequest<Request>();
 		const response = ctx.getResponse<Response>();
-		const path = request.path;
 
 		loggingIncomingRequest(request, this.logger);
 
@@ -24,13 +23,13 @@ export class HttpFilter implements ExceptionFilter {
 		const statusCode = exception.getStatus();
 		const exceptionResponse = exception.getResponse();
 
-		this.logger.error(exceptionResponse['message']);
+		this.logError(request, exceptionResponse['message']);
 
 		response.status(statusCode).json({
 			statusCode,
 			message: exceptionResponse['error'],
 			success: false,
-			path,
+			path: request.path,
 			errors: [exceptionResponse['message']]
 		});
 	}
@@ -59,17 +58,21 @@ export class HttpFilter implements ExceptionFilter {
 			};
 		});
 
-		const path = request.path;
-
-		this.logger.error('Validation error');
+		this.logError(request, 'Validation error');
 		this.logger.error(JSON.stringify(errors, null, 2));
 
 		response.status(400).json({
 			statusCode: 400,
 			message: 'Bad request',
 			success: false,
-			path,
+			path: request.path,
 			errors
 		});
+	}
+
+	private logError(request: Request, message: string) {
+		const path = request.path;
+		const method = request.method;
+		this.logger.error(`[${method}] ${path} - ${message}`);
 	}
 }

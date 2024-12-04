@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
 	CreateCustomerDto,
+	CustomerEntity,
 	FilterCustomerDto,
-	UpdateCustomerDto,
-	CustomerEntity
+	UpdateCustomerDto
 } from '@lib/modules/customer';
 import { CreateCustomerUseCase } from './usecases/create-customer.usecase';
 import { UpdateCustomerUseCase } from './usecases/update-customer.usecase';

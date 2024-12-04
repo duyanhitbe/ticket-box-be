@@ -2,11 +2,14 @@ import {
 	IsArray,
 	IsBoolean,
 	IsDateString,
+	IsEmail,
 	IsEnum,
 	IsNotEmpty,
 	IsNumber,
+	IsNumberString,
 	IsString,
 	IsUrl,
+	IsUUID,
 	Max,
 	MaxLength,
 	Min,
@@ -40,6 +43,48 @@ export function I18nIsString(options?: I18nValidationOptions): PropertyDecorator
 		IsString({
 			...options,
 			message: i18nValidationMessage('validation.IS_STRING', {
+				property
+			})
+		})(target, propertyKey);
+	};
+}
+
+export function I18nIsNumberString(
+	options?: I18nValidationOptions & ValidatorJS.IsNumericOptions
+): PropertyDecorator {
+	return function (target: any, propertyKey: string) {
+		const property = getProperty(target, propertyKey, options);
+		IsNumberString(options, {
+			...options,
+			message: i18nValidationMessage('validation.IS_NUMBER_STRING', {
+				property
+			})
+		})(target, propertyKey);
+	};
+}
+
+export function I18nIsEmail(
+	options?: I18nValidationOptions & ValidatorJS.IsNumericOptions
+): PropertyDecorator {
+	return function (target: any, propertyKey: string) {
+		const property = getProperty(target, propertyKey, options);
+		IsEmail(options, {
+			...options,
+			message: i18nValidationMessage('validation.IS_EMAIL', {
+				property
+			})
+		})(target, propertyKey);
+	};
+}
+
+export function I18nIsUUID(
+	options?: I18nValidationOptions & ValidatorJS.UUIDVersion
+): PropertyDecorator {
+	return function (target: any, propertyKey: string) {
+		const property = getProperty(target, propertyKey, options);
+		IsUUID(options, {
+			...options,
+			message: i18nValidationMessage('validation.IS_UUID', {
 				property
 			})
 		})(target, propertyKey);
