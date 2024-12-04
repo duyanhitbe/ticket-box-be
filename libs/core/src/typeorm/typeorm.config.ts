@@ -27,14 +27,9 @@ export const options: TypeOrmModuleOptions = {
 	database: configService.get('POSTGRES_DB'),
 	autoLoadEntities: true,
 	synchronize: false,
-	logger: new TypeOrmLogger()
-};
-
-export default new DataSource({
-	...options,
-	entities: ['**/*.typeorm.entity.ts'],
+	logger: new TypeOrmLogger(),
 	migrationsTableName: 'migrations',
-	migrationsRun: false,
+	migrationsRun: configService.get('TYPEORM_MIGRATION_RUN') === 'true',
 	migrationsTransactionMode: 'each',
 	migrations: [
 		Initial1732946728321,
@@ -48,4 +43,9 @@ export default new DataSource({
 		TicketGroupDate1733060760460,
 		RenameTable1733111751522
 	]
+};
+
+export default new DataSource({
+	...options,
+	entities: ['**/*.typeorm.entity.ts']
 } as any);

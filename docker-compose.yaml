@@ -1,7 +1,8 @@
 services:
   app:
-    image: nestjs-freelance-be
-    container_name: nestjs-freelance-be
+    image: ticket-box-be
+    container_name: ticket-box-be
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,6 +13,7 @@ services:
       - PORT=3000
       - IS_DEBUG=true
       - TYPEORM_DEBUG=true
+      - TYPEORM_MIGRATION_RUN=true
       - BASE_URL=http://localhost:3000
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
@@ -19,13 +21,16 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=nestjs_freelance
       - JWT_SECRET=nx2Hb3PaSHAPVmyEdvznZCQ5aSaq4IUH
+      - RABBIT_MQ_URL=amqp://guest:guest@rabbit:5672/
     depends_on:
       - postgres
+      - rabbit
     volumes:
       - ./public:/app/public
 
   postgres:
-    image: postgres:16
+    image: postgres:16-alpine
+    container_name: ticket-box-postgres
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -34,7 +39,19 @@ services:
     ports:
       - '5433:5432'
     volumes:
-      - nestjs-freelance-postgres:/var/lib/postgresql/data
+      - ticket-box-postgres:/var/lib/postgresql/data
+
+  rabbit:
+    image: rabbitmq:4.1-rc-management-alpine
+    container_name: ticket-box-rabbit
+    restart: always
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+      - ticket-box-rabbit:/var/lib/rabbitmq
+      - ticket-box-rabbit:/var/log/rabbitmq
 
 volumes:
-  nestjs-freelance-postgres:
+  ticket-box-postgres:
+  ticket-box-rabbit:
