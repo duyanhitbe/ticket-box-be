@@ -20,8 +20,11 @@ import { PaginationResponse } from '../dto';
 import { BaseRepository } from '../repositories/repository.base.abstract';
 import { I18nExceptionService } from '@lib/core/i18n';
 import { getMeta, getOffset } from '@lib/common/helpers';
+import { Logger } from '@nestjs/common';
 
 export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseRepository<T> {
+	protected readonly logger = new Logger(this.constructor.name);
+
 	constructor(
 		protected readonly repository: Repository<T>,
 		private readonly entityName: string,

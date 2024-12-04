@@ -4,4 +4,5 @@ export type SwaggerOptions = {
 	paginated?: boolean;
 	isEnum?: boolean;
 	enumName?: string;
+	isArray?: boolean;
 };

@@ -5,7 +5,6 @@ import {
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
-import { IsOptional } from 'class-validator';
 
 export class CreateTicketInfoDto {
 	/**
@@ -29,9 +28,8 @@ export class CreateTicketInfoDto {
 	/**
 	 * Số lượng vé
 	 */
-	@IsOptional()
 	@I18nIsNumber()
 	@SwaggerProperty({ required: false })
 	@Property('Số lượng vé')
-	quantity?: number;
+	quantity!: number;
 }

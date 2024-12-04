@@ -34,9 +34,8 @@ export class TicketController {
 	 * @returns {Promise<TicketEntity>}
 	 */
 	@Post()
-	@SwaggerCreatedResponse({ summary: 'Create ticket', type: TicketEntity })
-	@ApiExcludeEndpoint()
-	create(@Body() data: CreateTicketDto): Promise<(TicketEntity | null)[] | null> {
+	@SwaggerCreatedResponse({ summary: 'Create more ticket', type: TicketEntity, isArray: true })
+	create(@Body() data: CreateTicketDto): Promise<TicketEntity[]> {
 		return this.createTicketUseCase.execute(data);
 	}
 

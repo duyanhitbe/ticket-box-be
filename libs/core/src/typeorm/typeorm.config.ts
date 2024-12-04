@@ -15,6 +15,7 @@ import { SealCustomerRole1733036829839 } from '@lib/core/typeorm/migrations/1733
 import { TicketGroupDate1733060760460 } from '@lib/core/typeorm/migrations/1733060760460-ticket-group-date';
 import { RenameTable1733111751522 } from '@lib/core/typeorm/migrations/1733111751522-rename-table';
 import { Customer1733303509465 } from '@lib/core/typeorm/migrations/1733303509465-customer';
+import { TicketInfo1733318791744 } from '@lib/core/typeorm/migrations/1733318791744-ticket-info';
 
 config();
 const configService = new ConfigService();
@@ -43,7 +44,8 @@ export const options: TypeOrmModuleOptions = {
 		SealCustomerRole1733036829839,
 		TicketGroupDate1733060760460,
 		RenameTable1733111751522,
-		Customer1733303509465
+		Customer1733303509465,
+		TicketInfo1733318791744
 	]
 };
 

@@ -28,9 +28,9 @@ export abstract class TicketInfoEntity extends BaseEntity {
 	/**
 	 * Số lượng vé
 	 */
-	@SwaggerProperty({ required: false })
+	@SwaggerProperty()
 	@Property('Số lượng vé')
-	quantity?: number;
+	quantity!: number;
 
 	/* ========== Relations ========== */
 

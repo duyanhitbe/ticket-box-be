@@ -10,11 +10,11 @@ import { SwaggerListResponseType, SwaggerOptions, SwaggerResponseType } from '..
 import { getProperty } from './property.decorator';
 
 export function SwaggerCreatedResponse(options: SwaggerOptions) {
-	const { summary, type } = options;
+	const { summary, type, isArray } = options;
 
 	return applyDecorators(
 		ApiOperation({ summary }),
-		ApiCreatedResponse({ type: SwaggerResponseType(type, 201) })
+		ApiCreatedResponse({ type: SwaggerResponseType(type, 201, isArray) })
 	);
 }
 

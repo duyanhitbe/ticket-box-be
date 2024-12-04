@@ -48,7 +48,7 @@ export class TicketPriceConsumer {
 				})
 			);
 		} finally {
-			this.logger.log(`${customerRoles} ticket price was created successfully!`);
+			this.logger.log(`${customerRoles.length} ticket price was created successfully!`);
 		}
 	}
 

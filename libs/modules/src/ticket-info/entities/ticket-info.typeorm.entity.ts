@@ -16,8 +16,8 @@ export class TicketInfoTypeormEntity extends BaseTypeormEntity implements Ticket
 	@TypeormColumn()
 	name!: string;
 
-	@TypeormColumn({ nullable: true })
-	quantity?: number;
+	@TypeormColumn()
+	quantity!: number;
 
 	/* ========== Relations ========== */
 

@@ -4,7 +4,7 @@ import { IListResponse, IResponse } from '@lib/common/interfaces';
 import { PaginationMeta } from '@lib/base/dto/pagination.dto';
 import { ApiPropertyOptions } from '@nestjs/swagger/dist/decorators/api-property.decorator';
 
-export function SwaggerResponseType<T>(type: Type<T>, status = 200) {
+export function SwaggerResponseType<T>(type: Type<T>, status = 200, isArray?: boolean) {
 	class ClassResponse implements IResponse {
 		@ApiProperty({ example: status })
 		statusCode!: number;
@@ -21,11 +21,13 @@ export function SwaggerResponseType<T>(type: Type<T>, status = 200) {
 		@ApiProperty({ example: '0ms' })
 		duration!: string;
 
-		@ApiProperty({ type })
-		data!: T;
+		@ApiProperty({ type: isArray ? [type] : type })
+		data!: T | T[];
 	}
 
-	Object.defineProperty(ClassResponse, 'name', { value: `${type.name}Response` });
+	Object.defineProperty(ClassResponse, 'name', {
+		value: isArray ? `List${type.name}DataResponse` : `${type.name}Response`
+	});
 
 	return ClassResponse;
 }

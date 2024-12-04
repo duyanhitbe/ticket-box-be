@@ -10,5 +10,5 @@ export type TicketInfoCreatedPayload = {
 	/**
 	 * Số lượng
 	 */
-	quantity?: number;
+	quantity: number;
 };

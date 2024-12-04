@@ -1,95 +1,61 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTicketDto, TicketEntity, TicketRepository } from '@lib/modules/ticket';
+import {
+	CreateTicketDto,
+	TICKET_EVENTS,
+	TicketEntity,
+	TicketRepository,
+	TicketRollbackPayload
+} from '@lib/modules/ticket';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { TicketInfoEntity, TicketInfoRepository } from '@lib/modules/ticket-info';
-import { randomString, sortDates } from '@lib/common/helpers';
-import { Data } from '@lib/base/types';
-import { ENUM_DATE_TYPE } from '@lib/modules/common';
+import { TicketInfoRepository } from '@lib/modules/ticket-info';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
-export class CreateTicketUseCase extends ExecuteHandler<(TicketEntity | null)[] | null> {
+export class CreateTicketUseCase extends ExecuteHandler<TicketEntity[]> {
 	constructor(
+		@InjectDataSource()
+		private readonly dataSource: DataSource,
 		private readonly ticketRepository: TicketRepository,
-		private readonly ticketInfoRepository: TicketInfoRepository
+		private readonly ticketInfoRepository: TicketInfoRepository,
+		private readonly eventEmitter: EventEmitter2
 	) {
 		super();
 	}
 
-	async execute(data: CreateTicketDto): Promise<(TicketEntity | null)[] | null> {
-		const { ticketInfoId } = data;
+	async execute(data: CreateTicketDto): Promise<TicketEntity[]> {
+		const { ticketInfoId, quantity } = data;
 
-		const ticketInfo = await this.ticketInfoRepository.findById({
-			id: ticketInfoId,
-			relations: ['ticketGroup', 'ticketGroup.dates'],
-			select: {
-				id: true,
-				eventId: true,
-				ticketGroupId: true,
-				quantity: true,
-				ticketGroup: {
-					dateType: true,
-					toDate: true,
-					dates: {
-						date: true
-					}
-				}
-			}
-		});
-
+		const ticketInfo = await this.ticketInfoRepository.findByIdForCreateTicket(ticketInfoId);
 		if (!ticketInfo) {
-			this.logger.error('TicketInfo not found');
-			return null;
+			throw new Error('Ticket info is null');
 		}
 
-		if (!ticketInfo.ticketGroup) {
-			this.logger.error('Can not find TicketGroup');
-			return null;
-		}
+		const queryRunner = this.dataSource.createQueryRunner();
+		await queryRunner.startTransaction();
 
-		if (!ticketInfo.ticketGroup.dates) {
-			this.logger.error('Can not find TicketGroupDate');
-			return null;
-		}
-
-		return Promise.all(
-			Array.from({ length: ticketInfo.quantity || 0 }).map(() =>
-				this.createTicket(ticketInfo)
-			)
-		);
-	}
-
-	private async createTicket(ticketInfo: TicketInfoEntity) {
-		const creationData: Data<TicketEntity> = {
-			ticketInfoId: ticketInfo.id
-		};
-		creationData.eventId = ticketInfo.eventId;
-		creationData.ticketGroupId = ticketInfo.ticketGroupId;
-
-		if (ticketInfo.ticketGroup?.dateType === ENUM_DATE_TYPE.DURATION) {
-			if (!ticketInfo.ticketGroup.toDate) {
-				this.logger.error('"toDate" is null');
-				return null;
+		try {
+			const tickets: TicketEntity[] = [];
+			for (let i = 0; i < quantity; i++) {
+				const ticket = await this.ticketRepository.createByTicketInfo(
+					ticketInfo,
+					queryRunner
+				);
+				tickets.push(ticket);
 			}
-			creationData.expiresAt = ticketInfo.ticketGroup.toDate;
-		} else {
-			const dates = sortDates(
-				ticketInfo.ticketGroup?.dates?.map((item) => item.date) || [],
-				'desc'
-			);
-			creationData.expiresAt = dates[0];
+			await queryRunner.commitTransaction();
+			return tickets;
+		} catch (err) {
+			this.logger.error(err);
+			await queryRunner.rollbackTransaction();
+			const payload: TicketRollbackPayload = {
+				ticketInfoId
+			};
+			this.eventEmitter.emit(TICKET_EVENTS.ROLLBACK, payload);
+			throw err;
+		} finally {
+			await queryRunner.release();
 		}
-
-		creationData.code = await this.getCode();
-
-		return this.ticketRepository.create({ data: creationData });
-	}
-
-	private async getCode(): Promise<string> {
-		const code = randomString(6);
-		const exists = await this.ticketRepository.exists({
-			where: { code }
-		});
-		if (exists) return this.getCode();
-		return code;
 	}
 }

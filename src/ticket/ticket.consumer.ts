@@ -12,9 +12,14 @@ export class TicketConsumer {
 	@OnEvent(TICKET_INFO_EVENTS.CREATED)
 	async onTicketInfoCreated(payload: TicketInfoCreatedPayload) {
 		const { ticketInfoId, quantity } = payload;
-		if (quantity && quantity > 0) {
-			await this.createTicketUseCase.execute({ ticketInfoId });
-			this.logger.log(`${quantity} ticket was created successfully`);
+		if (quantity > 0) {
+			try {
+				await this.createTicketUseCase.execute({ ticketInfoId, quantity });
+				this.logger.log(`${quantity} ticket was created successfully`);
+			} catch (e) {
+				this.logger.error(e);
+				this.logger.error(`Rollback ${quantity} ticket`);
+			}
 		}
 	}
 }

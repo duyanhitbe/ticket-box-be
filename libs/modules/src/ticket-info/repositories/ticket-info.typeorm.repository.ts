@@ -3,6 +3,7 @@ import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { TicketInfoTypeormEntity } from '../entities/ticket-info.typeorm.entity';
 import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity.abstract';
+import { TicketInfoEntity } from '@lib/modules/ticket-info';
 
 @Repository(TicketInfoTypeormEntity)
 export class TicketInfoTypeormRepository
@@ -33,5 +34,41 @@ export class TicketInfoTypeormRepository
 			.where('t.ticket_group_id = :ticketGroupId', { ticketGroupId });
 
 		return queryBuilder.getRawMany();
+	}
+
+	async findByIdForCreateTicket(id: string): Promise<TicketInfoEntity | null> {
+		const ticketInfo = await this.findById({
+			id,
+			relations: ['ticketGroup', 'ticketGroup.dates'],
+			select: {
+				id: true,
+				eventId: true,
+				ticketGroupId: true,
+				ticketGroup: {
+					dateType: true,
+					toDate: true,
+					dates: {
+						date: true
+					}
+				}
+			}
+		});
+
+		if (!ticketInfo) {
+			this.logger.error('TicketInfo not found');
+			return null;
+		}
+
+		if (!ticketInfo.ticketGroup) {
+			this.logger.error('Can not find TicketGroup');
+			return null;
+		}
+
+		if (!ticketInfo.ticketGroup.dates) {
+			this.logger.error('Can not find TicketGroupDate');
+			return null;
+		}
+
+		return ticketInfo;
 	}
 }
