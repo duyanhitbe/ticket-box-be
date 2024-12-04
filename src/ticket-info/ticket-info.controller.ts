@@ -13,14 +13,18 @@ import { DetailTicketInfoUseCase } from './usecases/detail-ticket-info.usecase';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth,
+	User
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FilterTicketInfoByGroupDto } from '@lib/modules/ticket-info/dto/filter-ticket-info-by-group.dto';
 import { FindTicketInfoByGroupUseCase } from './usecases/find-ticket-info-by-group.usecase';
 import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity.abstract';
+import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('ticket-infos')
+@UseAuth(true)
 export class TicketInfoController {
 	constructor(
 		private readonly createTicketInfoUseCase: CreateTicketInfoUseCase,
@@ -79,6 +83,7 @@ export class TicketInfoController {
 	/**
 	 * @path GET /api/v1/ticket-infos/group
 	 * @param filter {FilterTicketInfoByGroupDto}
+	 * @param user {RequestUser}
 	 * @returns {Promise<TicketInfoByGroupEntity[]>}
 	 */
 	@Get('group')
@@ -88,9 +93,10 @@ export class TicketInfoController {
 		paginated: false
 	})
 	findAllByGroup(
-		@Query() filter: FilterTicketInfoByGroupDto
+		@Query() filter: FilterTicketInfoByGroupDto,
+		@User() user: RequestUser
 	): Promise<TicketInfoByGroupEntity[]> {
-		return this.findTicketInfoByGroupUseCase.query(filter);
+		return this.findTicketInfoByGroupUseCase.query(filter, user.customerRoleId);
 	}
 
 	/**

@@ -4,5 +4,6 @@ export interface RequestUser {
 	id: string;
 	username?: string;
 	phone?: string;
+	customerRoleId?: string;
 	role: ENUM_TOKEN_ROLE;
 }

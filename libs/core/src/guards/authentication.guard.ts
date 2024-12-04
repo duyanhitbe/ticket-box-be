@@ -85,7 +85,12 @@ export class AuthenticationGuard implements CanActivate {
 					select: ['id', 'phone']
 				});
 				if (!customer) this.i18nExceptionService.throwNotFoundEntity(CustomerEntity.name);
-				return { id: customer.id, phone: customer.phone, role: role };
+				return {
+					id: customer.id,
+					phone: customer.phone,
+					role: role,
+					customerRoleId: customer.customerRoleId
+				};
 		}
 	}
 }
