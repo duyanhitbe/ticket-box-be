@@ -1,4 +1,4 @@
-import { DeepPartial, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import {
 	CreateOptions,
 	DeleteByIdOptions,
@@ -35,9 +35,18 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		this.i18nExceptionService.throwNotFoundEntity(this.entityName);
 	}
 
-	create(options: CreateOptions<T>): Promise<T> {
-		const { data } = options;
-		return this.repository.create(data as DeepPartial<T>).save();
+	async create(options: CreateOptions<T>): Promise<T> {
+		const { data, returning } = options;
+		const result = await this.repository
+			.createQueryBuilder()
+			.insert()
+			.into(this.repository.target) // Specify the target entity/table
+			.values(data as any)
+			.returning(returning as any) // Add RETURNING clause
+			.execute();
+
+		// Extract and return the first row of the inserted data
+		return result.raw[0] as T;
 	}
 
 	find(options: FindOptions<T>): Promise<T[]> {

@@ -82,7 +82,7 @@ export class AuthenticationGuard implements CanActivate {
 			case ENUM_TOKEN_ROLE.CUSTOMER:
 				const customer = await this.customerRepository.findById({
 					id: userId,
-					select: ['id', 'phone']
+					select: ['id', 'phone', 'customerRoleId']
 				});
 				if (!customer) this.i18nExceptionService.throwNotFoundEntity(CustomerEntity.name);
 				return {

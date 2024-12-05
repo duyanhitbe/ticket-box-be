@@ -8,11 +8,11 @@ import { TypeormColumn, TypeormManyToOne } from '@lib/common/decorators';
 
 @Entity('orders')
 export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity {
-	@TypeormColumn()
-	eventId!: string;
+	@TypeormColumn({ nullable: true })
+	eventId?: string;
 
-	@TypeormColumn()
-	customerId!: string;
+	@TypeormColumn({ nullable: true })
+	customerId?: string;
 
 	@TypeormColumn()
 	code!: string;
@@ -20,17 +20,17 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	@TypeormColumn({ nullable: true })
 	note?: string;
 
-	@TypeormColumn()
-	eventName!: string;
+	@TypeormColumn({ nullable: true })
+	eventName?: string;
 
-	@TypeormColumn()
-	customerName!: string;
+	@TypeormColumn({ nullable: true })
+	customerName?: string;
 
-	@TypeormColumn()
-	customerPhone!: string;
+	@TypeormColumn({ nullable: true })
+	customerPhone?: string;
 
-	@TypeormColumn()
-	customerEmail!: string;
+	@TypeormColumn({ nullable: true })
+	customerEmail?: string;
 
 	@TypeormColumn({
 		type: 'simple-enum',
@@ -45,16 +45,22 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	@TypeormColumn({ nullable: true })
 	cardName?: string;
 
-	@TypeormColumn({ type: 'float' })
-	totalPrice!: number;
+	@TypeormColumn({ type: 'float', nullable: true })
+	totalPrice?: number;
 
 	@TypeormColumn({
 		type: 'simple-enum',
 		enum: ENUM_ORDER_STATUS,
 		enumName: 'ENUM_ORDER_STATUS',
-		default: ENUM_ORDER_STATUS.RESERVED
+		nullable: true
 	})
-	orderStatus!: ENUM_ORDER_STATUS;
+	orderStatus?: ENUM_ORDER_STATUS;
+
+	/**
+	 * Lí do
+	 */
+	@TypeormColumn({ nullable: true })
+	reason?: string;
 
 	/* ========== Relations ========== */
 

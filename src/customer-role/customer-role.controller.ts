@@ -13,11 +13,13 @@ import { DetailCustomerRoleUseCase } from './usecases/detail-customer-role.useca
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 
 @Controller('customer-roles')
+@UseAuth({ isPublic: true })
 export class CustomerRoleController {
 	constructor(
 		private readonly createCustomerRoleUseCase: CreateCustomerRoleUseCase,

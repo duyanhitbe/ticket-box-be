@@ -34,28 +34,43 @@ export class HttpFilter implements ExceptionFilter {
 		});
 	}
 
-	handleValidation(exception: any, request: Request, response: Response) {
-		const errors = exception['errors'].map((err) => {
-			const message: string[] = [];
-			const values: string[] = Object.values(err['constraints'] as any);
+	handleValidation(exception: I18nValidationException, request: Request, response: Response) {
+		const errors: any[] = [];
+		exception['errors'].forEach((err) => {
+			const includeArray = Object.keys(err.constraints || {}).includes('isArray');
 
-			values.forEach((value) => {
-				const [key, args] = value.split('|');
-				if (args) {
-					message.push(
-						this.i18nService.translate(key, {
-							args: JSON.parse(args)
-						})
-					);
-				} else {
-					message.push(value);
+			if (err.children?.length && !includeArray) {
+				for (const child of err.children) {
+					//Array object
+					if (child.children?.length) {
+						for (const subChild of child.children) {
+							const message = this.getValidationMessages(subChild);
+							const property = `${err.property}.${child.property}.${subChild.property}`;
+							errors.push({
+								property,
+								message
+							});
+						}
+					}
+					//Object
+					else {
+						const message = this.getValidationMessages(child);
+						const property = `${err.property}.${child.property}`;
+						errors.push({
+							property,
+							message
+						});
+					}
 				}
-			});
+				return;
+			}
 
-			return {
+			const message = this.getValidationMessages(err);
+
+			errors.push({
 				property: err.property,
 				message
-			};
+			});
 		});
 
 		this.logError(request, 'Validation error');
@@ -74,5 +89,24 @@ export class HttpFilter implements ExceptionFilter {
 		const path = request.path;
 		const method = request.method;
 		this.logger.error(`[${method}] ${path} - ${message}`);
+	}
+
+	private getValidationMessages(err: any) {
+		const message: string[] = [];
+		const values: string[] = Object.values(err['constraints'] as any);
+
+		values.forEach((value) => {
+			const [key, args] = value.split('|');
+			if (args) {
+				message.push(
+					this.i18nService.translate(key, {
+						args: JSON.parse(args)
+					})
+				);
+			} else {
+				message.push(value);
+			}
+		});
+		return message;
 	}
 }

@@ -13,12 +13,14 @@ import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller('ticket-prices')
+@UseAuth({ isPublic: true })
 export class TicketPriceController {
 	constructor(
 		private readonly createTicketPriceUseCase: CreateTicketPriceUseCase,

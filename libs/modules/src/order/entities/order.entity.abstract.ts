@@ -8,16 +8,16 @@ export abstract class OrderEntity extends BaseEntity {
 	/**
 	 * Mã sự kiện
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Mã sự kiện')
-	eventId!: string;
+	eventId?: string;
 
 	/**
 	 * Mã khách hàng
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Mã khách hàng')
-	customerId!: string;
+	customerId?: string;
 
 	/**
 	 * Mã đơn hàng
@@ -36,30 +36,30 @@ export abstract class OrderEntity extends BaseEntity {
 	/**
 	 * Tên sự kiện
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Tên sự kiện')
-	eventName!: string;
+	eventName?: string;
 
 	/**
 	 * Tên khách hàng
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Tên khách hàng')
-	customerName!: string;
+	customerName?: string;
 
 	/**
 	 * SĐT khách hàng
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('SĐT khách hàng')
-	customerPhone!: string;
+	customerPhone?: string;
 
 	/**
 	 * Email khách hàng
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Email khách hàng')
-	customerEmail!: string;
+	customerEmail?: string;
 
 	/**
 	 * Phương thức thanh toán
@@ -88,19 +88,27 @@ export abstract class OrderEntity extends BaseEntity {
 	/**
 	 * Tổng giá trị đơn hàng
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Tổng giá trị đơn hàng')
-	totalPrice!: number;
+	totalPrice?: number;
 
 	/**
 	 * Trạng thái đơn hàng
 	 */
 	@SwaggerProperty({
 		enum: ENUM_ORDER_STATUS,
-		enumName: 'ENUM_ORDER_STATUS'
+		enumName: 'ENUM_ORDER_STATUS',
+		required: false
 	})
 	@Property('Trạng thái đơn hàng')
-	orderStatus!: ENUM_ORDER_STATUS;
+	orderStatus?: ENUM_ORDER_STATUS;
+
+	/**
+	 * Lí do
+	 */
+	@SwaggerProperty()
+	@Property('Lí do')
+	reason?: string;
 
 	/* ========== Relations ========== */
 

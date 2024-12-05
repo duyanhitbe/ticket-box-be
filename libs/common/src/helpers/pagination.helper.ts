@@ -4,14 +4,12 @@ export function getMeta(limit: number, page: number, totalItem: number) {
 	const nextPage = page === totalPage ? null : page + 1;
 
 	return {
-		meta: {
-			limit,
-			page,
-			totalItem,
-			totalPage,
-			prevPage,
-			nextPage
-		}
+		limit,
+		page,
+		totalItem,
+		totalPage,
+		prevPage,
+		nextPage
 	};
 }
 

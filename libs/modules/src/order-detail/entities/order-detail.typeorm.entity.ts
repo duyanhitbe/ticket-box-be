@@ -4,7 +4,6 @@ import { Entity } from 'typeorm';
 import { TypeormColumn, TypeormManyToOne } from '@lib/common/decorators';
 import { OrderTypeormEntity } from '@lib/modules/order';
 import { TicketGroupTypeormEntity } from '@lib/modules/ticket-group';
-import { TicketTypeormEntity } from '@lib/modules/ticket';
 import { ENUM_DISCOUNT_TYPE } from '@lib/modules/common';
 
 @Entity('order_details')
@@ -14,9 +13,6 @@ export class OrderDetailTypeormEntity extends BaseTypeormEntity implements Order
 
 	@TypeormColumn()
 	ticketGroupId!: string;
-
-	@TypeormColumn()
-	ticketId!: string;
 
 	@TypeormColumn()
 	ticketName!: string;
@@ -46,7 +42,4 @@ export class OrderDetailTypeormEntity extends BaseTypeormEntity implements Order
 
 	@TypeormManyToOne(() => TicketGroupTypeormEntity)
 	ticketGroup?: TicketGroupTypeormEntity;
-
-	@TypeormManyToOne(() => TicketTypeormEntity)
-	ticket?: TicketTypeormEntity;
 }

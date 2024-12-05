@@ -25,6 +25,10 @@ export type I18nValidationOptions = ValidationOptions & {
 	property?: string;
 };
 
+export type I18nLengthValidationOptions = I18nValidationOptions & {
+	isArray?: boolean;
+};
+
 export function I18nIsNotEmpty(options?: I18nValidationOptions): PropertyDecorator {
 	return function (target: any, propertyKey: string) {
 		const property = getProperty(target, propertyKey, options);
@@ -195,28 +199,40 @@ export function I18nMax(value: number, options?: I18nValidationOptions): Propert
 	};
 }
 
-export function I18nMinLength(value: number, options?: I18nValidationOptions): PropertyDecorator {
+export function I18nMinLength(
+	value: number,
+	options?: I18nLengthValidationOptions
+): PropertyDecorator {
 	return function (target: any, propertyKey: string) {
 		const property = getProperty(target, propertyKey, options);
 		MinLength(value, {
 			...options,
-			message: i18nValidationMessage('validation.MIN_LENGTH', {
-				property,
-				value
-			})
+			message: i18nValidationMessage(
+				`validation.${options?.isArray ? 'MIN_LENGTH_ARRAY' : 'MIN_LENGTH'}`,
+				{
+					property,
+					value
+				}
+			)
 		})(target, propertyKey);
 	};
 }
 
-export function I18nMaxLength(value: number, options?: I18nValidationOptions): PropertyDecorator {
+export function I18nMaxLength(
+	value: number,
+	options?: I18nLengthValidationOptions
+): PropertyDecorator {
 	return function (target: any, propertyKey: string) {
 		const property = getProperty(target, propertyKey, options);
 		MaxLength(value, {
 			...options,
-			message: i18nValidationMessage('validation.MAX_LENGTH', {
-				property,
-				value
-			})
+			message: i18nValidationMessage(
+				`validation.${options?.isArray ? 'MAX_LENGTH_ARRAY' : 'MAX_LENGTH'}`,
+				{
+					property,
+					value
+				}
+			)
 		})(target, propertyKey);
 	};
 }

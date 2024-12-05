@@ -3,28 +3,28 @@ import {
 	CreateTicketDto,
 	TICKET_EVENTS,
 	TicketEntity,
-	TicketRepository,
 	TicketRollbackPayload
 } from '@lib/modules/ticket';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { TicketInfoRepository } from '@lib/modules/ticket-info';
+import { TicketInfoRepository, TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { EventEmitterService } from '@lib/core/event';
+import { TicketService } from '../ticket.service';
 
 @Injectable()
-export class CreateTicketUseCase extends ExecuteHandler<TicketEntity[]> {
+export class CreateTicketUseCase extends ExecuteHandler<string[]> {
 	constructor(
 		@InjectDataSource()
 		private readonly dataSource: DataSource,
-		private readonly ticketRepository: TicketRepository,
 		private readonly ticketInfoRepository: TicketInfoRepository,
-		private readonly eventEmitterService: EventEmitterService
+		private readonly eventEmitterService: EventEmitterService,
+		private readonly ticketService: TicketService
 	) {
 		super();
 	}
 
-	async execute(data: CreateTicketDto): Promise<TicketEntity[]> {
+	async execute(data: CreateTicketDto): Promise<string[]> {
 		const { ticketInfoId, quantity } = data;
 
 		const ticketInfo = await this.ticketInfoRepository.findByIdForCreateTicket(ticketInfoId);
@@ -38,14 +38,18 @@ export class CreateTicketUseCase extends ExecuteHandler<TicketEntity[]> {
 		try {
 			const tickets: TicketEntity[] = [];
 			for (let i = 0; i < quantity; i++) {
-				const ticket = await this.ticketRepository.createByTicketInfo(
-					ticketInfo,
-					queryRunner
-				);
+				const ticket = await this.ticketService.createByTicketInfo(ticketInfo, queryRunner);
 				tickets.push(ticket);
 			}
+			await queryRunner.manager.increment(
+				TicketInfoTypeormEntity,
+				{ id: ticketInfoId },
+				'quantity',
+				quantity
+			);
+			throw new Error();
 			await queryRunner.commitTransaction();
-			return tickets;
+			return tickets.map((item) => item.id);
 		} catch (err) {
 			this.logger.error(err);
 			await queryRunner.rollbackTransaction();

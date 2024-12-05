@@ -10,7 +10,7 @@ export class TicketInfoTypeormRepository
 	extends BaseTypeormRepository<TicketInfoTypeormEntity>
 	implements TicketInfoRepository
 {
-	async findPaginatedByGroup(
+	async findAllWithPriceByGroup(
 		ticketGroupId: string,
 		customerRoleId: string
 	): Promise<TicketInfoByGroupEntity[]> {

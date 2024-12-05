@@ -13,12 +13,14 @@ import { DetailTicketUseCase } from './usecases/detail-ticket.usecase';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 
 @Controller('tickets')
+@UseAuth({ isPublic: true })
 export class TicketController {
 	constructor(
 		private readonly createTicketUseCase: CreateTicketUseCase,
@@ -31,11 +33,11 @@ export class TicketController {
 	/**
 	 * @path POST /api/v1/tickets
 	 * @param data {CreateTicketDto}
-	 * @returns {Promise<TicketEntity>}
+	 * @returns {Promise<string[]>}
 	 */
 	@Post()
-	@SwaggerCreatedResponse({ summary: 'Create more ticket', type: TicketEntity, isArray: true })
-	create(@Body() data: CreateTicketDto): Promise<TicketEntity[]> {
+	@SwaggerCreatedResponse({ summary: 'Create more ticket', type: String, isArray: true })
+	create(@Body() data: CreateTicketDto): Promise<string[]> {
 		return this.createTicketUseCase.execute(data);
 	}
 

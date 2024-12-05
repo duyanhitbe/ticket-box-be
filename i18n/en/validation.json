@@ -14,6 +14,8 @@
   "MAX": "{property} must be lesser or equal than {value}",
   "MIN_LENGTH": "{property} must have at least {value} characters",
   "MAX_LENGTH": "{property} must not exceed {value} characters",
+  "MIN_LENGTH_ARRAY": "{property} must have at least {value} item",
+  "MAX_LENGTH_ARRAY": "{property} must not exceed {value} item",
   "EXISTS": "{property} already exists. Please try again!",
   "NOT_EXISTS": "{property} is not exists. Please try again!"
 }

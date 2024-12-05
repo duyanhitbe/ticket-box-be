@@ -24,7 +24,7 @@ import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticke
 import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('ticket-infos')
-@UseAuth(true)
+@UseAuth({ isPublic: true })
 export class TicketInfoController {
 	constructor(
 		private readonly createTicketInfoUseCase: CreateTicketInfoUseCase,

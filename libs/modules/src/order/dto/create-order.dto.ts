@@ -1,4 +1,5 @@
 import {
+	I18nIsArray,
 	I18nIsEmail,
 	I18nIsEnum,
 	I18nIsNotEmpty,
@@ -7,7 +8,9 @@ import {
 	SwaggerProperty
 } from '@lib/common/decorators';
 import { ENUM_PAYMENT_METHOD } from '@lib/modules/order/order.enum';
-import { IsOptional, ValidateIf } from 'class-validator';
+import { IsOptional, ValidateIf, ValidateNested } from 'class-validator';
+import { CreateOrderDetailDto } from '@lib/modules/order-detail';
+import { Type } from 'class-transformer';
 
 export class CreateOrderDto {
 	/**
@@ -76,4 +79,14 @@ export class CreateOrderDto {
 	@SwaggerProperty({ required: false })
 	@Property('Tên tài khoản thanh toán')
 	cardName?: string;
+
+	/**
+	 * Chi tiết đơn hàng
+	 */
+	@ValidateNested({ each: true })
+	@Type(() => CreateOrderDetailDto)
+	@I18nIsArray()
+	@SwaggerProperty({ type: [CreateOrderDetailDto] })
+	@Property('Chi tiết đơn hàng')
+	details!: CreateOrderDetailDto[];
 }

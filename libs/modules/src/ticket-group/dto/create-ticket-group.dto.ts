@@ -4,6 +4,7 @@ import {
 	I18nIsEnum,
 	I18nIsNotEmpty,
 	I18nIsString,
+	I18nIsUUID,
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
@@ -15,8 +16,7 @@ export class CreateTicketGroupDto {
 	/**
 	 * Mã sự kiện
 	 */
-	@I18nIsString()
-	@I18nIsNotEmpty()
+	@I18nIsUUID()
 	@SwaggerProperty()
 	@Property('Mã sự kiện')
 	eventId!: string;

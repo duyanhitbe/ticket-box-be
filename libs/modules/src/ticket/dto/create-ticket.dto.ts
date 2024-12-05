@@ -1,17 +1,10 @@
-import {
-	I18nIsNotEmpty,
-	I18nIsNumber,
-	I18nIsString,
-	Property,
-	SwaggerProperty
-} from '@lib/common/decorators';
+import { I18nIsNumber, I18nIsUUID, Property, SwaggerProperty } from '@lib/common/decorators';
 
 export class CreateTicketDto {
 	/**
 	 * Mã thông tin vé
 	 */
-	@I18nIsString()
-	@I18nIsNotEmpty()
+	@I18nIsUUID()
 	@SwaggerProperty()
 	@Property('Mã thông tin vé')
 	ticketInfoId!: string;

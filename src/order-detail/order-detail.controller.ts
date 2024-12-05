@@ -2,8 +2,8 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import {
 	CreateOrderDetailDto,
 	FilterOrderDetailDto,
-	UpdateOrderDetailDto,
-	OrderDetailEntity
+	OrderDetailEntity,
+	UpdateOrderDetailDto
 } from '@lib/modules/order-detail';
 import { CreateOrderDetailUseCase } from './usecases/create-order-detail.usecase';
 import { UpdateOrderDetailUseCase } from './usecases/update-order-detail.usecase';
@@ -13,11 +13,13 @@ import { DetailOrderDetailUseCase } from './usecases/detail-order-detail.usecase
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 
 @Controller('order-details')
+@UseAuth({ isPublic: true })
 export class OrderDetailController {
 	constructor(
 		private readonly createOrderDetailUseCase: CreateOrderDetailUseCase,

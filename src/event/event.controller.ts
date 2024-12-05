@@ -14,13 +14,15 @@ import { DetailEventUseCase } from './usecases/detail-event.usecase';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
 import { FindLocationUseCase } from './usecases/find-location.usecase';
 
 @Controller('events')
+@UseAuth({ isPublic: true })
 export class EventController {
 	constructor(
 		private readonly createEventUseCase: CreateEventUseCase,

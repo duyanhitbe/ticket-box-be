@@ -14,6 +14,8 @@
   "MAX": "{property} phải nhỏ hơn hoặc bằng {value}",
   "MIN_LENGTH": "{property} phải có ít nhất {value} ký tự",
   "MAX_LENGTH": "{property} không được vượt quá {value} ký tự",
+  "MIN_LENGTH_ARRAY": "{property} phải có ít nhất {value} phần tử",
+  "MAX_LENGTH_ARRAY": "{property} không được vượt quá {value} phần tử",
   "EXISTS": "{property} đã tồn tại. Vui lòng kiểm tra lại!",
   "NOT_EXISTS": "{property} không tồn tại. Vui lòng kiểm tra lại!"
 }

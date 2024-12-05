@@ -31,6 +31,9 @@ export class FindTicketInfoByGroupUseCase extends QueryHandler<TicketInfoByGroup
 			customerRoleId = customerRole.id;
 		}
 
-		return this.ticketInfoRepository.findPaginatedByGroup(filter.ticketGroupId, customerRoleId);
+		return this.ticketInfoRepository.findAllWithPriceByGroup(
+			filter.ticketGroupId,
+			customerRoleId
+		);
 	}
 }

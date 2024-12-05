@@ -10,11 +10,12 @@ import { UpdateTicketGroupDateUseCase } from './usecases/update-ticket-group-dat
 import { DeleteTicketGroupDateUseCase } from './usecases/delete-ticket-group-date.usecase';
 import { FindTicketGroupDateUseCase } from './usecases/find-ticket-group-date.usecase';
 import { DetailTicketGroupDateUseCase } from './usecases/detail-ticket-group-date.usecase';
-import { SwaggerCreatedResponse, SwaggerOkResponse } from '@lib/common/decorators';
+import { SwaggerCreatedResponse, SwaggerOkResponse, UseAuth } from '@lib/common/decorators';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
 import { EventTicketGroupDateEntity } from '@lib/modules/ticket-group-date/entities/event-ticket-group-date.entity';
 
 @Controller('ticket-group-dates')
+@UseAuth({ isPublic: true })
 export class TicketGroupDateController {
 	constructor(
 		private readonly createTicketGroupDateUseCase: CreateTicketGroupDateUseCase,

@@ -16,6 +16,8 @@ import { TicketGroupDate1733060760460 } from '@lib/core/typeorm/migrations/17330
 import { RenameTable1733111751522 } from '@lib/core/typeorm/migrations/1733111751522-rename-table';
 import { Customer1733303509465 } from '@lib/core/typeorm/migrations/1733303509465-customer';
 import { TicketInfo1733318791744 } from '@lib/core/typeorm/migrations/1733318791744-ticket-info';
+import { Order1733373959361 } from '@lib/core/typeorm/migrations/1733373959361-order';
+import { OrderDetail1733403998536 } from '@lib/core/typeorm/migrations/1733403998536-order-detail';
 
 config();
 const configService = new ConfigService();
@@ -45,7 +47,9 @@ export const options: TypeOrmModuleOptions = {
 		TicketGroupDate1733060760460,
 		RenameTable1733111751522,
 		Customer1733303509465,
-		TicketInfo1733318791744
+		TicketInfo1733318791744,
+		Order1733373959361,
+		OrderDetail1733403998536
 	]
 };
 

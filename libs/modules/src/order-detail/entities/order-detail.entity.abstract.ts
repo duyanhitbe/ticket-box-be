@@ -1,7 +1,6 @@
 import { BaseEntity } from '@lib/base/entities';
 import { OrderEntity } from '@lib/modules/order';
 import { TicketGroupEntity } from '@lib/modules/ticket-group';
-import { TicketEntity } from '@lib/modules/ticket';
 import { ENUM_DISCOUNT_TYPE } from '@lib/modules/common';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
 
@@ -19,13 +18,6 @@ export abstract class OrderDetailEntity extends BaseEntity {
 	@SwaggerProperty()
 	@Property('Mã nhóm vé')
 	ticketGroupId!: string;
-
-	/**
-	 * Mã vé
-	 */
-	@SwaggerProperty()
-	@Property('Mã vé')
-	ticketId!: string;
 
 	/**
 	 * Tên vé
@@ -91,9 +83,4 @@ export abstract class OrderDetailEntity extends BaseEntity {
 	 * Nhóm vé
 	 */
 	ticketGroup?: TicketGroupEntity;
-
-	/**
-	 * Vé
-	 */
-	ticket?: TicketEntity;
 }

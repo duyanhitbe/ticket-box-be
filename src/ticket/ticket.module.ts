@@ -6,10 +6,12 @@ import { DeleteTicketUseCase } from './usecases/delete-ticket.usecase';
 import { FindTicketUseCase } from './usecases/find-ticket.usecase';
 import { DetailTicketUseCase } from './usecases/detail-ticket.usecase';
 import { TicketConsumer } from './ticket.consumer';
+import { TicketService } from './ticket.service';
 
 @Module({
 	controllers: [TicketController, TicketConsumer],
 	providers: [
+		TicketService,
 		CreateTicketUseCase,
 		UpdateTicketUseCase,
 		DeleteTicketUseCase,

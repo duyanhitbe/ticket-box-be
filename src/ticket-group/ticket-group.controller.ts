@@ -15,12 +15,14 @@ import { DetailTicketGroupUseCase } from './usecases/detail-ticket-group.usecase
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FindTicketGroupByEventUseCase } from './usecases/find-ticket-group-by-event.usecase';
 
 @Controller('ticket-groups')
+@UseAuth({ isPublic: true })
 export class TicketGroupController {
 	constructor(
 		private readonly createTicketGroupUseCase: CreateTicketGroupUseCase,

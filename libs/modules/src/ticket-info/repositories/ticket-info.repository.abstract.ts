@@ -4,7 +4,7 @@ import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticke
 import { DataSource } from 'typeorm';
 
 export abstract class TicketInfoRepository extends BaseRepository<TicketInfoEntity> {
-	abstract findPaginatedByGroup(
+	abstract findAllWithPriceByGroup(
 		ticketGroupId: string,
 		customerRoleId: string
 	): Promise<TicketInfoByGroupEntity[]>;

@@ -13,11 +13,13 @@ import { DetailCustomerUseCase } from './usecases/detail-customer.usecase';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 
 @Controller('customers')
+@UseAuth({ isPublic: true })
 export class CustomerController {
 	constructor(
 		private readonly createCustomerUseCase: CreateCustomerUseCase,

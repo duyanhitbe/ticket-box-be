@@ -23,6 +23,10 @@ async function bootstrap() {
 	app.setGlobalPrefix('api', {
 		exclude: ['/']
 	});
+	app.enableCors({
+		credentials: true,
+		origin: '*'
+	});
 	app.useGlobalPipes(
 		new I18nValidationPipe({
 			transform: true,

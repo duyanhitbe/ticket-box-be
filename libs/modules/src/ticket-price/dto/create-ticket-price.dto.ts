@@ -1,8 +1,7 @@
 import {
 	I18nIsEnum,
-	I18nIsNotEmpty,
 	I18nIsNumber,
-	I18nIsString,
+	I18nIsUUID,
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
@@ -13,8 +12,7 @@ export class CreateTicketPriceDto {
 	/**
 	 * Mã thông tin vé
 	 */
-	@I18nIsString()
-	@I18nIsNotEmpty()
+	@I18nIsUUID()
 	@SwaggerProperty()
 	@Property('Mã thông tin vé')
 	ticketInfoId!: string;
@@ -22,8 +20,7 @@ export class CreateTicketPriceDto {
 	/**
 	 * Mã nhóm quyền
 	 */
-	@I18nIsString()
-	@I18nIsNotEmpty()
+	@I18nIsUUID()
 	@SwaggerProperty()
 	@Property('Mã nhóm quyền')
 	customerRoleId!: string;

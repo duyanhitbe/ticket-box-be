@@ -1,11 +1,16 @@
-import { I18nIsNotEmpty, I18nIsString, Property, SwaggerProperty } from '@lib/common/decorators';
+import {
+	I18nIsNotEmpty,
+	I18nIsString,
+	I18nIsUUID,
+	Property,
+	SwaggerProperty
+} from '@lib/common/decorators';
 
 export class FilterTicketGroupByEventDto {
 	/**
 	 * Mã sự kiện
 	 */
-	@I18nIsString()
-	@I18nIsNotEmpty()
+	@I18nIsUUID()
 	@SwaggerProperty()
 	@Property('Mã sự kiện')
 	eventId!: string;

@@ -18,9 +18,9 @@ export abstract class TicketInfoByGroupEntity {
 	/**
 	 * Số lượng vé
 	 */
-	@SwaggerProperty({ required: false })
+	@SwaggerProperty()
 	@Property('Số lượng vé')
-	quantity?: number;
+	quantity!: number;
 
 	/**
 	 * Giá gốc
