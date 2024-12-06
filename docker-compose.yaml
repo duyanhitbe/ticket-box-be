@@ -21,10 +21,16 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=ticket_box
       - JWT_SECRET=nx2Hb3PaSHAPVmyEdvznZCQ5aSaq4IUH
-      - RABBIT_MQ_URL=amqp://guest:guest@rabbit:5672/
+      - RABBIT_MQ_URL=amqp://guest:guest@rabbit:5672
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_USER=
+      - REDIS_PASSWORD=7NUEgvUrHzyCXb59U7Se4keB2QyILsQI
+      - REDIS_DB=0
     depends_on:
       - postgres
       - rabbit
+      - redis
     volumes:
       - ./public:/app/public
 
@@ -52,6 +58,18 @@ services:
       - ticket-box-rabbit:/var/lib/rabbitmq
       - ticket-box-rabbit:/var/log/rabbitmq
 
+  redis:
+    image: redis:7-alpine
+    container_name: ticket-box-redis
+    restart: always
+    ports:
+      - "6378:6379"
+    volumes:
+      - ticket-box-redis:/data
+    command: [ "redis-server", "--requirepass", "7NUEgvUrHzyCXb59U7Se4keB2QyILsQI" ]
+
+
 volumes:
   ticket-box-postgres:
   ticket-box-rabbit:
+  ticket-box-redis:

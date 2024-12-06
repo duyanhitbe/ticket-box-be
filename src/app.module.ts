@@ -16,6 +16,7 @@ import { ENUM_QUEUE, ENUM_RABBITMQ_CLIENT } from '@lib/core/rabbitmq';
 import { AppTransportModule } from './app.transport.module';
 import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.module';
 import { EventModule } from '@lib/core/event/event.module';
+import { RedisModule } from '@lib/core/redis/redis.module';
 
 @Module({
 	imports: [
@@ -42,6 +43,7 @@ import { EventModule } from '@lib/core/event/event.module';
 			}
 		]),
 		EventModule.forRoot(),
+		RedisModule.forRoot(),
 		AppRepositoryModule,
 		AppTransportModule,
 		TicketGroupDateModule

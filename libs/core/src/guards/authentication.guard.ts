@@ -12,6 +12,7 @@ import { UserEntity, UserRepository } from '@lib/modules/user';
 import { RequestUser } from '@lib/common/interfaces';
 import { CustomerEntity, CustomerRepository } from '@lib/modules/customer';
 import { Reflector } from '@nestjs/core';
+import { REDIS_PREFIX_KEY, RedisService } from '@lib/core/redis';
 
 export const PUBLIC_METADATA_KEY = 'PUBLIC_METADATA_KEY';
 
@@ -25,7 +26,8 @@ export class AuthenticationGuard implements CanActivate {
 		private readonly customerRepository: CustomerRepository,
 		private readonly jwtService: JwtService,
 		private readonly i18nExceptionService: I18nExceptionService,
-		private readonly reflector: Reflector
+		private readonly reflector: Reflector,
+		private readonly redisService: RedisService
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -71,6 +73,12 @@ export class AuthenticationGuard implements CanActivate {
 	}
 
 	private async getUserByRole(userId: string, role: ENUM_TOKEN_ROLE): Promise<RequestUser> {
+		const cachedUser = await this.redisService.get<RequestUser>({
+			prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
+			key: userId
+		});
+		if (cachedUser) return cachedUser;
+
 		switch (role) {
 			case ENUM_TOKEN_ROLE.USER:
 				const user = await this.userRepository.findById({
@@ -78,19 +86,31 @@ export class AuthenticationGuard implements CanActivate {
 					select: ['id', 'username']
 				});
 				if (!user) this.i18nExceptionService.throwNotFoundEntity(UserEntity.name);
-				return { id: user.id, username: user.username, role: role };
+				const resultUser = { id: user.id, username: user.username, role: role };
+				await this.redisService.setNx({
+					prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
+					key: userId,
+					value: resultUser
+				});
+				return resultUser;
 			case ENUM_TOKEN_ROLE.CUSTOMER:
 				const customer = await this.customerRepository.findById({
 					id: userId,
 					select: ['id', 'phone', 'customerRoleId']
 				});
 				if (!customer) this.i18nExceptionService.throwNotFoundEntity(CustomerEntity.name);
-				return {
+				const resultCustomer = {
 					id: customer.id,
 					phone: customer.phone,
 					role: role,
 					customerRoleId: customer.customerRoleId
 				};
+				await this.redisService.setNx({
+					prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
+					key: userId,
+					value: resultCustomer
+				});
+				return resultCustomer;
 		}
 	}
 }
