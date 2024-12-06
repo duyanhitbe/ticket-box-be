@@ -13,11 +13,11 @@ export type UseAuthOptions = {
 	roles?: ENUM_TOKEN_ROLE[];
 };
 
-export function UseAuth(options: UseAuthOptions) {
+export function UseAuth(options?: UseAuthOptions) {
 	return applyDecorators(
 		ApiBearerAuth(),
-		SetMetadata(PUBLIC_METADATA_KEY, options.isPublic),
-		SetMetadata(TOKEN_ROLE_METADATA_KEY, options.roles),
+		SetMetadata(PUBLIC_METADATA_KEY, options?.isPublic),
+		SetMetadata(TOKEN_ROLE_METADATA_KEY, options?.roles),
 		UseGuards(AuthenticationGuard, AuthorizationGuard)
 	);
 }
