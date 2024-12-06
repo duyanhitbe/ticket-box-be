@@ -47,7 +47,6 @@ export class CreateTicketUseCase extends ExecuteHandler<string[]> {
 				'quantity',
 				quantity
 			);
-			throw new Error();
 			await queryRunner.commitTransaction();
 			return tickets.map((item) => item.id);
 		} catch (err) {

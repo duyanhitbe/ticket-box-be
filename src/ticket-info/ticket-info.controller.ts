@@ -96,7 +96,7 @@ export class TicketInfoController {
 		@Query() filter: FilterTicketInfoByGroupDto,
 		@User() user: RequestUser
 	): Promise<TicketInfoByGroupEntity[]> {
-		return this.findTicketInfoByGroupUseCase.query(filter, user.customerRoleId);
+		return this.findTicketInfoByGroupUseCase.query(filter, user?.customerRoleId);
 	}
 
 	/**

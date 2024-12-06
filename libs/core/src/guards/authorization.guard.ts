@@ -32,10 +32,10 @@ export class AuthorizationGuard implements CanActivate {
 		]);
 		if (!roles || !roles.length) return true;
 
-		if (!roles.includes(user.role)) {
+		if (!roles.includes(user!.role)) {
 			this.logger.error('Invalid role');
 			this.logger.debug(`Required roles: ${roles}`);
-			this.logger.debug(`User role: ${user.role}`);
+			this.logger.debug(`User role: ${user!.role}`);
 			this.i18nExceptionService.throwInvalidAuthorization();
 		}
 		return true;
