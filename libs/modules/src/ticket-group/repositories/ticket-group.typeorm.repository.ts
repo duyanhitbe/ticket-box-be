@@ -71,11 +71,12 @@ export class TicketGroupTypeormRepository
 			.select(['tg.id as "id"', 'tg.name as "name"', 'tg.description as "description"'])
 			.leftJoin('ticket_group_dates', 'tgd', 'tgd.ticket_group_id = tg.id')
 			.where(`tg.event_id = :eventId`, { eventId })
-			.andWhere(`(tg.from_date <= :startOfDay AND tg.to_date >= :endOfDay)`, {
-				startOfDay,
-				endOfDay
-			})
-			.orWhere(`(tgd.date BETWEEN :startOfDay AND :endOfDay)`, { startOfDay, endOfDay })
+			.andWhere(
+				`(tg.from_date >= '${startOfDay.toISOString()}' AND tg.to_date >= '${endOfDay.toISOString()}')`
+			)
+			.orWhere(
+				`(tgd.date BETWEEN '${startOfDay.toISOString()}' AND '${endOfDay.toISOString()}')`
+			)
 			.orderBy('tg.created_at', 'DESC');
 
 		return queryBuilder.getRawMany();

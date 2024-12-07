@@ -10,6 +10,8 @@
   "IS_DATE_STRING": "{property} bắt buộc phải là một chuỗi ISO Date",
   "IS_ARRAY": "{property} bắt buộc phải là một mảng",
   "IS_URL": "{property} bắt buộc phải là một đường dẫn",
+  "IS_FROM_DATE_BEFORE_TO_DATE": "{fromDate} không được lớn hơn {toDate}",
+  "IS_TO_DATE_AFTER_FROM_DATE": "{toDate} không được nhỏ hơn {fromDate}",
   "MIN": "{property} phải lớn hơn hoặc bằng {value}",
   "MAX": "{property} phải nhỏ hơn hoặc bằng {value}",
   "MIN_LENGTH": "{property} phải có ít nhất {value} ký tự",

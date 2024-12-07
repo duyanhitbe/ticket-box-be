@@ -73,11 +73,11 @@ export class AuthenticationGuard implements CanActivate {
 	}
 
 	private async getUserByRole(userId: string, role: ENUM_TOKEN_ROLE): Promise<RequestUser> {
-		const cachedUser = await this.redisService.get<RequestUser>({
+		const cachedData = await this.redisService.get<RequestUser>({
 			prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
 			key: userId
 		});
-		if (cachedUser) return cachedUser;
+		if (cachedData) return cachedData;
 
 		switch (role) {
 			case ENUM_TOKEN_ROLE.USER:
@@ -87,7 +87,7 @@ export class AuthenticationGuard implements CanActivate {
 				});
 				if (!user) this.i18nExceptionService.throwNotFoundEntity(UserEntity.name);
 				const resultUser = { id: user.id, username: user.username, role: role };
-				await this.redisService.setNx({
+				this.redisService.setNx({
 					prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
 					key: userId,
 					value: resultUser
@@ -105,7 +105,7 @@ export class AuthenticationGuard implements CanActivate {
 					role: role,
 					customerRoleId: customer.customerRoleId
 				};
-				await this.redisService.setNx({
+				this.redisService.setNx({
 					prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
 					key: userId,
 					value: resultCustomer

@@ -1,14 +1,12 @@
 import { BaseFilterDto } from '@lib/base/dto';
-import { IsOptional } from 'class-validator';
 import { I18nIsUUID, Property, SwaggerProperty } from '@lib/common/decorators';
 
 export class FilterTicketGroupDateDto extends BaseFilterDto {
 	/**
 	 * Mã sự kiện
 	 */
-	@IsOptional()
 	@I18nIsUUID()
 	@SwaggerProperty({ required: false })
 	@Property('Mã sự kiện')
-	eventId?: string;
+	eventId!: string;
 }

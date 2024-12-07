@@ -7,10 +7,12 @@ import { FindEventUseCase } from './usecases/find-event.usecase';
 import { DetailEventUseCase } from './usecases/detail-event.usecase';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
 import { FindLocationUseCase } from './usecases/find-location.usecase';
+import { EventService } from './event.service';
 
 @Module({
 	controllers: [EventController],
 	providers: [
+		EventService,
 		CreateEventUseCase,
 		UpdateEventUseCase,
 		DeleteEventUseCase,

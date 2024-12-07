@@ -2,8 +2,10 @@ import {
 	I18nIsArray,
 	I18nIsDateString,
 	I18nIsEnum,
+	I18nIsFromDateBeforeToDate,
 	I18nIsNotEmpty,
 	I18nIsString,
+	I18nIsToDateAfterFromDate,
 	I18nIsUUID,
 	Property,
 	SwaggerProperty
@@ -67,6 +69,7 @@ export class CreateTicketGroupDto {
 	 */
 	@Transform(({ obj, value }) => (obj.dateType === ENUM_DATE_TYPE.FIXED ? null : value))
 	@ValidateIf((object: CreateTicketGroupDto) => object.dateType === ENUM_DATE_TYPE.DURATION)
+	@I18nIsFromDateBeforeToDate()
 	@I18nIsDateString()
 	@SwaggerProperty({ required: false })
 	@Property('Ngày bắt đầu sự kiện')
@@ -77,6 +80,7 @@ export class CreateTicketGroupDto {
 	 */
 	@Transform(({ obj, value }) => (obj.dateType === ENUM_DATE_TYPE.FIXED ? null : value))
 	@ValidateIf((object: CreateTicketGroupDto) => object.dateType === ENUM_DATE_TYPE.DURATION)
+	@I18nIsToDateAfterFromDate()
 	@I18nIsDateString()
 	@SwaggerProperty({ required: false })
 	@Property('Ngày kết thúc sự kiện')

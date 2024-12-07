@@ -7,18 +7,38 @@ import { QueryHandler } from '@lib/common/abstracts';
 import { TicketGroupRepository } from '@lib/modules/ticket-group';
 import { EventTicketGroupDateEntity } from '@lib/modules/ticket-group-date/entities/event-ticket-group-date.entity';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
+import { REDIS_PREFIX_KEY, RedisService } from '@lib/core/redis';
 
 @Injectable()
 export class FindTicketGroupDateUseCase extends QueryHandler<EventTicketGroupDateEntity> {
 	constructor(
 		private readonly ticketGroupDateRepository: TicketGroupDateRepository,
-		private readonly ticketGroupRepository: TicketGroupRepository
+		private readonly ticketGroupRepository: TicketGroupRepository,
+		private readonly redisService: RedisService
 	) {
 		super();
 	}
 
 	async query(filter: FilterTicketGroupDateDto): Promise<EventTicketGroupDateEntity> {
-		const dateTypes = await this.ticketGroupRepository.findDateTypeByEventId(filter.eventId!);
+		const cachedData = await this.redisService.get<EventTicketGroupDateEntity>({
+			prefix: REDIS_PREFIX_KEY.TICKET_GROUP_DATE.EVENT,
+			key: filter.eventId
+		});
+		if (cachedData) return cachedData;
+
+		const result = await this.getData(filter);
+
+		this.redisService.setNx({
+			prefix: REDIS_PREFIX_KEY.TICKET_GROUP_DATE.EVENT,
+			key: filter.eventId,
+			value: result
+		});
+
+		return result;
+	}
+
+	private async getData(filter: FilterTicketGroupDateDto) {
+		const dateTypes = await this.ticketGroupRepository.findDateTypeByEventId(filter.eventId);
 
 		if (dateTypes.length === 1) {
 			const dateType = dateTypes[0];

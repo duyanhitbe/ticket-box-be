@@ -19,7 +19,7 @@ import { BaseTypeormEntity } from '../entities';
 import { PaginationResponse } from '../dto';
 import { BaseRepository } from '../repositories/repository.base.abstract';
 import { I18nExceptionService } from '@lib/core/i18n';
-import { getMeta, getOffset } from '@lib/common/helpers';
+import { getMeta, getOffset, toCamelCase } from '@lib/common/helpers';
 import { Logger } from '@nestjs/common';
 
 export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseRepository<T> {
@@ -36,17 +36,17 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 	}
 
 	async create(options: CreateOptions<T>): Promise<T> {
-		const { data, returning } = options;
+		const { data, returning = '*' } = options;
+
 		const result = await this.repository
 			.createQueryBuilder()
 			.insert()
-			.into(this.repository.target) // Specify the target entity/table
+			.into(this.repository.target)
 			.values(data as any)
-			.returning(returning as any) // Add RETURNING clause
+			.returning(returning as any)
 			.execute();
 
-		// Extract and return the first row of the inserted data
-		return result.raw[0] as T;
+		return toCamelCase(result.raw[0]) as T;
 	}
 
 	find(options: FindOptions<T>): Promise<T[]> {

@@ -87,6 +87,7 @@ export class CreateEventDto {
 	/**
 	 * Địa điểm
 	 */
+	@IsOptional()
 	@I18nIsString()
 	@I18nIsNotEmpty()
 	@SwaggerProperty({ required: false })
