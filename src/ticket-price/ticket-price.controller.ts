@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
 	CreateTicketPriceDto,
 	FilterTicketPriceDto,
@@ -7,7 +7,6 @@ import {
 } from '@lib/modules/ticket-price';
 import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
 import { UpdateTicketPriceUseCase } from './usecases/update-ticket-price.usecase';
-import { DeleteTicketPriceUseCase } from './usecases/delete-ticket-price.usecase';
 import { FindTicketPriceUseCase } from './usecases/find-ticket-price.usecase';
 import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase';
 import {
@@ -18,6 +17,8 @@ import {
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { UpdateManyTicketPriceUseCase } from './usecases/update-many-ticket-price.usecase';
+import { UpdateManyTicketPriceDto } from '@lib/modules/ticket-price/dto/update-many-ticket-price.dto';
 
 @Controller('ticket-prices')
 @UseAuth({ isPublic: true })
@@ -25,7 +26,7 @@ export class TicketPriceController {
 	constructor(
 		private readonly createTicketPriceUseCase: CreateTicketPriceUseCase,
 		private readonly updateTicketPriceUseCase: UpdateTicketPriceUseCase,
-		private readonly deleteTicketPriceUseCase: DeleteTicketPriceUseCase,
+		private readonly updateManyTicketPriceUseCase: UpdateManyTicketPriceUseCase,
 		private readonly findTicketPriceUseCase: FindTicketPriceUseCase,
 		private readonly detailTicketPriceUseCase: DetailTicketPriceUseCase
 	) {}
@@ -43,6 +44,22 @@ export class TicketPriceController {
 	}
 
 	/**
+	 * @path GET /api/v1/ticket-prices/many/:id
+	 * @param data {UpdateManyTicketPriceDto}
+	 * @returns {Promise<string[]>}
+	 */
+	@Patch('many')
+	@SwaggerOkResponse({
+		summary: 'Update many ticket-price',
+		type: String,
+		paginated: false,
+		isArray: true
+	})
+	updateMany(@Body() data: UpdateManyTicketPriceDto): Promise<string[]> {
+		return this.updateManyTicketPriceUseCase.execute(data);
+	}
+
+	/**
 	 * @path GET /api/v1/ticket-prices/:id
 	 * @param id {string}
 	 * @param data {UpdateTicketPriceDto}
@@ -55,18 +72,6 @@ export class TicketPriceController {
 		@Body() data: UpdateTicketPriceDto
 	): Promise<TicketPriceEntity> {
 		return this.updateTicketPriceUseCase.execute(id, data);
-	}
-
-	/**
-	 * @path DELETE /api/v1/ticket-prices/:id
-	 * @param id {string}
-	 * @returns {Promise<TicketPriceEntity>}
-	 */
-	@Delete(':id')
-	@SwaggerOkResponse({ summary: 'Remove ticket-price', type: TicketPriceEntity })
-	@ApiExcludeEndpoint()
-	remove(@Param('id') id: string): Promise<TicketPriceEntity> {
-		return this.deleteTicketPriceUseCase.execute(id);
 	}
 
 	/**

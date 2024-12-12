@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import {
 	CreateOrderDto,
 	FilterOrderDto,
@@ -7,7 +7,6 @@ import {
 	UpdateOrderDto
 } from '@lib/modules/order';
 import { UpdateOrderUseCase } from './usecases/update-order.usecase';
-import { DeleteOrderUseCase } from './usecases/delete-order.usecase';
 import { FindOrderUseCase } from './usecases/find-order.usecase';
 import { DetailOrderUseCase } from './usecases/detail-order.usecase';
 import {
@@ -28,7 +27,6 @@ import { HandleWebhookPaymentUseCase } from './usecases/handle-webhook-payment.u
 export class OrderController {
 	constructor(
 		private readonly updateOrderUseCase: UpdateOrderUseCase,
-		private readonly deleteOrderUseCase: DeleteOrderUseCase,
 		private readonly findOrderUseCase: FindOrderUseCase,
 		private readonly detailOrderUseCase: DetailOrderUseCase,
 		private readonly placeOrderUseCase: PlaceOrderUseCase,
@@ -67,18 +65,6 @@ export class OrderController {
 	@SwaggerOkResponse({ summary: 'Update order', type: OrderEntity })
 	update(@Param('id') id: string, @Body() data: UpdateOrderDto): Promise<OrderEntity> {
 		return this.updateOrderUseCase.execute(id, data);
-	}
-
-	/**
-	 * @path DELETE /api/v1/orders/:id
-	 * @param id {string}
-	 * @returns {Promise<OrderEntity>}
-	 */
-	@Delete(':id')
-	@SwaggerOkResponse({ summary: 'Remove order', type: OrderEntity })
-	@ApiExcludeEndpoint()
-	remove(@Param('id') id: string): Promise<OrderEntity> {
-		return this.deleteOrderUseCase.execute(id);
 	}
 
 	/**
