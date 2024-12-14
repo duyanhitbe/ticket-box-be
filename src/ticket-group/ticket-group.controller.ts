@@ -6,6 +6,7 @@ import {
 	TicketGroupByEventEntity,
 	TicketGroupDetailEntity,
 	TicketGroupEntity,
+	TicketGroupListEntity,
 	UpdateTicketGroupDto
 } from '@lib/modules/ticket-group';
 import { CreateTicketGroupUseCase } from './usecases/create-ticket-group.usecase';
@@ -74,11 +75,13 @@ export class TicketGroupController {
 	/**
 	 * @path GET /api/v1/ticket-groups
 	 * @param filter {FilterTicketGroupDto}
-	 * @returns {Promise<PaginationResponse<TicketGroupEntity>>}
+	 * @returns {Promise<PaginationResponse<TicketGroupListEntity>>}
 	 */
 	@Get()
-	@SwaggerListResponse({ summary: 'List ticket-group', type: TicketGroupEntity })
-	findAll(@Query() filter: FilterTicketGroupDto): Promise<PaginationResponse<TicketGroupEntity>> {
+	@SwaggerListResponse({ summary: 'List ticket-group', type: TicketGroupListEntity })
+	findAll(
+		@Query() filter: FilterTicketGroupDto
+	): Promise<PaginationResponse<TicketGroupListEntity>> {
 		return this.findTicketGroupUseCase.query(filter);
 	}
 
