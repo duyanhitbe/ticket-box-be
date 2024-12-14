@@ -3,7 +3,11 @@ import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { TicketGroupTypeormEntity } from '../entities/ticket-group.typeorm.entity';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
-import { FilterTicketGroupByEventDto, TicketGroupByEventEntity } from '@lib/modules/ticket-group';
+import {
+	FilterTicketGroupByEventDto,
+	TicketGroupByEventEntity,
+	TicketGroupDetailEntity
+} from '@lib/modules/ticket-group';
 import { getStartAndEndOfDay } from '@lib/common/helpers';
 
 @Repository(TicketGroupTypeormEntity)
@@ -80,5 +84,19 @@ export class TicketGroupTypeormRepository
 			.orderBy('tg.created_at', 'DESC');
 
 		return queryBuilder.getRawMany();
+	}
+
+	async detail(id: string): Promise<TicketGroupDetailEntity> {
+		const ticketGroup = await this.findByIdOrThrow({
+			id,
+			relations: ['dates']
+		});
+
+		const result = new TicketGroupDetailEntity();
+		Object.assign(result, ticketGroup);
+
+		result.dates = ticketGroup.dates?.map((item) => item.date);
+
+		return result;
 	}
 }

@@ -1,7 +1,11 @@
 import { BaseRepository } from '@lib/base/repositories';
 import { TicketGroupEntity } from '../entities/ticket-group.entity.abstract';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
-import { FilterTicketGroupDto, TicketGroupByEventEntity } from '@lib/modules/ticket-group';
+import {
+	FilterTicketGroupDto,
+	TicketGroupByEventEntity,
+	TicketGroupDetailEntity
+} from '@lib/modules/ticket-group';
 
 export abstract class TicketGroupRepository extends BaseRepository<TicketGroupEntity> {
 	abstract findDateTypeByEventId(eventId: string): Promise<ENUM_DATE_TYPE[]>;
@@ -13,4 +17,6 @@ export abstract class TicketGroupRepository extends BaseRepository<TicketGroupEn
 	abstract findPaginatedByEvent(
 		filter: FilterTicketGroupDto
 	): Promise<TicketGroupByEventEntity[]>;
+
+	abstract detail(id: string): Promise<TicketGroupDetailEntity>;
 }

@@ -62,6 +62,12 @@
       "compilerOptions": {
         "tsConfigPath": "libs/modules/tsconfig.lib.json"
       }
+    },
+    "ticket-box:repl": {
+      "type": "application",
+      "root": ".",
+      "entryFile": "repl",
+      "sourceRoot": "src"
     }
   }
 }

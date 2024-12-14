@@ -27,11 +27,11 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 
 	constructor(
 		protected readonly repository: Repository<T>,
-		private readonly entityName: string,
-		private readonly i18nExceptionService: I18nExceptionService
+		protected readonly entityName: string,
+		protected readonly i18nExceptionService: I18nExceptionService
 	) {}
 
-	private throwErrorNotFound(): never {
+	protected throwErrorNotFound(): never {
 		this.i18nExceptionService.throwNotFoundEntity(this.entityName);
 	}
 

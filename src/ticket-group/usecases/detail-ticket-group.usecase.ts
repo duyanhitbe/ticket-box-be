@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { TicketGroupEntity, TicketGroupRepository } from '@lib/modules/ticket-group';
+import { TicketGroupDetailEntity, TicketGroupRepository } from '@lib/modules/ticket-group';
 import { QueryHandler } from '@lib/common/abstracts';
 
 @Injectable()
-export class DetailTicketGroupUseCase extends QueryHandler<TicketGroupEntity> {
+export class DetailTicketGroupUseCase extends QueryHandler<TicketGroupDetailEntity> {
 	constructor(private readonly ticketGroupRepository: TicketGroupRepository) {
 		super();
 	}
 
-	async query(id: string): Promise<TicketGroupEntity> {
-		return this.ticketGroupRepository.findByIdOrThrow({ id });
+	async query(id: string): Promise<TicketGroupDetailEntity> {
+		return this.ticketGroupRepository.detail(id);
 	}
 }

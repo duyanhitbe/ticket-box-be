@@ -4,6 +4,7 @@ import {
 	FilterTicketGroupByEventDto,
 	FilterTicketGroupDto,
 	TicketGroupByEventEntity,
+	TicketGroupDetailEntity,
 	TicketGroupEntity,
 	UpdateTicketGroupDto
 } from '@lib/modules/ticket-group';
@@ -101,11 +102,11 @@ export class TicketGroupController {
 	/**
 	 * @path GET /api/v1/ticket-groups/:id
 	 * @param id {string}
-	 * @returns {Promise<TicketGroupEntity>}
+	 * @returns {Promise<TicketGroupDetailEntity>}
 	 */
 	@Get(':id')
-	@SwaggerOkResponse({ summary: 'Detail ticket-group', type: TicketGroupEntity })
-	findOne(@Param('id') id: string): Promise<TicketGroupEntity> {
+	@SwaggerOkResponse({ summary: 'Detail ticket-group', type: TicketGroupDetailEntity })
+	findOne(@Param('id') id: string): Promise<TicketGroupDetailEntity> {
 		return this.detailTicketGroupUseCase.query(id);
 	}
 }
