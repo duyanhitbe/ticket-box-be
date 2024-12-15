@@ -29,7 +29,15 @@ export class CreateTicketInfoDto {
 	 * Số lượng vé
 	 */
 	@I18nIsNumber()
-	@SwaggerProperty({ required: false })
+	@SwaggerProperty()
 	@Property('Số lượng vé')
 	quantity!: number;
+
+	/**
+	 * Giá vé
+	 */
+	@I18nIsNumber()
+	@SwaggerProperty()
+	@Property('Giá vé')
+	price!: number;
 }

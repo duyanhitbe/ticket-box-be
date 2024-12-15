@@ -88,7 +88,7 @@ export class TicketInfoController {
 	 */
 	@Get('group')
 	@SwaggerListResponse({
-		summary: 'List ticket-info',
+		summary: 'List ticket-info by group',
 		type: TicketInfoByGroupEntity,
 		paginated: false
 	})

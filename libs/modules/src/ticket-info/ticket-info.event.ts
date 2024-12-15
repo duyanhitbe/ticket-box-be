@@ -11,4 +11,8 @@ export type TicketInfoCreatedPayload = {
 	 * Số lượng
 	 */
 	quantity: number;
+	/**
+	 * Giá vé
+	 */
+	price: number;
 };

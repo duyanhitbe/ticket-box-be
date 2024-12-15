@@ -21,7 +21,7 @@ export class CreateTicketInfoUseCase extends ExecuteHandler<TicketInfoEntity> {
 	}
 
 	async execute(data: CreateTicketInfoDto): Promise<TicketInfoEntity> {
-		const { ticketGroupId, name, quantity } = data;
+		const { ticketGroupId, name, quantity, price } = data;
 
 		const { eventId } = await this.ticketGroupRepository.findByIdOrThrow({
 			id: ticketGroupId,
@@ -39,7 +39,8 @@ export class CreateTicketInfoUseCase extends ExecuteHandler<TicketInfoEntity> {
 
 		const payload: TicketInfoCreatedPayload = {
 			ticketInfoId: ticketInfo.id,
-			quantity
+			quantity,
+			price
 		};
 		this.eventEmitterService.emit(TICKET_INFO_EVENTS.CREATED, payload);
 

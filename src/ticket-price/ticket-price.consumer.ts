@@ -32,7 +32,7 @@ export class TicketPriceConsumer {
 
 	@OnEvent(TICKET_INFO_EVENTS.CREATED)
 	async onTicketInfoCreated(payload: TicketInfoCreatedPayload) {
-		const { ticketInfoId } = payload;
+		const { ticketInfoId, price } = payload;
 
 		const customerRoles = await this.customerRoleRepository.find({
 			select: ['id']
@@ -43,7 +43,7 @@ export class TicketPriceConsumer {
 				customerRoles.map((customerRole) => {
 					const data: CreateTicketPriceDto = {
 						ticketInfoId,
-						basePrice: 0,
+						basePrice: price,
 						customerRoleId: customerRole.id
 					};
 					return this.createTicketPriceUsecase.execute(data);
