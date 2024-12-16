@@ -62,7 +62,7 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 
 		const result = rawTicketGroups.reduce((prev: TicketGroupByEventEntity[], next) => {
 			const exist = prev.find((item) => item.id === next.id);
-
+			this.logger.debug(exist);
 			if (!exist) {
 				const res = new TicketGroupByEventEntity();
 
@@ -72,6 +72,8 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 				res.ticketInfos = [];
 
 				pushTicketInfo(res, next);
+
+				prev.push(res);
 			} else {
 				pushTicketInfo(exist, next);
 			}
