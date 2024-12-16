@@ -19,8 +19,9 @@ import { BaseTypeormEntity } from '../entities';
 import { PaginationResponse } from '../dto';
 import { BaseRepository } from '../repositories/repository.base.abstract';
 import { I18nExceptionService } from '@lib/core/i18n';
-import { getMeta, getOffset, toCamelCase } from '@lib/common/helpers';
+import { getMeta, getOffset } from '@lib/common/helpers';
 import { Logger } from '@nestjs/common';
+import { DeepPartial } from 'typeorm/common/DeepPartial';
 
 export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseRepository<T> {
 	protected readonly logger = new Logger(this.constructor.name);
@@ -36,17 +37,11 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 	}
 
 	async create(options: CreateOptions<T>): Promise<T> {
-		const { data, returning = '*' } = options;
+		const { data } = options;
 
-		const result = await this.repository
-			.createQueryBuilder()
-			.insert()
-			.into(this.repository.target)
-			.values(data as any)
-			.returning(returning as any)
-			.execute();
+		const entity = this.repository.create(data as DeepPartial<T>);
 
-		return toCamelCase(result.raw[0]) as T;
+		return entity.save();
 	}
 
 	find(options: FindOptions<T>): Promise<T[]> {

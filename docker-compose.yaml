@@ -1,6 +1,6 @@
 services:
   app:
-    image: ticket-box-be
+    image: duyanhit/ticket-box-be:latest
     container_name: ticket-box-be
     restart: always
     build:
@@ -11,15 +11,15 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - IS_DEBUG=false
-      - TYPEORM_DEBUG=false
+      - IS_DEBUG=true
+      - TYPEORM_DEBUG=true
       - TYPEORM_MIGRATION_RUN=true
       - BASE_URL=http://localhost:3000
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=ticket_box
+      - POSTGRES_DB=postgres
       - JWT_SECRET=nx2Hb3PaSHAPVmyEdvznZCQ5aSaq4IUH
       - RABBIT_MQ_URL=amqp://guest:guest@rabbit:5672
       - REDIS_HOST=redis
@@ -41,35 +41,24 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: ticket_box
+      POSTGRES_DB: postgres
     ports:
-      - '5433:5432'
+      - '5432:5432'
     volumes:
-      - ticket-box-postgres:/var/lib/postgresql/data
+      - ./docker-volumes/postgres:/var/lib/postgresql/data
 
   rabbit:
-    image: rabbitmq:4.1-rc-management-alpine
+    image: rabbitmq:4.1-rc-management
     container_name: ticket-box-rabbit
     restart: always
     ports:
-      - "5673:5672"
-      - "15673:15672"
+      - "5672:5672"
+      - "15672:15672"
     volumes:
-      - ticket-box-rabbit:/var/lib/rabbitmq
-      - ticket-box-rabbit:/var/log/rabbitmq
+      - ./docker-volumes/rabbitmq:/var/lib/rabbitmq
+      - ./docker-volumes/rabbitmq:/var/log/rabbitmq
 
   redis:
     image: redis:7-alpine
     container_name: ticket-box-redis
     restart: always
-    ports:
-      - "6378:6379"
-    volumes:
-      - ticket-box-redis:/data
-    command: [ "redis-server", "--requirepass", "7NUEgvUrHzyCXb59U7Se4keB2QyILsQI" ]
-
-
-volumes:
-  ticket-box-postgres:
-  ticket-box-rabbit:
-  ticket-box-redis:
