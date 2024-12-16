@@ -1,8 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { TicketInfoRepository } from '@lib/modules/ticket-info';
 import { QueryHandler } from '@lib/common/abstracts';
 import { FilterTicketInfoByGroupDto } from '@lib/modules/ticket-info/dto/filter-ticket-info-by-group.dto';
-import { CustomerRoleRepository, ENUM_CUSTOMER_ROLE_CODE } from '@lib/modules/customer-role';
+import { CustomerRoleRepository } from '@lib/modules/customer-role';
 import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity';
 
 @Injectable()
@@ -16,20 +16,9 @@ export class FindTicketInfoByGroupUseCase extends QueryHandler<TicketInfoByGroup
 
 	async query(
 		filter: FilterTicketInfoByGroupDto,
-		customerRoleId?: string
+		userRoleId?: string
 	): Promise<TicketInfoByGroupEntity[]> {
-		if (!customerRoleId) {
-			const customerRole = await this.customerRoleRepository.findOne({
-				where: {
-					code: ENUM_CUSTOMER_ROLE_CODE.NORMAL_CUSTOMER
-				},
-				select: ['id']
-			});
-			if (!customerRole) {
-				throw new InternalServerErrorException('Invalid data');
-			}
-			customerRoleId = customerRole.id;
-		}
+		const customerRoleId = await this.customerRoleRepository.getCustomerRoleId(userRoleId);
 
 		return this.ticketInfoRepository.findAllWithPriceByGroup(
 			filter.ticketGroupId,

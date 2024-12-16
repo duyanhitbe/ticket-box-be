@@ -5,7 +5,7 @@ import { TicketGroupTypeormEntity } from '../entities/ticket-group.typeorm.entit
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
 import {
 	FilterTicketGroupByEventDto,
-	TicketGroupByEventEntity,
+	RawTicketGroupByEventEntity,
 	TicketGroupDetailEntity
 } from '@lib/modules/ticket-group';
 import { getStartAndEndOfDay } from '@lib/common/helpers';
@@ -64,26 +64,32 @@ export class TicketGroupTypeormRepository
 		};
 	}
 
+	//prettier-ignore
 	async findPaginatedByEvent(
-		filter: FilterTicketGroupByEventDto
-	): Promise<TicketGroupByEventEntity[]> {
+		filter: FilterTicketGroupByEventDto,
+		customerRoleId: string
+	): Promise<RawTicketGroupByEventEntity[]> {
 		const { eventId, date } = filter;
 		const { startOfDay, endOfDay } = getStartAndEndOfDay(date);
 
-		const queryBuilder = this.repository
-			.createQueryBuilder('tg')
-			.select(['tg.id as "id"', 'tg.name as "name"', 'tg.description as "description"'])
-			.leftJoin('ticket_group_dates', 'tgd', 'tgd.ticket_group_id = tg.id')
-			.where(`tg.event_id = :eventId`, { eventId })
-			.andWhere(
-				`(tg.from_date >= '${startOfDay.toISOString()}' AND tg.to_date >= '${endOfDay.toISOString()}')`
+		return this.repository.query(`
+            WITH ticket_info AS (
+            	SELECT t.id, t.name, t.quantity, t.ticket_group_id, tp.base_price, tp.discounted_price
+                FROM ticket_infos t
+                LEFT JOIN ticket_prices tp ON tp.ticket_info_id = t.id AND tp.customer_role_id = '${customerRoleId}' AND tp.deleted_at IS NULL
+				WHERE t.deleted_at IS NULL
 			)
-			.orWhere(
-				`(tgd.date BETWEEN '${startOfDay.toISOString()}' AND '${endOfDay.toISOString()}')`
-			)
-			.orderBy('tg.created_at', 'DESC');
-
-		return queryBuilder.getRawMany();
+            SELECT tg.id, tg.name, tg.description, tf.id AS "ticketInfoId", tf.name AS "ticketInfoName", tf.quantity::int AS "ticketInfoQuantity", tf.base_price::int AS "ticketInfoBasePrice", tf.discounted_price::int AS "ticketInfoDiscountedPrice"
+            FROM ticket_groups tg
+			LEFT JOIN ticket_group_dates tgd ON tgd.ticket_group_id = tg.id AND tgd.deleted_at IS NULL
+			LEFT JOIN ticket_info tf ON tf.ticket_group_id = tg.id
+            WHERE (
+                tg.event_id = '${eventId}' AND
+                (tg.from_date >= '${startOfDay.toISOString()}' AND tg.to_date >= '${endOfDay.toISOString()}') OR
+                (tgd.date BETWEEN '${startOfDay.toISOString()}' AND '${endOfDay.toISOString()}')
+            ) AND (tg.deleted_at IS NULL)
+            ORDER BY tg.created_at DESC;
+		`)
 	}
 
 	async detail(id: string): Promise<TicketGroupDetailEntity> {

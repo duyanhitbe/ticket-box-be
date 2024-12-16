@@ -18,10 +18,12 @@ import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
-	UseAuth
+	UseAuth,
+	User
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FindTicketGroupByEventUseCase } from './usecases/find-ticket-group-by-event.usecase';
+import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('ticket-groups')
 @UseAuth({ isPublic: true })
@@ -88,6 +90,7 @@ export class TicketGroupController {
 	/**
 	 * @path GET /api/v1/ticket-groups/event
 	 * @param filter {FilterTicketGroupByEventDto}
+	 * @param user
 	 * @returns {Promise<TicketGroupByEventEntity[]>}
 	 */
 	@Get('event')
@@ -97,9 +100,10 @@ export class TicketGroupController {
 		paginated: false
 	})
 	findAllByEvent(
-		@Query() filter: FilterTicketGroupByEventDto
+		@Query() filter: FilterTicketGroupByEventDto,
+		@User() user: RequestUser
 	): Promise<TicketGroupByEventEntity[]> {
-		return this.findTicketGroupByEventUseCase.query(filter);
+		return this.findTicketGroupByEventUseCase.query(filter, user?.customerRoleId);
 	}
 
 	/**

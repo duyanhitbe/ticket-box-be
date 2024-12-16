@@ -3,7 +3,7 @@ import { TicketGroupEntity } from '../entities/ticket-group.entity.abstract';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
 import {
 	FilterTicketGroupDto,
-	TicketGroupByEventEntity,
+	RawTicketGroupByEventEntity,
 	TicketGroupDetailEntity
 } from '@lib/modules/ticket-group';
 
@@ -15,8 +15,9 @@ export abstract class TicketGroupRepository extends BaseRepository<TicketGroupEn
 	abstract findMinMaxMixed(eventId: string): Promise<{ fromDate: Date; toDate: Date } | null>;
 
 	abstract findPaginatedByEvent(
-		filter: FilterTicketGroupDto
-	): Promise<TicketGroupByEventEntity[]>;
+		filter: FilterTicketGroupDto,
+		customerRoleId: string
+	): Promise<RawTicketGroupByEventEntity[]>;
 
 	abstract detail(id: string): Promise<TicketGroupDetailEntity>;
 }

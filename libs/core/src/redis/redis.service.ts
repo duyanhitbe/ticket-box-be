@@ -48,6 +48,7 @@ export class RedisServiceImp extends RedisService {
 	async setNx(options: RedisSetNxOptions): Promise<void> {
 		const { value } = options;
 		const setKey = this.getKey(options);
+		await this.del(options);
 		await this.redis.setnx(setKey, JSON.stringify(value));
 		this.logger.log(`Cached data with key=${setKey} | ttl=forever`);
 		this.logger.debug(value);
