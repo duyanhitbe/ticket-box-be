@@ -25,11 +25,11 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 		userRoleId?: string
 	): Promise<TicketGroupByEventEntity[]> {
 		const { eventId, date } = filter;
-		// const cachedData = await this.redisService.get({
-		// 	prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
-		// 	key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')]
-		// });
-		// if (cachedData) return cachedData;
+		const cachedData = await this.redisService.get({
+			prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
+			key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')]
+		});
+		if (cachedData) return cachedData;
 
 		const customerRoleId = await this.customerRoleRepository.getCustomerRoleId(userRoleId);
 		const rawTicketGroups = await this.ticketGroupRepository.findPaginatedByEvent(
