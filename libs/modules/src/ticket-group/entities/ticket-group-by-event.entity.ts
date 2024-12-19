@@ -1,5 +1,5 @@
 import { Property, SwaggerProperty } from '@lib/common/decorators';
-import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity';
+import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info';
 
 export class TicketGroupByEventEntity {
 	/**

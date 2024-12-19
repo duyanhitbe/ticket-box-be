@@ -6,6 +6,7 @@ import {
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
+import { IsOptional } from 'class-validator';
 
 export class CreateTicketInfoDto {
 	/**
@@ -40,4 +41,13 @@ export class CreateTicketInfoDto {
 	@SwaggerProperty()
 	@Property('Giá vé')
 	price!: number;
+
+	/**
+	 * Thứ tự hiển thị
+	 */
+	@IsOptional()
+	@I18nIsNumber()
+	@SwaggerProperty()
+	@Property('Thứ tự hiển thị')
+	order?: number;
 }

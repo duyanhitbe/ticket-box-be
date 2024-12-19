@@ -1,15 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-	CreateTicketInfoDto,
-	FilterTicketInfoDto,
-	TicketInfoEntity,
-	UpdateTicketInfoDto
-} from '@lib/modules/ticket-info';
-import { CreateTicketInfoUseCase } from './usecases/create-ticket-info.usecase';
-import { UpdateTicketInfoUseCase } from './usecases/update-ticket-info.usecase';
-import { DeleteTicketInfoUseCase } from './usecases/delete-ticket-info.usecase';
-import { FindTicketInfoUseCase } from './usecases/find-ticket-info.usecase';
-import { DetailTicketInfoUseCase } from './usecases/detail-ticket-info.usecase';
+import { PaginationResponse } from '@lib/base/dto';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
@@ -17,11 +6,22 @@ import {
 	UseAuth,
 	User
 } from '@lib/common/decorators';
-import { PaginationResponse } from '@lib/base/dto';
-import { FilterTicketInfoByGroupDto } from '@lib/modules/ticket-info/dto/filter-ticket-info-by-group.dto';
-import { FindTicketInfoByGroupUseCase } from './usecases/find-ticket-info-by-group.usecase';
-import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity';
 import { RequestUser } from '@lib/common/interfaces';
+import {
+	CreateTicketInfoDto,
+	FilterTicketInfoByGroupDto,
+	FilterTicketInfoDto,
+	TicketInfoByGroupEntity,
+	TicketInfoEntity,
+	UpdateTicketInfoDto
+} from '@lib/modules/ticket-info';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { CreateTicketInfoUseCase } from './usecases/create-ticket-info.usecase';
+import { DeleteTicketInfoUseCase } from './usecases/delete-ticket-info.usecase';
+import { DetailTicketInfoUseCase } from './usecases/detail-ticket-info.usecase';
+import { FindTicketInfoByGroupUseCase } from './usecases/find-ticket-info-by-group.usecase';
+import { FindTicketInfoUseCase } from './usecases/find-ticket-info.usecase';
+import { UpdateTicketInfoUseCase } from './usecases/update-ticket-info.usecase';
 
 @Controller('ticket-infos')
 @UseAuth({ isPublic: true })

@@ -1,4 +1,4 @@
-import { CreateOrderDto } from '@lib/modules/order/dto/create-order.dto';
+import { CreateOrderDto } from '@lib/modules/order';
 import { RequestUser } from '@lib/common/interfaces';
 
 export type CreateOrderEventPayload = CreateOrderDto & {

@@ -1,21 +1,21 @@
-import { Controller, Logger } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { Logging } from '@lib/common/decorators';
+import {
+	CUSTOMER_ROLE_EVENTS,
+	CustomerRoleCreatedPayload,
+	CustomerRoleDeletedPayload,
+	CustomerRoleRepository
+} from '@lib/modules/customer-role';
+import { EventRepository } from '@lib/modules/event';
 import {
 	TICKET_INFO_EVENTS,
 	TicketInfoCreatedPayload,
 	TicketInfoRepository
 } from '@lib/modules/ticket-info';
-import { CustomerRoleRepository } from '@lib/modules/customer-role';
-import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
 import { CreateTicketPriceDto, TicketPriceRepository } from '@lib/modules/ticket-price';
-import {
-	CUSTOMER_ROLE_EVENTS,
-	CustomerRoleCreatedPayload,
-	CustomerRoleDeletedPayload
-} from '@lib/modules/customer-role/customer-role.event';
-import { EventRepository } from '@lib/modules/event';
+import { Controller, Logger } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { In } from 'typeorm';
-import { Logging } from '@lib/common/decorators';
+import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
 
 @Controller()
 @Logging()

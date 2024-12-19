@@ -1,5 +1,5 @@
 import { Property, SwaggerProperty } from '@lib/common/decorators';
-import { ENUM_PAYMENT_METHOD } from '@lib/modules/order/order.enum';
+import { ENUM_PAYMENT_METHOD } from '@lib/modules/order';
 
 export class OrderCreatedEntity {
 	/**

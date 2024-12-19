@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { EventPattern, Payload } from '@nestjs/microservices';
+import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { RABBITMQ_PATTERNS } from '@lib/core/rabbitmq';
 import { Logging } from '@lib/common/decorators';
 
@@ -7,7 +7,10 @@ import { Logging } from '@lib/common/decorators';
 @Logging()
 export class MailConsumer {
 	@EventPattern(RABBITMQ_PATTERNS.SEND_MAIL)
-	onSendMail(@Payload() payload: any) {
+	onSendMail(@Payload() payload: any, @Ctx() context: RmqContext) {
+		const channel = context.getChannelRef();
+		const originalMessage = context.getMessage();
 		console.log(payload);
+		channel.ack(originalMessage);
 	}
 }

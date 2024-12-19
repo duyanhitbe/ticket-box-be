@@ -1,7 +1,6 @@
+import { TicketInfoByIdsEntity, TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
 import { Injectable, Logger } from '@nestjs/common';
 import { QueryRunner } from 'typeorm';
-import { TicketInfoByIdsEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-ids.entity';
-import { TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
 
 @Injectable()
 export class OrderService {

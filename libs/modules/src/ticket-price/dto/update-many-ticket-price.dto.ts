@@ -1,4 +1,4 @@
-import { UpdateTicketPriceDto } from '@lib/modules/ticket-price';
+import { UpdateTicketPriceDto } from './update-ticket-price.dto';
 import {
 	I18nIsArray,
 	I18nIsNotEmpty,

@@ -2,8 +2,10 @@ import { TicketInfoRepository } from './ticket-info.repository.abstract';
 import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { TicketInfoTypeormEntity } from '../entities/ticket-info.typeorm.entity';
-import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-group.entity';
-import { TicketInfoEntity } from '@lib/modules/ticket-info';
+import { TicketInfoByGroupEntity, TicketInfoEntity } from '@lib/modules/ticket-info';
+import { CreateOptions, FindPaginatedOptions } from '@lib/base/types';
+import { getMeta, getOffset, randomString } from '@lib/common/helpers';
+import { PaginationResponse } from '@lib/base/dto';
 
 @Repository(TicketInfoTypeormEntity)
 export class TicketInfoTypeormRepository
@@ -70,5 +72,73 @@ export class TicketInfoTypeormRepository
 		}
 
 		return ticketInfo;
+	}
+
+	async create(
+		options: CreateOptions<TicketInfoTypeormEntity>
+	): Promise<TicketInfoTypeormEntity> {
+		const { data } = options;
+		const code = await this.getCode();
+
+		return super.create({
+			data: {
+				...data,
+				code
+			}
+		});
+	}
+
+	private async getCode(): Promise<string> {
+		const code = randomString(6);
+
+		const exist = await this.exists({
+			where: { code }
+		});
+		if (exist) {
+			return this.getCode();
+		}
+
+		return code;
+	}
+
+	async findPaginated(
+		options: FindPaginatedOptions<TicketInfoTypeormEntity>
+	): Promise<PaginationResponse<TicketInfoTypeormEntity>> {
+		const limit = +(options.limit || 25);
+		const page = +(options.page || 1);
+		const offset = getOffset(limit, page);
+
+		const queryBuilder = this.repository
+			.createQueryBuilder('tf')
+			.select([
+				'tf.id as "id"',
+				'tf.created_at as "createdAt"',
+				'tf.updated_at as "updatedAt"',
+				'tf.deleted_at as "deletedAt"',
+				'tf.status as "status"',
+				'tf.name as "name"',
+				'tf.quantity as "quantity"',
+				'tf.code as "code"',
+				'tf.order as "order"',
+				'e.name as "eventName"',
+				'tg.name as "ticketGroupName"'
+			])
+			.leftJoin('events', 'e', 'e.id = tf.event_id')
+			.leftJoin('ticket_groups', 'tg', 'tg.id = tf.ticket_group_id')
+			.orderBy('tf.order', 'ASC');
+
+		const [data, count] = await Promise.all([
+			queryBuilder
+				.limit(+(limit || '25'))
+				.offset(offset)
+				.getRawMany(),
+			queryBuilder.getCount()
+		]);
+		const meta = getMeta(limit, page, count);
+
+		return {
+			data,
+			meta
+		};
 	}
 }

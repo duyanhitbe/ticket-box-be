@@ -7,7 +7,7 @@ import {
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
-import { ENUM_PAYMENT_METHOD } from '@lib/modules/order/order.enum';
+import { ENUM_PAYMENT_METHOD } from '../order.enum';
 import { IsOptional, ValidateIf, ValidateNested } from 'class-validator';
 import { CreateOrderDetailDto } from '@lib/modules/order-detail';
 import { Type } from 'class-transformer';

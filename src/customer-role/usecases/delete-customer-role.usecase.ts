@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CustomerRoleEntity, CustomerRoleRepository } from '@lib/modules/customer-role';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import {
-	CUSTOMER_ROLE_EVENTS,
-	CustomerRoleDeletedPayload
-} from '@lib/modules/customer-role/customer-role.event';
+import { CUSTOMER_ROLE_EVENTS, CustomerRoleDeletedPayload } from '@lib/modules/customer-role';
 import { EventEmitterService } from '@lib/core/event';
 
 @Injectable()

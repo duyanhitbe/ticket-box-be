@@ -1,24 +1,24 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import {
-	CreateTicketPriceDto,
-	FilterTicketPriceDto,
-	TicketPriceEntity,
-	UpdateTicketPriceDto
-} from '@lib/modules/ticket-price';
-import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
-import { UpdateTicketPriceUseCase } from './usecases/update-ticket-price.usecase';
-import { FindTicketPriceUseCase } from './usecases/find-ticket-price.usecase';
-import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase';
+import { PaginationResponse } from '@lib/base/dto';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
 	UseAuth
 } from '@lib/common/decorators';
-import { PaginationResponse } from '@lib/base/dto';
+import {
+	CreateTicketPriceDto,
+	FilterTicketPriceDto,
+	TicketPriceEntity,
+	UpdateManyTicketPriceDto,
+	UpdateTicketPriceDto
+} from '@lib/modules/ticket-price';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
+import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase';
+import { FindTicketPriceUseCase } from './usecases/find-ticket-price.usecase';
 import { UpdateManyTicketPriceUseCase } from './usecases/update-many-ticket-price.usecase';
-import { UpdateManyTicketPriceDto } from '@lib/modules/ticket-price/dto/update-many-ticket-price.dto';
+import { UpdateTicketPriceUseCase } from './usecases/update-ticket-price.usecase';
 
 @Controller('ticket-prices')
 @UseAuth({ isPublic: true })

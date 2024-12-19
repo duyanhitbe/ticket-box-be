@@ -9,3 +9,4 @@ export * from './repositories/customer-role.typeorm.repository';
 export * from './repositories/customer-role.repository.abstract';
 
 export * from './customer-role.enum';
+export * from './customer-role.event';

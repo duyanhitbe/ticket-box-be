@@ -1,16 +1,15 @@
-import { Injectable } from '@nestjs/common';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { CreateOrderEventPayload, ENUM_ORDER_STATUS, OrderRepository } from '@lib/modules/order';
-import { CustomerEntity, CustomerRepository } from '@lib/modules/customer';
-import { TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
-import { TicketInfoByIdsEntity } from '@lib/modules/ticket-info/entities/ticket-info-by-ids.entity';
-import { CreateOrderDetailDto, OrderDetailTypeormEntity } from '@lib/modules/order-detail';
 import { RequestUser } from '@lib/common/interfaces';
+import { CustomerEntity, CustomerRepository } from '@lib/modules/customer';
+import { CustomerRoleRepository } from '@lib/modules/customer-role'; // totalPrice
+import { CreateOrderEventPayload, ENUM_ORDER_STATUS, OrderRepository } from '@lib/modules/order';
+import { CreateOrderDetailDto, OrderDetailTypeormEntity } from '@lib/modules/order-detail';
+import { TicketTypeormEntity } from '@lib/modules/ticket';
+import { TicketInfoByIdsEntity, TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
+import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, In, IsNull, QueryRunner } from 'typeorm';
-import { TicketTypeormEntity } from '@lib/modules/ticket';
 import { OrderService } from '../order.service';
-import { CustomerRoleRepository } from '@lib/modules/customer-role'; // totalPrice
 
 // totalPrice
 

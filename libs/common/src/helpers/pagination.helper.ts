@@ -13,6 +13,9 @@ export function getMeta(limit: number, page: number, totalItem: number) {
 	};
 }
 
-export function getOffset(limit: number, page: number) {
-	return limit * (page - 1);
+export function getOffset(
+	limit: number | string | null | undefined,
+	page: number | string | null | undefined
+) {
+	return +(limit || '25') * (+(page || '1') - 1);
 }

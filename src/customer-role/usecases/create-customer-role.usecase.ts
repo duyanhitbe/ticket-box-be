@@ -5,10 +5,7 @@ import {
 	CustomerRoleRepository
 } from '@lib/modules/customer-role';
 import { ExecuteHandler } from '@lib/common/abstracts';
-import {
-	CUSTOMER_ROLE_EVENTS,
-	CustomerRoleCreatedPayload
-} from '@lib/modules/customer-role/customer-role.event';
+import { CUSTOMER_ROLE_EVENTS, CustomerRoleCreatedPayload } from '@lib/modules/customer-role';
 import { EventEmitterService } from '@lib/core/event';
 
 @Injectable()

@@ -32,6 +32,20 @@ export abstract class TicketInfoEntity extends BaseEntity {
 	@Property('Số lượng vé')
 	quantity!: number;
 
+	/**
+	 * Mã vé
+	 */
+	@SwaggerProperty()
+	@Property('Mã vé')
+	code!: string;
+
+	/**
+	 * Thứ tự hiển thị
+	 */
+	@SwaggerProperty()
+	@Property('Thứ tự hiển thị')
+	order!: number;
+
 	/* ========== Relations ========== */
 
 	/**

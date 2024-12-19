@@ -1,5 +1,5 @@
 import { BaseEntity } from '@lib/base/entities';
-import { ENUM_ORDER_STATUS, ENUM_PAYMENT_METHOD } from '@lib/modules/order/order.enum';
+import { ENUM_ORDER_STATUS, ENUM_PAYMENT_METHOD } from '@lib/modules/order';
 import { EventEntity } from '@lib/modules/event';
 import { CustomerEntity } from '@lib/modules/customer';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
