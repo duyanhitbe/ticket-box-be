@@ -13,3 +13,4 @@ export * from './repositories/ticket-group.typeorm.repository';
 export * from './repositories/ticket-group.repository.abstract';
 
 export * from './ticket-group.event';
+export * from './ticket-group.type';

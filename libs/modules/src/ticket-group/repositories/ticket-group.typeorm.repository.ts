@@ -6,7 +6,8 @@ import { ENUM_DATE_TYPE } from '@lib/modules/common';
 import {
 	FilterTicketGroupByEventDto,
 	RawTicketGroupByEventEntity,
-	TicketGroupDetailEntity
+	TicketGroupDetailEntity,
+	TicketGroupMinMax
 } from '@lib/modules/ticket-group';
 import { getStartAndEndOfDay } from '@lib/common/helpers';
 
@@ -25,7 +26,7 @@ export class TicketGroupTypeormRepository
 		return res.map((item) => item.dateType);
 	}
 
-	async findMinMaxDuration(eventId: string): Promise<{ fromDate: Date; toDate: Date } | null> {
+	async findMinMaxDuration(eventId: string): Promise<TicketGroupMinMax> {
 		const res = await this.repository
 			.createQueryBuilder('tg')
 			.select([`MIN(tg.from_date) as "fromDate"`, `MAX(tg.to_date) as "toDate"`])
@@ -39,7 +40,7 @@ export class TicketGroupTypeormRepository
 		};
 	}
 
-	async findMinMaxMixed(eventId: string): Promise<{ fromDate: Date; toDate: Date } | null> {
+	async findMinMaxMixed(eventId: string): Promise<TicketGroupMinMax> {
 		const res = await this.repository
 			.createQueryBuilder('tg')
 			.select([

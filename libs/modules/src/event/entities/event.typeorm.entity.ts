@@ -39,4 +39,6 @@ export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity
 
 	@TypeormColumn({ nullable: true })
 	location?: string;
+
+	startDate?: Date;
 }

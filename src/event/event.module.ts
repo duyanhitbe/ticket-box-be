@@ -8,8 +8,10 @@ import { DetailEventUseCase } from './usecases/detail-event.usecase';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
 import { FindLocationUseCase } from './usecases/find-location.usecase';
 import { EventService } from './event.service';
+import { TicketGroupDateModule } from '../ticket-group-date/ticket-group-date.module';
 
 @Module({
+	imports: [TicketGroupDateModule],
 	controllers: [EventController],
 	providers: [
 		EventService,
