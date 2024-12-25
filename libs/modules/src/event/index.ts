@@ -9,3 +9,4 @@ export * from './repositories/event.typeorm.repository';
 export * from './repositories/event.repository.abstract';
 
 export * from './event.enum';
+export * from './event.constant';

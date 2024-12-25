@@ -19,7 +19,6 @@ import {
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
-import { FindLocationUseCase } from './usecases/find-location.usecase';
 
 @Controller('events')
 @UseAuth({ isPublic: true })
@@ -30,7 +29,6 @@ export class EventController {
 		private readonly deleteEventUseCase: DeleteEventUseCase,
 		private readonly findBannerUseCase: FindBannerUseCase,
 		private readonly findEventUseCase: FindEventUseCase,
-		private readonly findLocationUseCase: FindLocationUseCase,
 		private readonly detailEventUseCase: DetailEventUseCase
 	) {}
 
@@ -107,20 +105,6 @@ export class EventController {
 	})
 	findAllBanner(): Promise<EventEntity[]> {
 		return this.findBannerUseCase.query();
-	}
-
-	/**
-	 * @path GET /api/v1/events/location
-	 * @returns {string[]}
-	 */
-	@Get('location')
-	@SwaggerListResponse({
-		summary: 'List location',
-		type: String,
-		paginated: false
-	})
-	findAllLocation(): Promise<string[]> {
-		return this.findLocationUseCase.query();
 	}
 
 	/**

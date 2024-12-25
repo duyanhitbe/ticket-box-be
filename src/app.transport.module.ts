@@ -11,6 +11,7 @@ import { CustomerModule } from './customer/customer.module';
 import { CustomerRoleModule } from './customer-role/customer-role.module';
 import { OrderModule } from './order/order.module';
 import { OrderDetailModule } from './order-detail/order-detail.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
 	imports: [
@@ -25,7 +26,8 @@ import { OrderDetailModule } from './order-detail/order-detail.module';
 		CustomerModule,
 		CustomerRoleModule,
 		OrderModule,
-		OrderDetailModule
+		OrderDetailModule,
+		LocationModule
 	]
 })
 export class AppTransportModule {}

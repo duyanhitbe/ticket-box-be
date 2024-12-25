@@ -77,9 +77,16 @@ export abstract class EventEntity extends BaseEntity {
 	location?: string;
 
 	/**
-	 * Ngày bắt đầu sự
+	 * Ngày bắt đầu sự kiện
 	 */
 	@SwaggerProperty({ required: false })
 	@Property('Ngày bắt đầu sự kiện')
 	startDate?: Date;
+
+	/**
+	 * Tên loại sự kiện
+	 */
+	@SwaggerProperty({ required: false })
+	@Property('Tên loại sự kiện')
+	eventTypeName?: string;
 }
