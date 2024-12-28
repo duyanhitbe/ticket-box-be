@@ -19,7 +19,7 @@ import { BaseTypeormEntity } from '../entities';
 import { PaginationResponse } from '../dto';
 import { BaseRepository } from '../repositories/repository.base.abstract';
 import { I18nExceptionService } from '@lib/core/i18n';
-import { getMeta, getOffset } from '@lib/common/helpers';
+import { getMeta, getPageLimitOffset } from '@lib/common/helpers';
 import { Logger } from '@nestjs/common';
 import { DeepPartial } from 'typeorm/common/DeepPartial';
 
@@ -50,16 +50,11 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 	}
 
 	async findPaginated(options: FindPaginatedOptions<T>): Promise<PaginationResponse<T>> {
-		const { where, select, offset, relations } = options;
+		const { select, relations, where, order } = options;
 
-		let order = options.order;
-		if (!order) order = {};
-		order.createdAt = 'DESC';
-
-		const limit = +(options.limit || 25);
-		const page = +(options.page || 1);
+		const { limit, page, offset } = getPageLimitOffset(options);
 		const take = limit || 10;
-		const skip = offset || getOffset(limit, page);
+		const skip = options.offset || offset;
 
 		const [data, totalItem] = await this.repository.findAndCount({
 			where,

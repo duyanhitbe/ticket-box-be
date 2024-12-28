@@ -70,4 +70,9 @@ export class RawTicketGroupByEventEntity {
 	 * Giá vé sau giảm
 	 */
 	ticketInfoDiscountedPrice?: number;
+
+	/**
+	 * Thứ tự vé
+	 */
+	ticketInfoOrder?: number;
 }

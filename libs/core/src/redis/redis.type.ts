@@ -1,5 +1,5 @@
 export type RedisKeyOption = {
-	key?: string | (string | null | undefined)[];
+	key?: string | (string | number | null | undefined)[];
 	prefix: string;
 };
 export type RedisSetOptions = RedisKeyOption & {

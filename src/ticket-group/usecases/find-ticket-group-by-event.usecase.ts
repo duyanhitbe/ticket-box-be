@@ -46,7 +46,8 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 				item.ticketInfoName,
 				item.ticketInfoQuantity,
 				item.ticketInfoBasePrice,
-				item.ticketInfoDiscountedPrice
+				item.ticketInfoDiscountedPrice,
+				item.ticketInfoOrder
 			].every((ticketInfo) => ticketInfo !== undefined && ticketInfo !== null);
 
 			if (haveTicketInfo) {
@@ -55,9 +56,11 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 					name: item.ticketInfoName!,
 					quantity: item.ticketInfoQuantity!,
 					basePrice: item.ticketInfoBasePrice!,
-					discountedPrice: item.ticketInfoDiscountedPrice!
+					discountedPrice: item.ticketInfoDiscountedPrice!,
+					order: item.ticketInfoOrder!
 				});
 			}
+			// res.ticketInfos = res.ticketInfos.sort((a, b) => a.order - b.order);
 		};
 
 		const result = rawTicketGroups.reduce((prev: TicketGroupByEventEntity[], next) => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FilterCustomerDto, CustomerEntity, CustomerRepository } from '@lib/modules/customer';
+import { CustomerEntity, CustomerRepository, FilterCustomerDto } from '@lib/modules/customer';
 import { PaginationResponse } from '@lib/base/dto';
 import { QueryHandler } from '@lib/common/abstracts';
 
@@ -10,6 +10,7 @@ export class FindCustomerUseCase extends QueryHandler<PaginationResponse<Custome
 	}
 
 	async query(filter: FilterCustomerDto): Promise<PaginationResponse<CustomerEntity>> {
+		filter.searchFields = ['name', 'email', 'phone'];
 		return this.customerRepository.findPaginated(filter);
 	}
 }

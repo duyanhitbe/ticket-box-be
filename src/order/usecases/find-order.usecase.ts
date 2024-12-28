@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { FilterOrderDto, OrderEntity, OrderRepository } from '@lib/modules/order';
+import { FilterOrderDto, ListOrderEntity, OrderRepository } from '@lib/modules/order';
 import { PaginationResponse } from '@lib/base/dto';
 import { QueryHandler } from '@lib/common/abstracts';
 
 @Injectable()
-export class FindOrderUseCase extends QueryHandler<PaginationResponse<OrderEntity>> {
+export class FindOrderUseCase extends QueryHandler<PaginationResponse<ListOrderEntity>> {
 	constructor(private readonly orderRepository: OrderRepository) {
 		super();
 	}
 
-	async query(filter: FilterOrderDto): Promise<PaginationResponse<OrderEntity>> {
+	async query(filter: FilterOrderDto): Promise<PaginationResponse<ListOrderEntity>> {
 		return this.orderRepository.findPaginated(filter);
 	}
 }

@@ -1,9 +1,8 @@
 import { EventEntity } from './event.entity.abstract';
 import { BaseTypeormEntity } from '@lib/base/entities';
-import { AfterLoad, Entity } from 'typeorm';
+import { Entity } from 'typeorm';
 import { ENUM_EVENT_TYPE } from '../event.enum';
 import { TypeormColumn } from '@lib/common/decorators';
-import { EventType } from '../event.constant';
 
 @Entity('events')
 export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity {
@@ -42,12 +41,6 @@ export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity
 	location?: string;
 
 	startDate?: Date;
-	eventTypeName?: string;
 
 	/* ========== Hooks ========== */
-
-	@AfterLoad()
-	afterLoad() {
-		this.eventTypeName = EventType[this.eventType];
-	}
 }

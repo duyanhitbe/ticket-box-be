@@ -35,4 +35,11 @@ export abstract class TicketInfoByGroupEntity {
 	@SwaggerProperty()
 	@Property('Giá sau giảm')
 	discountedPrice!: number;
+
+	/**
+	 * Thứ tự vé
+	 */
+	@SwaggerProperty()
+	@Property('Thứ tự vé')
+	order!: number;
 }

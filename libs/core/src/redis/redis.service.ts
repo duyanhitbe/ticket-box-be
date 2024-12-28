@@ -28,13 +28,13 @@ export class RedisServiceImp extends RedisService {
 		const { key, prefix } = options;
 		let result = '';
 		if (typeof key === 'string') {
-			const keys = [prefix];
+			const keys: (string | number)[] = [prefix];
 			if (key) {
 				keys.push(key);
 			}
 			result = keys.join(':');
 		} else {
-			const keys = [prefix];
+			const keys: (string | number)[] = [prefix];
 			if (key) {
 				key.forEach((k) => {
 					if (k) keys.push(k);

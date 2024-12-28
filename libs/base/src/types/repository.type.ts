@@ -67,8 +67,10 @@ export type FindPaginatedOptions<T extends BaseEntity> = {
 	limit?: number | string;
 	page?: number | string;
 	offset?: number;
-	select?: Select<T>;
+	select?: (keyof T)[];
 	relations?: Relation<T>;
+	search?: string;
+	searchFields?: string[];
 };
 
 export type FindByIdOptions<T extends BaseEntity> = {

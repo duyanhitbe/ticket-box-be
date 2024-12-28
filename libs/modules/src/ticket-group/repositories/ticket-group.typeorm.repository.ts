@@ -75,12 +75,12 @@ export class TicketGroupTypeormRepository
 
 		return this.repository.query(`
             WITH ticket_info AS (
-            	SELECT t.id, t.name, t.quantity, t.ticket_group_id, tp.base_price, tp.discounted_price
+            	SELECT t.id, t.name, t.quantity, t.ticket_group_id, tp.base_price, tp.discounted_price, t.order
                 FROM ticket_infos t
                 LEFT JOIN ticket_prices tp ON tp.ticket_info_id = t.id AND tp.customer_role_id = '${customerRoleId}' AND tp.deleted_at IS NULL
 				WHERE t.deleted_at IS NULL
 			)
-            SELECT tg.id, tg.name, tg.description, tf.id AS "ticketInfoId", tf.name AS "ticketInfoName", tf.quantity::int AS "ticketInfoQuantity", tf.base_price::int AS "ticketInfoBasePrice", tf.discounted_price::int AS "ticketInfoDiscountedPrice"
+            SELECT tg.id, tg.name, tg.description, tf.id AS "ticketInfoId", tf.order::int AS "ticketInfoOrder", tf.name AS "ticketInfoName", tf.quantity::int AS "ticketInfoQuantity", tf.base_price::int AS "ticketInfoBasePrice", tf.discounted_price::int AS "ticketInfoDiscountedPrice"
             FROM ticket_groups tg
 			LEFT JOIN ticket_group_dates tgd ON tgd.ticket_group_id = tg.id AND tgd.deleted_at IS NULL
 			LEFT JOIN ticket_info tf ON tf.ticket_group_id = tg.id
@@ -89,7 +89,7 @@ export class TicketGroupTypeormRepository
                 (tg.from_date <= '${startOfDay.toISOString()}' AND tg.to_date >= '${startOfDay.toISOString()}') OR
                 (tgd.date BETWEEN '${startOfDay.toISOString()}' AND '${endOfDay.toISOString()}')
             ) AND (tg.deleted_at IS NULL)
-            ORDER BY tg.created_at DESC;
+            ORDER BY tg.created_at DESC, "ticketInfoOrder" ASC;
 		`)
 	}
 

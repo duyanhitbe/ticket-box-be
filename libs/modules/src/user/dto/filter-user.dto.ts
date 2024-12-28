@@ -4,7 +4,7 @@ import { Property, SwaggerProperty } from '@lib/common/decorators';
 
 export class FilterUserDto extends BaseFilterDto {
 	@IsOptional()
-	@SwaggerProperty()
-	@Property('Tài khoản')
-	username?: string;
+	@SwaggerProperty({ required: false })
+	@Property('Search by `username`')
+	search?: string;
 }

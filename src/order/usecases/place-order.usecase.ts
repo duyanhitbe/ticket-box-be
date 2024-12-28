@@ -40,6 +40,9 @@ export class PlaceOrderUseCase extends ExecuteHandler<Promise<OrderCreatedEntity
 		};
 		this.orderClient.emit(RABBITMQ_PATTERNS.CREATE_ORDER, payload);
 
-		return order;
+		return {
+			id: order.id,
+			paymentMethod: order.paymentMethod
+		};
 	}
 }

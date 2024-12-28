@@ -4,6 +4,11 @@ import { ENUM_EVENT_TYPE } from '@lib/modules/event';
 import { IsOptional } from 'class-validator';
 
 export class FilterEventDto extends BaseFilterDto {
+	@IsOptional()
+	@SwaggerProperty({ required: false })
+	@Property('Search by `name`, `location`')
+	search?: string;
+
 	/**
 	 * Loại sự kiện
 	 */

@@ -2,9 +2,13 @@ import { TicketInfoRepository } from './ticket-info.repository.abstract';
 import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { TicketInfoTypeormEntity } from '../entities/ticket-info.typeorm.entity';
-import { TicketInfoByGroupEntity, TicketInfoEntity } from '@lib/modules/ticket-info';
-import { CreateOptions, FindPaginatedOptions } from '@lib/base/types';
-import { getMeta, getOffset, randomString } from '@lib/common/helpers';
+import {
+	FilterTicketInfoDto,
+	TicketInfoByGroupEntity,
+	TicketInfoEntity
+} from '@lib/modules/ticket-info';
+import { CreateOptions } from '@lib/base/types';
+import { getMeta, getPageLimitOffset, randomString } from '@lib/common/helpers';
 import { PaginationResponse } from '@lib/base/dto';
 
 @Repository(TicketInfoTypeormEntity)
@@ -102,11 +106,10 @@ export class TicketInfoTypeormRepository
 	}
 
 	async findPaginated(
-		options: FindPaginatedOptions<TicketInfoTypeormEntity>
+		filter: FilterTicketInfoDto
 	): Promise<PaginationResponse<TicketInfoTypeormEntity>> {
-		const limit = +(options.limit || 25);
-		const page = +(options.page || 1);
-		const offset = getOffset(limit, page);
+		const { ticketGroupId } = filter;
+		const { limit, page, offset } = getPageLimitOffset(filter);
 
 		const queryBuilder = this.repository
 			.createQueryBuilder('tf')
@@ -126,6 +129,10 @@ export class TicketInfoTypeormRepository
 			.leftJoin('events', 'e', 'e.id = tf.event_id')
 			.leftJoin('ticket_groups', 'tg', 'tg.id = tf.ticket_group_id')
 			.orderBy('tf.order', 'ASC');
+
+		if (ticketGroupId) {
+			queryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
+		}
 
 		const [data, count] = await Promise.all([
 			queryBuilder
