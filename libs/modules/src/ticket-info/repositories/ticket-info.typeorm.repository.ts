@@ -10,6 +10,7 @@ import {
 import { CreateOptions } from '@lib/base/types';
 import { getMeta, getPageLimitOffset, randomString } from '@lib/common/helpers';
 import { PaginationResponse } from '@lib/base/dto';
+import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 
 @Repository(TicketInfoTypeormEntity)
 export class TicketInfoTypeormRepository
@@ -37,7 +38,8 @@ export class TicketInfoTypeormRepository
 					customerRoleId
 				}
 			)
-			.where('t.ticket_group_id = :ticketGroupId', { ticketGroupId });
+			.where('t.ticket_group_id = :ticketGroupId', { ticketGroupId })
+			.andWhere('t.status = :status', { status: ENUM_STATUS.ACTIVE });
 
 		return queryBuilder.getRawMany();
 	}
@@ -108,7 +110,7 @@ export class TicketInfoTypeormRepository
 	async findPaginated(
 		filter: FilterTicketInfoDto
 	): Promise<PaginationResponse<TicketInfoTypeormEntity>> {
-		const { ticketGroupId } = filter;
+		const { ticketGroupId, search, searchFields } = filter;
 		const { limit, page, offset } = getPageLimitOffset(filter);
 
 		const queryBuilder = this.repository
@@ -132,6 +134,10 @@ export class TicketInfoTypeormRepository
 
 		if (ticketGroupId) {
 			queryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
+		}
+
+		if (search && searchFields) {
+			this.addSearchFields(queryBuilder, 'tf', searchFields, search);
 		}
 
 		const [data, count] = await Promise.all([

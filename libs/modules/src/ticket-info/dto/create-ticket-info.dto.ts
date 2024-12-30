@@ -47,7 +47,7 @@ export class CreateTicketInfoDto {
 	 */
 	@IsOptional()
 	@I18nIsNumber()
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Thứ tự hiển thị')
 	order?: number;
 }

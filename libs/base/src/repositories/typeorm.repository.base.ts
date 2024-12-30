@@ -1,4 +1,12 @@
-import { In, Repository } from 'typeorm';
+import { camelToSnake, getMeta, getPageLimitOffset } from '@lib/common/helpers';
+import { I18nExceptionService } from '@lib/core/i18n';
+import { Logger } from '@nestjs/common';
+import { set } from 'lodash';
+import { Brackets, In, Repository, SelectQueryBuilder } from 'typeorm';
+import { DeepPartial } from 'typeorm/common/DeepPartial';
+import { PaginationResponse } from '../dto';
+import { BaseTypeormEntity } from '../entities';
+import { BaseRepository } from '../repositories/repository.base.abstract';
 import {
 	CreateOptions,
 	DeleteByIdOptions,
@@ -15,13 +23,7 @@ import {
 	UpdateManyOptions,
 	UpdateOneOptions
 } from '../types';
-import { BaseTypeormEntity } from '../entities';
-import { PaginationResponse } from '../dto';
-import { BaseRepository } from '../repositories/repository.base.abstract';
-import { I18nExceptionService } from '@lib/core/i18n';
-import { getMeta, getPageLimitOffset } from '@lib/common/helpers';
-import { Logger } from '@nestjs/common';
-import { DeepPartial } from 'typeorm/common/DeepPartial';
+import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 
 export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseRepository<T> {
 	protected readonly logger = new Logger(this.constructor.name);
@@ -34,6 +36,21 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 
 	protected throwErrorNotFound(): never {
 		this.i18nExceptionService.throwNotFoundEntity(this.entityName);
+	}
+
+	protected addSearchFields(
+		queryBuilder: SelectQueryBuilder<T>,
+		alias: string,
+		searchFields: string[],
+		search: string
+	): void {
+		queryBuilder.andWhere(
+			new Brackets((qb) => {
+				searchFields.forEach((field) => {
+					qb.orWhere(`${alias}.${field} ILIKE '%${search}%'`);
+				});
+			})
+		);
 	}
 
 	async create(options: CreateOptions<T>): Promise<T> {
@@ -50,26 +67,58 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 	}
 
 	async findPaginated(options: FindPaginatedOptions<T>): Promise<PaginationResponse<T>> {
-		const { select, relations, where, order } = options;
-
-		const { limit, page, offset } = getPageLimitOffset(options);
-		const take = limit || 10;
-		const skip = options.offset || offset;
-
-		const [data, totalItem] = await this.repository.findAndCount({
+		const {
+			alias = 'entity',
+			select,
+			relations,
 			where,
-			take,
-			skip,
-			order: order as any,
-			select: select as any,
-			relations: relations as any
+			search,
+			searchFields,
+			status = ENUM_STATUS.ACTIVE
+		} = options;
+
+		set(options, 'order.created_at', 'DESC');
+
+		const { limit, offset } = getPageLimitOffset(options);
+		const queryBuilder = this.repository
+			.createQueryBuilder(alias)
+			.where('status = :status', { status });
+
+		if (relations) {
+			relations.forEach((relation) => {
+				queryBuilder.leftJoinAndSelect(`${alias}.${relation}`, relation);
+			});
+		}
+
+		if (where) {
+			queryBuilder.andWhere(where);
+		}
+
+		if (select) {
+			select.forEach((field) => {
+				const snakeCase = camelToSnake(field as string);
+				queryBuilder.select(`${alias}.${snakeCase} AS "${field as string}"`);
+			});
+		}
+
+		if (search && searchFields) {
+			this.addSearchFields(queryBuilder, alias, searchFields, search);
+		}
+
+		Object.entries(options.order || {}).forEach(([key, value]) => {
+			const snakeCase = camelToSnake(key);
+			queryBuilder.orderBy(`${alias}.${snakeCase}`, value as any);
 		});
 
-		const meta = getMeta(limit, page, totalItem);
+		const [data, count] = await Promise.all([
+			queryBuilder.limit(limit).offset(offset).getMany(),
+			queryBuilder.getCount()
+		]);
+		const meta = getMeta(options, count);
 
 		return {
 			data,
-			meta: meta as any
+			meta
 		};
 	}
 

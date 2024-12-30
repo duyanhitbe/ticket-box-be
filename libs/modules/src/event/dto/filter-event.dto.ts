@@ -21,11 +21,8 @@ export class FilterEventDto extends BaseFilterDto {
 	@Property('Loại sự kiện')
 	eventType?: ENUM_EVENT_TYPE;
 
-	/**
-	 * Tên sự kiện
-	 */
 	@IsOptional()
 	@SwaggerProperty({ required: false })
-	@Property('Tên sự kiện')
-	name?: string;
+	@Property('Thao tác trên client')
+	isWebClient?: 'true' | 'false';
 }

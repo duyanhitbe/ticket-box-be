@@ -3,6 +3,11 @@ import { I18nIsUUID, Property, SwaggerProperty } from '@lib/common/decorators';
 import { IsOptional } from 'class-validator';
 
 export class FilterTicketInfoDto extends BaseFilterDto {
+	@IsOptional()
+	@SwaggerProperty({ required: false })
+	@Property('Search by `name`, `code`')
+	search?: string;
+
 	/**
 	 * Mã nhóm vé
 	 */

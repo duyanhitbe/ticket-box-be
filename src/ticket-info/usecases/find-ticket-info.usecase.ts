@@ -14,6 +14,7 @@ export class FindTicketInfoUseCase extends QueryHandler<PaginationResponse<Ticke
 	}
 
 	async query(filter: FilterTicketInfoDto): Promise<PaginationResponse<TicketInfoEntity>> {
+		filter.searchFields = ['name', 'code'];
 		return this.ticketInfoRepository.findPaginated(filter);
 	}
 }

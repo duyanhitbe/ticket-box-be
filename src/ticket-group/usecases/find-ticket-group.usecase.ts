@@ -16,10 +16,9 @@ export class FindTicketGroupUseCase extends QueryHandler<
 	}
 
 	async query(filter: FilterTicketGroupDto): Promise<PaginationResponse<TicketGroupListEntity>> {
-		const { data, meta } = await this.ticketGroupRepository.findPaginated({
-			...filter,
-			relations: ['dates', 'event']
-		});
+		filter.relations = ['dates', 'event'];
+		filter.searchFields = ['name'];
+		const { data, meta } = await this.ticketGroupRepository.findPaginated(filter);
 		const result: TicketGroupListEntity[] = [];
 
 		data.forEach((ticketGroup) => {

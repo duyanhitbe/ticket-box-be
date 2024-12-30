@@ -4,6 +4,8 @@ import { IsOptional } from 'class-validator';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { Where } from '@lib/base/types';
 import { BaseEntity } from '@lib/base/entities';
+import { I18nIsEnum } from '@lib/common/decorators/i18n.decorator';
+import { ENUM_STATUS } from '../enums/status.enum';
 
 export class BaseFilterDto<T extends BaseEntity = any> {
 	@IsOptional()
@@ -21,9 +23,18 @@ export class BaseFilterDto<T extends BaseEntity = any> {
 	@Property('Search')
 	search?: string;
 
+	@IsOptional()
+	@I18nIsEnum(ENUM_STATUS)
+	@SwaggerProperty({ required: false, enum: ENUM_STATUS, enumName: 'ENUM_STATUS' })
+	@Property('Status')
+	status?: ENUM_STATUS;
+
 	@ApiHideProperty()
 	where?: Where<T>;
 
 	@ApiHideProperty()
 	searchFields?: string[];
+
+	@ApiHideProperty()
+	relations?: string[];
 }

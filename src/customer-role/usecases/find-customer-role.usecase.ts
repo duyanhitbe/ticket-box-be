@@ -14,6 +14,7 @@ export class FindCustomerRoleUseCase extends QueryHandler<PaginationResponse<Cus
 	}
 
 	async query(filter: FilterCustomerRoleDto): Promise<PaginationResponse<CustomerRoleEntity>> {
+		filter.searchFields = ['name', 'code'];
 		return this.customerRoleRepository.findPaginated(filter);
 	}
 }
