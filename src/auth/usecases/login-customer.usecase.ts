@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LoginCustomerDto, LoginCustomerEntity } from '@lib/modules/auth';
-import { ENUM_TOKEN_ROLE, JwtService } from '@lib/core/jwt';
+import { ACCESS_TOKEN_EXPIRES, ENUM_TOKEN_ROLE, JwtService } from '@lib/core/jwt';
 import { I18nExceptionService } from '@lib/core/i18n';
 import { HashService } from '@lib/core/hash';
 import { ExecuteHandler } from '@lib/common/abstracts';
@@ -32,7 +32,7 @@ export class LoginCustomerUseCase extends ExecuteHandler<LoginCustomerEntity> {
 			this.i18nExceptionService.throwWrongPassword();
 		}
 
-		const expiresIn = 60 * 60 * 24;
+		const expiresIn = ACCESS_TOKEN_EXPIRES;
 		const accessToken = await this.jwtService.sign(
 			customer.id,
 			ENUM_TOKEN_ROLE.CUSTOMER,

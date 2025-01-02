@@ -5,12 +5,14 @@ import { TicketInfoTypeormEntity } from '../entities/ticket-info.typeorm.entity'
 import {
 	FilterTicketInfoDto,
 	TicketInfoByGroupEntity,
+	TicketInfoByIdsEntity,
 	TicketInfoEntity
 } from '@lib/modules/ticket-info';
 import { CreateOptions } from '@lib/base/types';
 import { getMeta, getPageLimitOffset, randomString } from '@lib/common/helpers';
 import { PaginationResponse } from '@lib/base/dto';
 import { ENUM_STATUS } from '@lib/base/enums/status.enum';
+import { QueryRunner } from 'typeorm';
 
 @Repository(TicketInfoTypeormEntity)
 export class TicketInfoTypeormRepository
@@ -119,7 +121,6 @@ export class TicketInfoTypeormRepository
 				'tf.id as "id"',
 				'tf.created_at as "createdAt"',
 				'tf.updated_at as "updatedAt"',
-				'tf.deleted_at as "deletedAt"',
 				'tf.status as "status"',
 				'tf.name as "name"',
 				'tf.quantity as "quantity"',
@@ -131,13 +132,16 @@ export class TicketInfoTypeormRepository
 			.leftJoin('events', 'e', 'e.id = tf.event_id')
 			.leftJoin('ticket_groups', 'tg', 'tg.id = tf.ticket_group_id')
 			.orderBy('tf.order', 'ASC');
+		const countQueryBuilder = this.repository.createQueryBuilder('tf');
 
 		if (ticketGroupId) {
 			queryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
+			countQueryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
 		}
 
 		if (search && searchFields) {
 			this.addSearchFields(queryBuilder, 'tf', searchFields, search);
+			this.addSearchFields(countQueryBuilder, 'tf', searchFields, search);
 		}
 
 		const [data, count] = await Promise.all([
@@ -145,7 +149,7 @@ export class TicketInfoTypeormRepository
 				.limit(+(limit || '25'))
 				.offset(offset)
 				.getRawMany(),
-			queryBuilder.getCount()
+			countQueryBuilder.getCount()
 		]);
 		const meta = getMeta(limit, page, count);
 
@@ -153,5 +157,38 @@ export class TicketInfoTypeormRepository
 			data,
 			meta
 		};
+	}
+
+	async findAllWithPriceByIds(
+		ids: string[],
+		customerRoleId: string,
+		queryRunner: QueryRunner
+	): Promise<TicketInfoByIdsEntity[]> {
+		const queryBuilder = queryRunner.manager
+			.createQueryBuilder(TicketInfoTypeormEntity, 't')
+			.select([
+				't.id as "id"',
+				't.name as "name"',
+				't.quantity as "quantity"',
+				't.event_id as "eventId"',
+				't.ticket_group_id as "ticketGroupId"',
+				'tp.base_price as "basePrice"',
+				'tp.discount_type as "discountType"',
+				'tp.discount_value as "discountValue"',
+				'tp.discounted_price as "discountedPrice"',
+				'e.name as "eventName"'
+			])
+			.leftJoin(
+				'ticket_prices',
+				'tp',
+				'tp.ticket_info_id = t.id AND tp.customer_role_id = :customerRoleId',
+				{
+					customerRoleId
+				}
+			)
+			.leftJoin('events', 'e', 'e.id = t.event_id')
+			.where('t.id IN (:...ids)', { ids });
+
+		return queryBuilder.getRawMany();
 	}
 }

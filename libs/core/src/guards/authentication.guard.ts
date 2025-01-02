@@ -32,7 +32,11 @@ export class AuthenticationGuard implements CanActivate {
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest();
-		const accessToken = request.headers.authorization?.split(' ')[1];
+		let accessToken = request.headers.authorization?.split(' ')[1];
+
+		if (request.session.accessToken) {
+			accessToken = request.session.accessToken;
+		}
 
 		const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_METADATA_KEY, [
 			context.getClass(),
@@ -61,7 +65,9 @@ export class AuthenticationGuard implements CanActivate {
 				this.i18nExceptionService.throwInvalidAuthorization();
 			}
 
-			if (userId === '' || !role) this.i18nExceptionService.throwInvalidAuthorization();
+			if (userId === '' || !role) {
+				this.i18nExceptionService.throwInvalidAuthorization();
+			}
 
 			request['user'] = await this.getUserByRole(userId, role);
 			const end = performance.now();

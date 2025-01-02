@@ -14,6 +14,7 @@ import { DetailCustomerUseCase } from './usecases/detail-customer.usecase';
 		DeleteCustomerUseCase,
 		FindCustomerUseCase,
 		DetailCustomerUseCase
-	]
+	],
+	exports: [DetailCustomerUseCase]
 })
 export class CustomerModule {}

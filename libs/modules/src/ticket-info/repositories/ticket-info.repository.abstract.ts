@@ -1,7 +1,7 @@
 import { BaseRepository } from '@lib/base/repositories';
 import { TicketInfoEntity } from '../entities/ticket-info.entity.abstract';
-import { TicketInfoByGroupEntity } from '@lib/modules/ticket-info';
-import { DataSource } from 'typeorm';
+import { TicketInfoByGroupEntity, TicketInfoByIdsEntity } from '@lib/modules/ticket-info';
+import { DataSource, QueryRunner } from 'typeorm';
 
 export abstract class TicketInfoRepository extends BaseRepository<TicketInfoEntity> {
 	abstract findAllWithPriceByGroup(
@@ -13,4 +13,10 @@ export abstract class TicketInfoRepository extends BaseRepository<TicketInfoEnti
 		id: string,
 		datasource?: DataSource
 	): Promise<TicketInfoEntity | null>;
+
+	abstract findAllWithPriceByIds(
+		ids: string[],
+		customerRoleId: string,
+		queryRunner: QueryRunner
+	): Promise<TicketInfoByIdsEntity[]>;
 }

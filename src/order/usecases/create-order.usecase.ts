@@ -5,11 +5,14 @@ import { CustomerRoleRepository } from '@lib/modules/customer-role'; // totalPri
 import { CreateOrderEventPayload, ENUM_ORDER_STATUS, OrderRepository } from '@lib/modules/order';
 import { CreateOrderDetailDto, OrderDetailTypeormEntity } from '@lib/modules/order-detail';
 import { TicketTypeormEntity } from '@lib/modules/ticket';
-import { TicketInfoByIdsEntity, TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
+import {
+	TicketInfoByIdsEntity,
+	TicketInfoRepository,
+	TicketInfoTypeormEntity
+} from '@lib/modules/ticket-info';
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, In, IsNull, QueryRunner } from 'typeorm';
-import { OrderService } from '../order.service';
 
 // totalPrice
 
@@ -21,7 +24,7 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 		private readonly orderRepository: OrderRepository,
 		private readonly customerRepository: CustomerRepository,
 		private readonly customerRoleRepository: CustomerRoleRepository,
-		private readonly orderService: OrderService
+		private readonly ticketInfoRepository: TicketInfoRepository
 	) {
 		super();
 	}
@@ -49,7 +52,7 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 		try {
 			//Lấy danh sách thông tin vé kèm giá theo role của customer
 			const ticketInfoIds = details.map((detail) => detail.ticketInfoId);
-			const ticketInfos = await this.orderService.findAllWithPriceByIds(
+			const ticketInfos = await this.ticketInfoRepository.findAllWithPriceByIds(
 				ticketInfoIds,
 				customerRoleId,
 				queryRunner

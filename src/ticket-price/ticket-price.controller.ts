@@ -8,6 +8,7 @@ import {
 import {
 	CreateTicketPriceDto,
 	FilterTicketPriceDto,
+	ListTicketPriceEntity,
 	TicketPriceEntity,
 	UpdateManyTicketPriceDto,
 	UpdateTicketPriceDto
@@ -77,11 +78,13 @@ export class TicketPriceController {
 	/**
 	 * @path GET /api/v1/ticket-prices
 	 * @param filter {FilterTicketPriceDto}
-	 * @returns {Promise<PaginationResponse<TicketPriceEntity>>}
+	 * @returns {Promise<PaginationResponse<ListTicketPriceEntity>>}
 	 */
 	@Get()
-	@SwaggerListResponse({ summary: 'List ticket-price', type: TicketPriceEntity })
-	findAll(@Query() filter: FilterTicketPriceDto): Promise<PaginationResponse<TicketPriceEntity>> {
+	@SwaggerListResponse({ summary: 'List ticket-price', type: ListTicketPriceEntity })
+	findAll(
+		@Query() filter: FilterTicketPriceDto
+	): Promise<PaginationResponse<ListTicketPriceEntity>> {
 		return this.findTicketPriceUseCase.query(filter);
 	}
 
