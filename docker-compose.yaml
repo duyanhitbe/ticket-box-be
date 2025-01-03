@@ -2,31 +2,13 @@ services:
   app:
     image: duyanhit/ticket-box-be:latest
     container_name: ticket-box-be
+    env_file: .env
     restart: always
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - IS_DEBUG=true
-      - TYPEORM_DEBUG=true
-      - TYPEORM_MIGRATION_RUN=true
-      - BASE_URL=http://localhost:3000
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
-      - JWT_SECRET=nx2Hb3PaSHAPVmyEdvznZCQ5aSaq4IUH
-      - RABBIT_MQ_URL=amqp://guest:guest@rabbit:5672
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_USER=
-      - REDIS_PASSWORD=7NUEgvUrHzyCXb59U7Se4keB2QyILsQI
-      - REDIS_DB=0
     depends_on:
       - postgres
       - rabbit
@@ -35,30 +17,33 @@ services:
       - ./public:/app/public
 
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17
     container_name: ticket-box-postgres
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-    ports:
-      - '5432:5432'
     volumes:
-      - ./docker-volumes/postgres:/var/lib/postgresql/data
+      - ./.docker/postgres:/var/lib/postgresql/data
 
   rabbit:
     image: rabbitmq:4.1-rc-management
     container_name: ticket-box-rabbit
+    env_file: .env
     restart: always
-    ports:
-      - "5672:5672"
-      - "15672:15672"
     volumes:
-      - ./docker-volumes/rabbitmq:/var/lib/rabbitmq
-      - ./docker-volumes/rabbitmq:/var/log/rabbitmq
+      - ./.docker/rabbitmq:/var/lib/rabbitmq
+      - ./.docker/rabbitmq:/var/log/rabbitmq
 
   redis:
-    image: redis:7-alpine
+    image: redis:7
     container_name: ticket-box-redis
+    env_file: .env
     restart: always
+    volumes:
+      - ./.docker/redis:/data
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ticket-box-ngrok
+    env_file: .env
+    command: http http://host.docker.internal:3000 --log=stdout
+    depends_on:
+      - app
