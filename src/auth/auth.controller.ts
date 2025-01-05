@@ -14,7 +14,7 @@ import { DetailUserUseCase } from '../user/usecases/detail-user.usecase';
 import { UserEntity } from '@lib/modules/user';
 import { CustomerEntity } from '@lib/modules/customer';
 import { DetailCustomerUseCase } from '../customer/usecases/detail-customer.usecase';
-import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
+import { ONLY_CUSTOMER_ROLE, ONLY_USER_ROLE } from '@lib/core/jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -72,7 +72,7 @@ export class AuthController {
 	 * @path GET /api/v1/auth/user
 	 * @returns Promise<UserEntity>
 	 */
-	@UseAuth({ roles: [ENUM_TOKEN_ROLE.USER] })
+	@UseAuth({ roles: ONLY_USER_ROLE })
 	@Get('user')
 	@SwaggerOkResponse({ summary: 'Get user info', type: UserEntity })
 	async getUserInfo(@User() user: RequestUser) {
@@ -83,7 +83,7 @@ export class AuthController {
 	 * @path GET /api/v1/auth/customer
 	 * @returns Promise<CustomerEntity>
 	 */
-	@UseAuth({ roles: [ENUM_TOKEN_ROLE.CUSTOMER] })
+	@UseAuth({ roles: ONLY_CUSTOMER_ROLE })
 	@Get('customer')
 	@SwaggerOkResponse({ summary: 'Get customer info', type: CustomerEntity })
 	async getCustomerInfo(@User() user: RequestUser) {

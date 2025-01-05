@@ -24,6 +24,7 @@ import { RedisStore } from 'connect-redis';
 import { ACCESS_TOKEN_EXPIRES } from '@lib/core/jwt';
 import { Env } from '@lib/common/interfaces';
 import { LoggerMiddleware } from '@lib/core/middlewares';
+import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 
 @Module({
 	imports: [
@@ -51,6 +52,7 @@ import { LoggerMiddleware } from '@lib/core/middlewares';
 		]),
 		EventModule.forRoot(),
 		RedisModule.forRoot(),
+		NodemailerModule.forRoot(),
 		AppRepositoryModule,
 		AppTransportModule,
 		TicketGroupDateModule

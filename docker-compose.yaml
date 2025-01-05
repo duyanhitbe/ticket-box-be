@@ -7,21 +7,28 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
     depends_on:
       - postgres
       - rabbit
       - redis
     volumes:
       - ./public:/app/public
+    networks:
+      - app
+      - postgres
+      - redis
+      - rabbitmq
+      - ngrok
 
   postgres:
     image: postgres:17
     container_name: ticket-box-postgres
+    env_file: .env
     restart: always
     volumes:
-      - ./.docker/postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - postgres
 
   rabbit:
     image: rabbitmq:4.1-rc-management
@@ -29,8 +36,10 @@ services:
     env_file: .env
     restart: always
     volumes:
-      - ./.docker/rabbitmq:/var/lib/rabbitmq
-      - ./.docker/rabbitmq:/var/log/rabbitmq
+      - rabbitmq:/var/lib/rabbitmq
+      - rabbitmq:/var/log/rabbitmq
+    networks:
+      - rabbitmq
 
   redis:
     image: redis:7
@@ -38,12 +47,28 @@ services:
     env_file: .env
     restart: always
     volumes:
-      - ./.docker/redis:/data
+      - redis:/data
+    networks:
+      - redis
 
   ngrok:
     image: ngrok/ngrok:latest
     container_name: ticket-box-ngrok
     env_file: .env
-    command: http http://host.docker.internal:3000 --log=stdout
+    command: http http://app:3000 --log=stdout
     depends_on:
       - app
+    networks:
+      - app
+
+networks:
+  app:
+  postgres:
+  redis:
+  rabbitmq:
+  ngrok:
+
+volumes:
+  postgres:
+  rabbitmq:
+  redis:

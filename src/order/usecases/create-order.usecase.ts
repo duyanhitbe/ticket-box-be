@@ -13,6 +13,13 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, In, IsNull, QueryRunner } from 'typeorm';
+import {
+	ENUM_RABBITMQ_CLIENT,
+	InjectClientRMQ,
+	RABBITMQ_PATTERNS,
+	RMQClientProxy
+} from '@lib/core/rabbitmq';
+import { SendMailOrderSuccessEventPayload } from '@lib/modules/mail'; // totalPrice
 
 // totalPrice
 
@@ -21,6 +28,8 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 	constructor(
 		@InjectDataSource()
 		private readonly dataSource: DataSource,
+		@InjectClientRMQ(ENUM_RABBITMQ_CLIENT.MAIL)
+		private readonly mailClient: RMQClientProxy,
 		private readonly orderRepository: OrderRepository,
 		private readonly customerRepository: CustomerRepository,
 		private readonly customerRoleRepository: CustomerRoleRepository,
@@ -30,7 +39,7 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 	}
 
 	async execute(data: CreateOrderEventPayload) {
-		const { orderId, user, details } = data;
+		const { orderId, orderCode, user, details } = data;
 
 		//Lấy role của user, nếu đang không đăng nhập thì lấy role NORMAL_CUSTOMER
 		const customerRoleId = await this.getCustomerRoleId(user);
@@ -71,6 +80,19 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 			totalPrice = await this.createDetails(orderId, customerId, mappedDetails, queryRunner);
 
 			await queryRunner.commitTransaction();
+			const sendMailPayload: SendMailOrderSuccessEventPayload = {
+				orderCode,
+				totalPrice,
+				customerName,
+				customerEmail,
+				details: mappedDetails.map(({ name, quantity, discountedPrice }) => ({
+					name,
+					quantity,
+					price: discountedPrice,
+					totalPrice: discountedPrice * quantity
+				}))
+			};
+			this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER_SUCCESS, sendMailPayload);
 		} catch (err) {
 			this.logger.error(err.message);
 			await queryRunner.rollbackTransaction();

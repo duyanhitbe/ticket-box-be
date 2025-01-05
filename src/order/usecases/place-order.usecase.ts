@@ -35,6 +35,7 @@ export class PlaceOrderUseCase extends ExecuteHandler<Promise<OrderCreatedEntity
 
 		const payload: CreateOrderEventPayload = {
 			orderId: order.id,
+			orderCode: order.code,
 			user,
 			...data
 		};
