@@ -19,7 +19,7 @@ import {
 	RABBITMQ_PATTERNS,
 	RMQClientProxy
 } from '@lib/core/rabbitmq';
-import { SendMailOrderSuccessEventPayload } from '@lib/modules/mail'; // totalPrice
+import { SendMailOrderFailEventPayload, SendMailOrderSuccessEventPayload } from '@lib/modules/mail'; // totalPrice
 
 // totalPrice
 
@@ -96,6 +96,13 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 		} catch (err) {
 			this.logger.error(err.message);
 			await queryRunner.rollbackTransaction();
+			const sendMailPayload: SendMailOrderFailEventPayload = {
+				orderCode,
+				customerName,
+				customerEmail,
+				reason: err.message
+			};
+			this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER_FAIL, sendMailPayload);
 			return this.orderRepository.updateById({
 				id: orderId,
 				data: {

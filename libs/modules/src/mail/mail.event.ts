@@ -10,3 +10,10 @@ export type SendMailOrderSuccessEventPayload = {
 		totalPrice: number;
 	}[];
 };
+
+export type SendMailOrderFailEventPayload = {
+	customerName: string;
+	customerEmail: string;
+	orderCode: string;
+	reason: string;
+};

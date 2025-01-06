@@ -1,4 +1,4 @@
-export interface SendMailOrderOptions {
+export interface SendMailOrderSuccessOptions {
 	to: string;
 	customerName: string;
 	orderCode: string;
@@ -9,4 +9,11 @@ export interface SendMailOrderOptions {
 		price: number;
 		totalPrice: number;
 	}[];
+}
+
+export interface SendMailOrderFailOptions {
+	to: string;
+	customerName: string;
+	orderCode: string;
+	reason: string;
 }

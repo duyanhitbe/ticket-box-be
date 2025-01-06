@@ -8,6 +8,6 @@ export class ProcessPaymentOrderUseCase extends ExecuteHandler<any> {
 	}
 
 	async execute(data: any) {
-		console.log(data);
+		this.logger.debug(data);
 	}
 }

@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { NodemailerService } from './nodemailer.abstract';
 import { InjectNodemailer } from './nodemailer.decorator';
 import { SendMailOptions, Transporter } from 'nodemailer';
-import { SendMailOrderOptions } from './nodemailer.interface';
+import { SendMailOrderFailOptions, SendMailOrderSuccessOptions } from './nodemailer.interface';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import * as handlebars from 'handlebars';
@@ -31,7 +31,7 @@ export class NodemailerServiceImp extends NodemailerService {
 		return template(data);
 	}
 
-	sendOrderSuccess(options: SendMailOrderOptions) {
+	sendOrderSuccess(options: SendMailOrderSuccessOptions) {
 		const from = '"No Reply" <noreply@yourdomain.com>';
 		const subject = 'Đặt vé thành công';
 		const html = this.loadTemplate('order-success', {
@@ -43,6 +43,18 @@ export class NodemailerServiceImp extends NodemailerService {
 			})),
 			totalPrice: toVND(options.totalPrice)
 		});
+		return this.send({
+			from,
+			to: options.to,
+			subject,
+			html
+		});
+	}
+
+	sendOrderFail(options: SendMailOrderFailOptions): Promise<void> {
+		const from = '"No Reply" <noreply@yourdomain.com>';
+		const subject = 'Đặt vé thất bại';
+		const html = this.loadTemplate('order-cancel', options);
 		return this.send({
 			from,
 			to: options.to,
