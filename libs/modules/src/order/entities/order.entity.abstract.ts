@@ -72,20 +72,6 @@ export abstract class OrderEntity extends BaseEntity {
 	paymentMethod!: ENUM_PAYMENT_METHOD;
 
 	/**
-	 * STK thanh toán
-	 */
-	@SwaggerProperty({ required: false })
-	@Property('STK thanh toán')
-	cardId?: string;
-
-	/**
-	 * Tên tài khoản thanh toán
-	 */
-	@SwaggerProperty({ required: false })
-	@Property('Tên tài khoản thanh toán')
-	cardName?: string;
-
-	/**
 	 * Tổng giá trị đơn hàng
 	 */
 	@SwaggerProperty({ required: false })

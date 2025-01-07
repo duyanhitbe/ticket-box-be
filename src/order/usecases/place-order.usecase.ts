@@ -21,14 +21,12 @@ export class PlaceOrderUseCase extends ExecuteHandler<Promise<OrderCreatedEntity
 	}
 
 	async execute(data: CreateOrderDto, user: RequestUser): Promise<OrderCreatedEntity> {
-		const { paymentMethod, note, cardName, cardId } = data;
+		const { paymentMethod, note } = data;
 
 		const order = await this.orderRepository.create({
 			data: {
 				paymentMethod,
-				note,
-				cardName,
-				cardId
+				note
 			},
 			returning: ['id', 'code']
 		});

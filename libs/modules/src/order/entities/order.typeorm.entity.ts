@@ -39,12 +39,6 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	})
 	paymentMethod!: ENUM_PAYMENT_METHOD;
 
-	@TypeormColumn({ nullable: true })
-	cardId?: string;
-
-	@TypeormColumn({ nullable: true })
-	cardName?: string;
-
 	@TypeormColumn({ type: 'float', nullable: true })
 	totalPrice?: number;
 

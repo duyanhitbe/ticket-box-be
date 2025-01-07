@@ -8,7 +8,7 @@ import {
 	SwaggerProperty
 } from '@lib/common/decorators';
 import { ENUM_PAYMENT_METHOD } from '../order.enum';
-import { IsOptional, ValidateIf, ValidateNested } from 'class-validator';
+import { IsOptional, ValidateNested } from 'class-validator';
 import { CreateOrderDetailDto } from '@lib/modules/order-detail';
 import { Type } from 'class-transformer';
 
@@ -59,26 +59,6 @@ export class CreateOrderDto {
 	})
 	@Property('Phương thức thanh toán')
 	paymentMethod!: ENUM_PAYMENT_METHOD;
-
-	/**
-	 * STK thanh toán
-	 */
-	@ValidateIf((obj: CreateOrderDto) => obj.paymentMethod === ENUM_PAYMENT_METHOD.BANKING)
-	@I18nIsString()
-	@I18nIsNotEmpty()
-	@SwaggerProperty({ required: false })
-	@Property('STK thanh toán')
-	cardId?: string;
-
-	/**
-	 * Tên tài khoản thanh toán
-	 */
-	@ValidateIf((obj: CreateOrderDto) => obj.paymentMethod === ENUM_PAYMENT_METHOD.BANKING)
-	@I18nIsString()
-	@I18nIsNotEmpty()
-	@SwaggerProperty({ required: false })
-	@Property('Tên tài khoản thanh toán')
-	cardName?: string;
 
 	/**
 	 * Chi tiết đơn hàng
