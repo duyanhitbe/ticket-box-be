@@ -1,6 +1,10 @@
 # Stage 1: Build
 FROM node:20-alpine AS builder
 
+# Set ENV
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 # Set the working directory
 WORKDIR /app
 
@@ -12,7 +16,7 @@ COPY patches /app/patches
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Copy the rest of the application code
 COPY . .
@@ -25,9 +29,6 @@ FROM node:20-alpine AS production
 
 # Set the working directory
 WORKDIR /app
-
-# Install pnpm globally
-RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Copy dependencies from builder
 COPY --from=builder /app/dist ./dist
