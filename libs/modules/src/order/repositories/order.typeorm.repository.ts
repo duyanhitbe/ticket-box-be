@@ -2,8 +2,10 @@ import { OrderRepository } from './order.repository.abstract';
 import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { OrderTypeormEntity } from '../entities/order.typeorm.entity';
-import { CreateOptions } from '@lib/base/types';
+import { CreateOptions, UpdateByIdOptions } from '@lib/base/types';
 import { randomString } from '@lib/common/helpers';
+import { ENUM_ORDER_STATUS } from '../order.enum';
+import { BadRequestException } from '@nestjs/common';
 
 @Repository(OrderTypeormEntity)
 export class OrderTypeormRepository
@@ -28,5 +30,30 @@ export class OrderTypeormRepository
 
 	async updateOrderById(id: string, data: Partial<OrderTypeormEntity>): Promise<void> {
 		await this.repository.update(id, data);
+	}
+
+	async updateById(options: UpdateByIdOptions<OrderTypeormEntity>): Promise<OrderTypeormEntity> {
+		const { id, data } = options;
+		const { orderStatus } = data;
+
+		const order = await this.findByIdOrThrow({ id });
+
+		if (orderStatus) {
+			if (
+				order.orderStatus === ENUM_ORDER_STATUS.RESERVED &&
+				orderStatus === ENUM_ORDER_STATUS.CANCELLED
+			) {
+				throw new BadRequestException('Can not update order status');
+			}
+			if (
+				order.orderStatus === ENUM_ORDER_STATUS.PAID ||
+				order.orderStatus === ENUM_ORDER_STATUS.CANCELLED
+			) {
+				throw new BadRequestException('Can not update order status');
+			}
+		}
+		Object.assign(order, data);
+
+		return order.save();
 	}
 }
