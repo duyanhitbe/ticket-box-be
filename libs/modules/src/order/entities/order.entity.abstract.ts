@@ -3,6 +3,7 @@ import { ENUM_ORDER_STATUS, ENUM_PAYMENT_METHOD } from '@lib/modules/order';
 import { EventEntity } from '@lib/modules/event';
 import { CustomerEntity } from '@lib/modules/customer';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
+import { OrderDetailEntity } from '../../order-detail';
 
 export abstract class OrderEntity extends BaseEntity {
 	/**
@@ -107,4 +108,9 @@ export abstract class OrderEntity extends BaseEntity {
 	 * Khách hàng
 	 */
 	customer?: CustomerEntity;
+
+	/**
+	 * Chi tiết đơn hàng
+	 */
+	details?: OrderDetailEntity[];
 }

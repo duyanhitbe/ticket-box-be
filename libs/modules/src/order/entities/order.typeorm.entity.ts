@@ -4,7 +4,8 @@ import { CustomerTypeormEntity } from '@lib/modules/customer';
 import { EventTypeormEntity } from '@lib/modules/event';
 import { Entity } from 'typeorm';
 import { ENUM_ORDER_STATUS, ENUM_PAYMENT_METHOD } from '../order.enum';
-import { TypeormColumn, TypeormManyToOne } from '@lib/common/decorators';
+import { TypeormColumn, TypeormManyToOne, TypeormOneToMany } from '@lib/common/decorators';
+import { OrderDetailTypeormEntity } from '../../order-detail';
 
 @Entity('orders')
 export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity {
@@ -63,4 +64,7 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 
 	@TypeormManyToOne(() => CustomerTypeormEntity)
 	customer?: CustomerTypeormEntity;
+
+	@TypeormOneToMany(() => OrderDetailTypeormEntity, (detail) => detail.order)
+	details?: OrderDetailTypeormEntity[];
 }

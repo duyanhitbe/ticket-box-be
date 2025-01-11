@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Xác Nhận Thanh Toán</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f9;
+			color: #333;
+			margin: 0;
+			padding: 20px;
+		}
+
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			border-top: 8px solid #0275d8;
+		}
+
+		.header {
+			text-align: center;
+			padding: 20px 10px;
+		}
+
+		.header h1 {
+			font-size: 1.8em;
+			color: #0275d8;
+			margin: 10px 0;
+		}
+
+		.header p {
+			font-size: 1.1em;
+			color: #555;
+		}
+
+		.content {
+			margin: 20px 0;
+		}
+
+		.content p {
+			line-height: 1.6;
+			margin: 10px 0;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 20px 0;
+		}
+
+		table th, table td {
+			border: 1px solid #ddd;
+			padding: 10px;
+			text-align: left;
+		}
+
+		table th {
+			background-color: #0275d8;
+			color: #fff;
+		}
+
+		.summary {
+			margin-top: 20px;
+			background-color: #f9f9f9;
+			padding: 15px;
+			border-radius: 8px;
+		}
+
+		.summary p {
+			margin: 5px 0;
+			font-size: 1.1em;
+		}
+
+		.summary .total {
+			font-size: 1.4em;
+			font-weight: bold;
+			color: #333;
+		}
+
+		.footer {
+			text-align: center;
+			font-size: 0.9em;
+			color: #888;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+	<div class="header">
+		<h1>Xác Nhận Thanh Toán</h1>
+		<p>Đơn hàng của bạn đã được xác nhận!</p>
+	</div>
+	<div class="content">
+		<p>Xin chào, <strong>{{customerName}}</strong>,</p>
+		<p>Chúng tôi đã nhận được thanh toán cho đơn hàng của bạn. Dưới đây là thông tin chi tiết:</p>
+		<div class="details">
+			<p><strong>Mã Đơn Hàng:</strong> {{orderCode}}</p>
+			<p><strong>Trạng Thái:</strong> {{orderStatus}}</p>
+		</div>
+		<table>
+			<thead>
+			<tr>
+				<th>Tên Vé</th>
+				<th>Số Lượng</th>
+				<th>Giá</th>
+				<th>Tổng Cộng</th>
+			</tr>
+			</thead>
+			<tbody>
+			{{#each details}}
+				<tr>
+					<td>{{name}}</td>
+					<td>{{quantity}}</td>
+					<td>{{price}}</td>
+					<td>{{totalPrice}}</td>
+				</tr>
+			{{/each}}
+			</tbody>
+		</table>
+		<div class="summary">
+			<p><strong>Tổng Số Tiền:</strong> <span class="total">{{totalPrice}}</span></p>
+		</div>
+		<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi. Chúng tôi mong được phục vụ bạn trong tương lai!</p>
+	</div>
+	<div class="footer">
+		<p>Trân trọng,<br>[Tên Công Ty]</p>
+	</div>
+</div>
+</body>
+</html>

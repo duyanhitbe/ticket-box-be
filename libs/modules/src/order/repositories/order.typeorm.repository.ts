@@ -33,22 +33,16 @@ export class OrderTypeormRepository
 	}
 
 	async updateById(options: UpdateByIdOptions<OrderTypeormEntity>): Promise<OrderTypeormEntity> {
-		const { id, data } = options;
+		const { id, data, relations } = options;
 		const { orderStatus } = data;
 
-		const order = await this.findByIdOrThrow({ id });
+		const order = await this.findByIdOrThrow({ id, relations });
 
 		if (orderStatus) {
-			if (
-				order.orderStatus === ENUM_ORDER_STATUS.RESERVED &&
-				orderStatus === ENUM_ORDER_STATUS.CANCELLED
-			) {
-				throw new BadRequestException('Can not update order status');
-			}
-			if (
-				order.orderStatus === ENUM_ORDER_STATUS.PAID ||
-				order.orderStatus === ENUM_ORDER_STATUS.CANCELLED
-			) {
+			const isAllowUpdateStatus = order.orderStatus === ENUM_ORDER_STATUS.RESERVED;
+			const isUpdateSameStatus = order.orderStatus === data.orderStatus;
+
+			if (!isAllowUpdateStatus || isUpdateSameStatus) {
 				throw new BadRequestException('Can not update order status');
 			}
 		}

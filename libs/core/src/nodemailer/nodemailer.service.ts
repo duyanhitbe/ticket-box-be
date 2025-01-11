@@ -2,11 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { NodemailerService } from './nodemailer.abstract';
 import { InjectNodemailer } from './nodemailer.decorator';
 import { SendMailOptions, Transporter } from 'nodemailer';
-import { SendMailOrderFailOptions, SendMailOrderSuccessOptions } from './nodemailer.interface';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import * as handlebars from 'handlebars';
 import { toVND } from '@lib/common/helpers';
+import { SendMailOrderEventPayload } from '@lib/modules/mail';
+import { ENUM_ORDER_STATUS } from '@lib/modules/order';
 
 @Injectable()
 export class NodemailerServiceImp extends NodemailerService {
@@ -31,33 +32,31 @@ export class NodemailerServiceImp extends NodemailerService {
 		return template(data);
 	}
 
-	sendOrderSuccess(options: SendMailOrderSuccessOptions) {
+	sendMailOrder(options: SendMailOrderEventPayload) {
+		const { orderStatus, details, totalPrice, customerEmail } = options;
+		const subjectMap = {
+			[ENUM_ORDER_STATUS.RESERVED]: 'Đặt vé thành công',
+			[ENUM_ORDER_STATUS.PAID]: 'Xác nhận thanh toán',
+			[ENUM_ORDER_STATUS.CANCELLED]: 'Xác nhận huỷ vé'
+		};
+
 		const from = '"No Reply" <noreply@yourdomain.com>';
-		const subject = 'Đặt vé thành công';
-		const html = this.loadTemplate('order-success', {
+		const subject = subjectMap[orderStatus];
+		const template = `order-${orderStatus.toLowerCase()}`;
+		const data = {
 			...options,
-			details: options.details.map((detail) => ({
+			details: details?.map((detail) => ({
 				...detail,
 				price: toVND(detail.price),
 				totalPrice: toVND(detail.totalPrice)
 			})),
-			totalPrice: toVND(options.totalPrice)
-		});
-		return this.send({
-			from,
-			to: options.to,
-			subject,
-			html
-		});
-	}
+			totalPrice: toVND(totalPrice || 0)
+		};
+		const html = this.loadTemplate(template, data);
 
-	sendOrderFail(options: SendMailOrderFailOptions): Promise<void> {
-		const from = '"No Reply" <noreply@yourdomain.com>';
-		const subject = 'Đặt vé thất bại';
-		const html = this.loadTemplate('order-cancel', options);
 		return this.send({
 			from,
-			to: options.to,
+			to: customerEmail,
 			subject,
 			html
 		});

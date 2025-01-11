@@ -5,6 +5,7 @@ import {
 	ListOrderEntity,
 	OrderCreatedEntity,
 	OrderEntity,
+	OrderUpdatedEntity,
 	UpdateOrderDto
 } from '@lib/modules/order';
 import { UpdateOrderUseCase } from './usecases/update-order.usecase';
@@ -63,8 +64,8 @@ export class OrderController {
 	 * @returns {Promise<OrderEntity>}
 	 */
 	@Patch(':id')
-	@SwaggerOkResponse({ summary: 'Update order', type: OrderEntity })
-	update(@Param('id') id: string, @Body() data: UpdateOrderDto): Promise<OrderEntity> {
+	@SwaggerOkResponse({ summary: 'Update order', type: OrderUpdatedEntity })
+	update(@Param('id') id: string, @Body() data: UpdateOrderDto): Promise<OrderUpdatedEntity> {
 		return this.updateOrderUseCase.execute(id, data);
 	}
 

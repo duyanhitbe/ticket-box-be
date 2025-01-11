@@ -19,7 +19,7 @@ import {
 	RABBITMQ_PATTERNS,
 	RMQClientProxy
 } from '@lib/core/rabbitmq';
-import { SendMailOrderFailEventPayload } from '@lib/modules/mail'; // totalPrice
+import { SendMailOrderEventPayload } from '@lib/modules/mail'; // totalPrice
 
 // totalPrice
 
@@ -80,29 +80,31 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 			totalPrice = await this.createDetails(orderId, customerId, mappedDetails, queryRunner);
 
 			await queryRunner.commitTransaction();
-			// const sendMailPayload: SendMailOrderSuccessEventPayload = {
-			// 	orderCode,
-			// 	totalPrice,
-			// 	customerName,
-			// 	customerEmail,
-			// 	details: mappedDetails.map(({ name, quantity, discountedPrice }) => ({
-			// 		name,
-			// 		quantity,
-			// 		price: discountedPrice,
-			// 		totalPrice: discountedPrice * quantity
-			// 	}))
-			// };
-			// this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER_SUCCESS, sendMailPayload);
+			const sendMailPayload: SendMailOrderEventPayload = {
+				orderCode,
+				totalPrice,
+				customerName,
+				customerEmail,
+				orderStatus: ENUM_ORDER_STATUS.RESERVED,
+				details: mappedDetails.map(({ name, quantity, discountedPrice }) => ({
+					name,
+					quantity,
+					price: discountedPrice,
+					totalPrice: discountedPrice * quantity
+				}))
+			};
+			this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER, sendMailPayload);
 		} catch (err) {
 			this.logger.error(err.message);
 			await queryRunner.rollbackTransaction();
-			const sendMailPayload: SendMailOrderFailEventPayload = {
+			const sendMailPayload: SendMailOrderEventPayload = {
 				orderCode,
 				customerName,
 				customerEmail,
+				orderStatus: ENUM_ORDER_STATUS.CANCELLED,
 				reason: err.message
 			};
-			this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER_FAIL, sendMailPayload);
+			this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER, sendMailPayload);
 			return this.orderRepository.updateById({
 				id: orderId,
 				data: {

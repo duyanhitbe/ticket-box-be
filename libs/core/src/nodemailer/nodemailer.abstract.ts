@@ -1,7 +1,5 @@
-import { SendMailOrderFailOptions, SendMailOrderSuccessOptions } from './nodemailer.interface';
+import { SendMailOrderEventPayload } from '@lib/modules/mail';
 
 export abstract class NodemailerService {
-	abstract sendOrderSuccess(options: SendMailOrderSuccessOptions): Promise<void>;
-
-	abstract sendOrderFail(options: SendMailOrderFailOptions): Promise<void>;
+	abstract sendMailOrder(options: SendMailOrderEventPayload): Promise<void>;
 }
