@@ -1,7 +1,7 @@
 import { ClassSerializerInterceptor, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { TypeormModule } from '@lib/core/typeorm/typeorm.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseInterceptor } from '@lib/core/interceptors';
 import { I18nModule } from '@lib/core/i18n/i18n.module';
@@ -16,13 +16,6 @@ import { ENUM_QUEUE, ENUM_RABBITMQ_CLIENT } from '@lib/core/rabbitmq';
 import { AppTransportModule } from './app.transport.module';
 import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.module';
 import { EventModule } from '@lib/core/event/event.module';
-import { RedisModule } from '@lib/core/redis/redis.module';
-import * as session from 'express-session';
-import { InjectRedis } from '@lib/core/redis';
-import Redis from 'ioredis';
-import { RedisStore } from 'connect-redis';
-import { ACCESS_TOKEN_EXPIRES } from '@lib/core/jwt';
-import { Env } from '@lib/common/interfaces';
 import { LoggerMiddleware } from '@lib/core/middlewares';
 import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 
@@ -51,7 +44,7 @@ import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 			}
 		]),
 		EventModule.forRoot(),
-		RedisModule.forRoot(),
+		// RedisModule.forRoot(),
 		NodemailerModule.forRoot(),
 		AppRepositoryModule,
 		AppTransportModule,
@@ -78,32 +71,28 @@ import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 	]
 })
 export class AppModule implements NestModule {
-	constructor(
-		@InjectRedis()
-		private readonly redis: Redis,
-		private readonly configService: ConfigService<Env>
-	) {}
+	constructor() {} // private readonly configService: ConfigService<Env> // private readonly redis: Redis, // @InjectRedis()
 
 	configure(consumer: MiddlewareConsumer) {
 		consumer
 			.apply(
-				session({
-					name: 'session',
-					store: new RedisStore({
-						client: this.redis,
-						prefix: 'SESSION:'
-					}),
-					secret: this.configService.get('SESSION_SECRET')!,
-					resave: false,
-					saveUninitialized: false,
-					cookie: {
-						maxAge: ACCESS_TOKEN_EXPIRES * 1000,
-						secure: false,
-						httpOnly: true,
-						sameSite: 'lax',
-						signed: true
-					}
-				}),
+				// session({
+				// 	name: 'session',
+				// 	store: new RedisStore({
+				// 		client: this.redis,
+				// 		prefix: 'SESSION:'
+				// 	}),
+				// 	secret: this.configService.get('SESSION_SECRET')!,
+				// 	resave: false,
+				// 	saveUninitialized: false,
+				// 	cookie: {
+				// 		maxAge: ACCESS_TOKEN_EXPIRES * 1000,
+				// 		secure: false,
+				// 		httpOnly: true,
+				// 		sameSite: 'lax',
+				// 		signed: true
+				// 	}
+				// }),
 				LoggerMiddleware
 			)
 			.forRoutes('*');
