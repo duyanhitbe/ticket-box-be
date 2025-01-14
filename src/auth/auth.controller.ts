@@ -33,10 +33,8 @@ export class AuthController {
 	@Post('login')
 	@HttpCode(200)
 	@SwaggerOkResponse({ summary: 'Login', type: LoginEntity })
-	async login(@Body() data: LoginDto, @Req() req: Request): Promise<LoginEntity> {
-		const result = await this.loginUseCase.execute(data);
-		req.session['accessToken'] = result.accessToken;
-		return result;
+	async login(@Body() data: LoginDto): Promise<LoginEntity> {
+		return await this.loginUseCase.execute(data);
 	}
 
 	/**

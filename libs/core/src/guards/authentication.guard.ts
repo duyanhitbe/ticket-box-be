@@ -33,7 +33,7 @@ export class AuthenticationGuard implements CanActivate {
 		const request = context.switchToHttp().getRequest();
 		let accessToken = request.headers.authorization?.split(' ')[1];
 
-		if (request.session.accessToken) {
+		if (request.session?.accessToken) {
 			accessToken = request.session.accessToken;
 		}
 
