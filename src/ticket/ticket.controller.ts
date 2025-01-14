@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { CreateTicketDto, FilterTicketDto, TicketEntity } from '@lib/modules/ticket';
 import { CreateTicketUseCase } from './usecases/create-ticket.usecase';
 import { FindTicketUseCase } from './usecases/find-ticket.usecase';
@@ -10,6 +10,8 @@ import {
 	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { GetImportTicketTemplateUseCase } from './usecases/get-import-ticket-template.usecase';
+import { Response } from 'express';
 
 @Controller('tickets')
 @UseAuth({ isPublic: true })
@@ -17,7 +19,8 @@ export class TicketController {
 	constructor(
 		private readonly createTicketUseCase: CreateTicketUseCase,
 		private readonly findTicketUseCase: FindTicketUseCase,
-		private readonly detailTicketUseCase: DetailTicketUseCase
+		private readonly detailTicketUseCase: DetailTicketUseCase,
+		private readonly getImportTicketTemplateUseCase: GetImportTicketTemplateUseCase
 	) {}
 
 	/**
@@ -40,6 +43,20 @@ export class TicketController {
 	@SwaggerListResponse({ summary: 'List ticket', type: TicketEntity })
 	findAll(@Query() filter: FilterTicketDto): Promise<PaginationResponse<TicketEntity>> {
 		return this.findTicketUseCase.query(filter);
+	}
+
+	/**
+	 * @path GET /api/v1/tickets/excel
+	 * @param res
+	 */
+	@Get('excel')
+	@SwaggerOkResponse({ summary: 'Get template import ticket', type: {} })
+	async getTemplate(@Res({ passthrough: false }) res: Response) {
+		const buffer = await this.getImportTicketTemplateUseCase.query();
+		res.header('Content-Disposition', 'attachment; filename=NhapVe.xlsx');
+		res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		res.send(buffer);
+		return {};
 	}
 
 	/**

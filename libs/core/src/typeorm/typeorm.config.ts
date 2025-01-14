@@ -20,6 +20,7 @@ import { Order1733373959361 } from '@lib/core/typeorm/migrations/1733373959361-o
 import { OrderDetail1733403998536 } from '@lib/core/typeorm/migrations/1733403998536-order-detail';
 import { TicketInfo1734602616704 } from '@lib/core/typeorm/migrations/1734602616704-ticket-info';
 import { Order1736261317836 } from './migrations/1736261317836-order';
+import { Ticket1736862495029 } from './migrations/1736862495029-ticket';
 
 config();
 const configService = new ConfigService();
@@ -53,7 +54,8 @@ export const options: TypeOrmModuleOptions = {
 		Order1733373959361,
 		OrderDetail1733403998536,
 		TicketInfo1734602616704,
-		Order1736261317836
+		Order1736261317836,
+		Ticket1736862495029
 	]
 };
 

@@ -7,9 +7,10 @@ import { OrderTypeormEntity } from '@lib/modules/order';
 import { TicketGroupTypeormEntity } from '@lib/modules/ticket-group';
 import { TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
 import { Entity } from 'typeorm';
-import { TypeormColumn, TypeormManyToOne } from '@lib/common/decorators';
+import { TypeormColumn, TypeormManyToOne, TypeormUniqueMulti } from '@lib/common/decorators';
 
 @Entity('tickets')
+@TypeormUniqueMulti<TicketTypeormEntity>(['eventId', 'code'])
 export class TicketTypeormEntity extends BaseTypeormEntity implements TicketEntity {
 	@TypeormColumn()
 	eventId!: string;
