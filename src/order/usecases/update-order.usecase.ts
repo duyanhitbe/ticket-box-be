@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
 	ENUM_ORDER_STATUS,
+	OrderEntity,
 	OrderRepository,
 	OrderUpdatedEntity,
 	UpdateOrderDto
@@ -26,6 +27,15 @@ export class UpdateOrderUseCase extends ExecuteHandler<OrderUpdatedEntity> {
 
 	async execute(id: string, data: UpdateOrderDto): Promise<OrderUpdatedEntity> {
 		const order = await this.orderRepository.updateById({ id, data, relations: ['details'] });
+		this.emitEvent(order);
+		return {
+			id: order.id,
+			orderStatus: order.orderStatus,
+			reason: order.reason
+		};
+	}
+
+	private emitEvent(order: OrderEntity) {
 		if (order.orderStatus !== ENUM_ORDER_STATUS.RESERVED) {
 			const eventPayload: SendMailOrderEventPayload = {
 				orderCode: order.code,
@@ -42,9 +52,5 @@ export class UpdateOrderUseCase extends ExecuteHandler<OrderUpdatedEntity> {
 			};
 			this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER, eventPayload);
 		}
-		return {
-			id: order.id,
-			orderStatus: order.orderStatus
-		};
 	}
 }

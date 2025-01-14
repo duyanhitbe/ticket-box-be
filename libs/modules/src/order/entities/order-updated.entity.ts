@@ -16,4 +16,11 @@ export class OrderUpdatedEntity {
 	})
 	@Property('Trạng thái đơn hàng')
 	orderStatus?: ENUM_ORDER_STATUS;
+
+	/**
+	 * Lí do
+	 */
+	@SwaggerProperty()
+	@Property('Lí do')
+	reason?: string;
 }
