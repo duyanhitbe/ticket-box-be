@@ -112,7 +112,7 @@ export class TicketInfoTypeormRepository
 	async findPaginated(
 		filter: FilterTicketInfoDto
 	): Promise<PaginationResponse<TicketInfoTypeormEntity>> {
-		const { ticketGroupId, search, searchFields } = filter;
+		const { ticketGroupId, eventId, search, searchFields } = filter;
 		const { limit, page, offset } = getPageLimitOffset(filter);
 
 		const queryBuilder = this.repository
@@ -137,6 +137,11 @@ export class TicketInfoTypeormRepository
 		if (ticketGroupId) {
 			queryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
 			countQueryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
+		}
+
+		if (eventId) {
+			queryBuilder.where('tf.event_id = :eventId', { eventId });
+			countQueryBuilder.where('tf.event_id = :eventId', { eventId });
 		}
 
 		if (search && searchFields) {

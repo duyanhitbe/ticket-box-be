@@ -8,14 +8,13 @@ import {
 } from '@lib/modules/ticket-group';
 import { ExecuteHandler } from '@lib/common/abstracts';
 import { EventEmitterService } from '@lib/core/event';
-import { REDIS_PREFIX_KEY, RedisService } from '@lib/core/redis';
 
 @Injectable()
 export class UpdateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> {
 	constructor(
 		private readonly ticketGroupRepository: TicketGroupRepository,
-		private readonly eventEmitterService: EventEmitterService,
-		private readonly redisService: RedisService
+		private readonly eventEmitterService: EventEmitterService
+		// private readonly redisService: RedisService
 	) {
 		super();
 	}
@@ -35,10 +34,10 @@ export class UpdateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> 
 		};
 		this.eventEmitterService.emit(TICKET_GROUP_EVENTS.UPDATED, payload);
 
-		await this.redisService.delGroup({
-			prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
-			key: [ticketGroup.eventId]
-		});
+		// await this.redisService.delGroup({
+		// 	prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
+		// 	key: [ticketGroup.eventId]
+		// });
 
 		return ticketGroup;
 	}

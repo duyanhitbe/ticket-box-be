@@ -6,16 +6,14 @@ import {
 	TicketGroupRepository
 } from '@lib/modules/ticket-group';
 import { QueryHandler } from '@lib/common/abstracts';
-import { REDIS_PREFIX_KEY, RedisService } from '@lib/core/redis';
-import { formatDate } from '@lib/common/helpers';
 import { CustomerRoleRepository } from '@lib/modules/customer-role';
 
 @Injectable()
 export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEventEntity[]> {
 	constructor(
 		private readonly ticketGroupRepository: TicketGroupRepository,
-		private readonly customerRoleRepository: CustomerRoleRepository,
-		private readonly redisService: RedisService
+		private readonly customerRoleRepository: CustomerRoleRepository
+		// private readonly redisService: RedisService
 	) {
 		super();
 	}
@@ -25,11 +23,11 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 		userRoleId?: string
 	): Promise<TicketGroupByEventEntity[]> {
 		const { eventId, date } = filter;
-		const cachedData = await this.redisService.get({
-			prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
-			key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')]
-		});
-		if (cachedData) return cachedData;
+		// const cachedData = await this.redisService.get({
+		// 	prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
+		// 	key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')]
+		// });
+		// if (cachedData) return cachedData;
 
 		const customerRoleId = await this.customerRoleRepository.getCustomerRoleId(userRoleId);
 		const rawTicketGroups = await this.ticketGroupRepository.findPaginatedByEvent(
@@ -84,11 +82,11 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 			return prev;
 		}, []);
 
-		this.redisService.setNx({
-			prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
-			key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')],
-			value: result
-		});
+		// this.redisService.setNx({
+		// 	prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
+		// 	key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')],
+		// 	value: result
+		// });
 		return result;
 	}
 }

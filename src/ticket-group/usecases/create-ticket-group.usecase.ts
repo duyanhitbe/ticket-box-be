@@ -9,14 +9,13 @@ import {
 import { ExecuteHandler } from '@lib/common/abstracts';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
 import { EventEmitterService } from '@lib/core/event';
-import { REDIS_PREFIX_KEY, RedisService } from '@lib/core/redis';
 
 @Injectable()
 export class CreateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> {
 	constructor(
 		private readonly ticketGroupRepository: TicketGroupRepository,
-		private readonly eventEmitterService: EventEmitterService,
-		private readonly redisService: RedisService
+		private readonly eventEmitterService: EventEmitterService
+		// private readonly redisService: RedisService
 	) {
 		super();
 	}
@@ -33,10 +32,10 @@ export class CreateTicketGroupUseCase extends ExecuteHandler<TicketGroupEntity> 
 			};
 			this.eventEmitterService.emit(TICKET_GROUP_EVENTS.CREATED, payload);
 		}
-		await this.redisService.delGroup({
-			prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
-			key: [ticketGroup.eventId]
-		});
+		// await this.redisService.delGroup({
+		// 	prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
+		// 	key: [ticketGroup.eventId]
+		// });
 		return ticketGroup;
 	}
 }

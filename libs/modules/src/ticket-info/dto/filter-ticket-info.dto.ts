@@ -16,4 +16,13 @@ export class FilterTicketInfoDto extends BaseFilterDto {
 	@SwaggerProperty({ required: false })
 	@Property('Mã nhóm vé')
 	ticketGroupId?: string;
+
+	/**
+	 * Mã sự kiện
+	 */
+	@IsOptional()
+	@I18nIsUUID()
+	@SwaggerProperty({ required: false })
+	@Property('Mã sự kiện')
+	eventId?: string;
 }

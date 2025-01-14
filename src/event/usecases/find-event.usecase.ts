@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EventEntity, EventRepository, FilterEventDto } from '@lib/modules/event';
 import { PaginationResponse } from '@lib/base/dto';
 import { QueryHandler } from '@lib/common/abstracts';
-import { REDIS_PREFIX_KEY, RedisService } from '@lib/core/redis';
 import { FindTicketGroupDateForEventUseCase } from '../../ticket-group-date/usecases/find-ticket-group-date-for-event.usecase';
-import { getPageLimitOffset } from '@lib/common/helpers';
 import { set } from 'lodash';
 import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 
@@ -12,7 +10,7 @@ import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntity>> {
 	constructor(
 		private readonly eventRepository: EventRepository,
-		private readonly redisService: RedisService,
+		// private readonly redisService: RedisService,
 		private readonly findTicketGroupDateForEventUseCase: FindTicketGroupDateForEventUseCase
 	) {
 		super();
@@ -20,12 +18,12 @@ export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntit
 
 	async query(filter: FilterEventDto): Promise<PaginationResponse<EventEntity>> {
 		const { eventType, isWebClient } = filter;
-		const { limit, page } = getPageLimitOffset(filter);
-		const cachedData = await this.redisService.get<PaginationResponse<EventEntity>>({
-			prefix: REDIS_PREFIX_KEY.EVENT.LIST,
-			key: [limit, page, eventType]
-		});
-		if (cachedData) return cachedData;
+		// const { limit, page } = getPageLimitOffset(filter);
+		// const cachedData = await this.redisService.get<PaginationResponse<EventEntity>>({
+		// 	prefix: REDIS_PREFIX_KEY.EVENT.LIST,
+		// 	key: [limit, page, eventType]
+		// });
+		// if (cachedData) return cachedData;
 
 		filter.searchFields = ['name', 'location'];
 		if (eventType) {
@@ -52,11 +50,11 @@ export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntit
 			);
 		}
 
-		this.redisService.setNx({
-			prefix: REDIS_PREFIX_KEY.EVENT.LIST,
-			key: [limit, page, eventType],
-			value: result
-		});
+		// this.redisService.setNx({
+		// 	prefix: REDIS_PREFIX_KEY.EVENT.LIST,
+		// 	key: [limit, page, eventType],
+		// 	value: result
+		// });
 		return result;
 	}
 }

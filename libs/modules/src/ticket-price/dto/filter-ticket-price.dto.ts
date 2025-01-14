@@ -23,6 +23,15 @@ export class FilterTicketPriceDto extends BaseFilterDto<TicketPriceEntity> {
 	ticketGroupId?: string;
 
 	/**
+	 * Mã thông tin vé
+	 */
+	@IsOptional()
+	@I18nIsUUID()
+	@SwaggerProperty({ required: false })
+	@Property('Mã thông tin vé')
+	ticketInfoId?: string;
+
+	/**
 	 * Mã nhóm quyền
 	 */
 	@IsOptional()
