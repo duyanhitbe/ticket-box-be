@@ -18,6 +18,7 @@ import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.mod
 import { EventModule } from '@lib/core/event/event.module';
 import { LoggerMiddleware } from '@lib/core/middlewares';
 import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
+import { ExcelModule } from '@lib/core/excel/excel.module';
 
 @Module({
 	imports: [
@@ -45,6 +46,7 @@ import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 		]),
 		EventModule.forRoot(),
 		// RedisModule.forRoot(),
+		ExcelModule,
 		NodemailerModule.forRoot(),
 		AppRepositoryModule,
 		AppTransportModule,
