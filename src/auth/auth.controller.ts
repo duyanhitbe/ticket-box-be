@@ -1,11 +1,6 @@
 import { Body, Controller, Get, HttpCode, Logger, Post, Req, Res } from '@nestjs/common';
 import { SwaggerOkResponse, UseAuth, User } from '@lib/common/decorators';
-import {
-	LoginCustomerDto,
-	LoginCustomerEntity,
-	LoginUserDto,
-	LoginUserEntity
-} from '@lib/modules/auth';
+import { LoginDto, LoginEntity } from '@lib/modules/auth';
 import { LoginUserUseCase } from './usecases/login-user.usecase';
 import { LoginCustomerUseCase } from './usecases/login-customer.usecase';
 import { Request, Response } from 'express';
@@ -15,12 +10,14 @@ import { UserEntity } from '@lib/modules/user';
 import { CustomerEntity } from '@lib/modules/customer';
 import { DetailCustomerUseCase } from '../customer/usecases/detail-customer.usecase';
 import { ONLY_CUSTOMER_ROLE, ONLY_USER_ROLE } from '@lib/core/jwt';
+import { LoginUseCase } from './usecases/login.usecase';
 
 @Controller('auth')
 export class AuthController {
 	private readonly logger = new Logger(this.constructor.name);
 
 	constructor(
+		private readonly loginUseCase: LoginUseCase,
 		private readonly loginUserUseCase: LoginUserUseCase,
 		private readonly loginCustomerUseCase: LoginCustomerUseCase,
 		private readonly detailUserUseCase: DetailUserUseCase,
@@ -28,30 +25,18 @@ export class AuthController {
 	) {}
 
 	/**
-	 * @path POST /api/v1/auth/user/login
-	 * @param data {LoginUserDto}
+	 * @path POST /api/v1/auth/login
+	 * @param data {LoginDto}
 	 * @param req
-	 * @returns Promise<LoginUserEntity>
+	 * @returns Promise<LoginEntity>
 	 */
-	@Post('user/login')
+	@Post('login')
 	@HttpCode(200)
-	@SwaggerOkResponse({ summary: 'Login user', type: LoginUserEntity })
-	async loginUser(@Body() data: LoginUserDto, @Req() req: Request): Promise<LoginUserEntity> {
-		const result = await this.loginUserUseCase.execute(data);
+	@SwaggerOkResponse({ summary: 'Login', type: LoginEntity })
+	async login(@Body() data: LoginDto, @Req() req: Request): Promise<LoginEntity> {
+		const result = await this.loginUseCase.execute(data);
 		req.session['accessToken'] = result.accessToken;
 		return result;
-	}
-
-	/**
-	 * @path POST /api/v1/auth/customer/login
-	 * @param data {LoginCustomerDto}
-	 * @returns Promise<LoginCustomerEntity>
-	 */
-	@Post('customer/login')
-	@HttpCode(200)
-	@SwaggerOkResponse({ summary: 'Login customer', type: LoginCustomerEntity })
-	async loginCustomer(@Body() data: LoginCustomerDto): Promise<LoginCustomerEntity> {
-		return this.loginCustomerUseCase.execute(data);
 	}
 
 	/**
