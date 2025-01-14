@@ -6,6 +6,8 @@ import {
 import { QueryHandler } from '@lib/common/abstracts';
 import { TicketGroupRepository } from '@lib/modules/ticket-group';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
+import { MoreThanOrEqual } from 'typeorm';
+import { getStartOfDay } from '@lib/common/helpers';
 
 @Injectable()
 export class FindTicketGroupDateForEventUseCase extends QueryHandler<TicketGroupDateByEventType> {
@@ -18,6 +20,7 @@ export class FindTicketGroupDateForEventUseCase extends QueryHandler<TicketGroup
 
 	async query(eventId: string): Promise<TicketGroupDateByEventType> {
 		const dateTypes = await this.ticketGroupRepository.findDateTypeByEventId(eventId);
+		const startOfDay = getStartOfDay(new Date().toISOString());
 
 		if (dateTypes.length === 1) {
 			const dateType = dateTypes[0];
@@ -28,12 +31,16 @@ export class FindTicketGroupDateForEventUseCase extends QueryHandler<TicketGroup
 						this.logger.error('Data date DURATION is null');
 						throw new InternalServerErrorException('Invalid data');
 					}
+					if (result.fromDate < startOfDay) {
+						result.fromDate = startOfDay;
+					}
 					return result;
 				case ENUM_DATE_TYPE.FIXED:
 					const dates = await this.ticketGroupDateRepository
 						.find({
 							where: {
-								eventId
+								eventId,
+								date: MoreThanOrEqual(startOfDay)
 							},
 							select: ['date']
 						})
