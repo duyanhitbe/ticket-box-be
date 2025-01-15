@@ -6,6 +6,7 @@ import { DetailTicketUseCase } from './usecases/detail-ticket.usecase';
 import { TicketConsumer } from './ticket.consumer';
 import { TicketService } from './ticket.service';
 import { GetImportTicketTemplateUseCase } from './usecases/get-import-ticket-template.usecase';
+import { ImportTicketUseCase } from './usecases/import-ticket.usecase';
 
 @Module({
 	controllers: [TicketController, TicketConsumer],
@@ -14,7 +15,8 @@ import { GetImportTicketTemplateUseCase } from './usecases/get-import-ticket-tem
 		CreateTicketUseCase,
 		FindTicketUseCase,
 		DetailTicketUseCase,
-		GetImportTicketTemplateUseCase
+		GetImportTicketTemplateUseCase,
+		ImportTicketUseCase
 	]
 })
 export class TicketModule {}

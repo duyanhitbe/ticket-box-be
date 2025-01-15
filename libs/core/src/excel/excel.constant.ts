@@ -14,19 +14,19 @@ export const EXCEL_CONSTANTS: Record<ExcelModuleType, ExcelModuleValue> = {
 		columns: [
 			{
 				header: 'Mã thông tin vé',
-				key: 'ticket_info_code',
+				key: 'ticketInfoCode',
 				required: true
 			},
 			{
 				header: 'Mã vé',
-				key: 'ticket_code',
+				key: 'ticketCode',
 				required: true
 			}
 		],
 		sampleData: [
 			{
-				ticket_info_code: 'INFO001',
-				ticket_code: 'CODE001'
+				ticketInfoCode: 'INFO001',
+				ticketCode: 'CODE001'
 			}
 		]
 	}

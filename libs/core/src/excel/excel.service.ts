@@ -70,4 +70,33 @@ export class ExcelServiceImp extends ExcelService {
 		worksheet.addRows(setting.sampleData);
 		return worksheet;
 	}
+
+	async getDataFromFile<T = any>(
+		workbook: Workbook,
+		module: ExcelModuleType,
+		file: Express.Multer.File
+	): Promise<T> {
+		const setting = EXCEL_CONSTANTS[module];
+		const data: any[] = [];
+
+		try {
+			await workbook.xlsx.load(file.buffer); // Load the workbook from the buffer
+			const worksheet = workbook.getWorksheet(setting.sheetName)!; // Read the first worksheet
+
+			worksheet.eachRow((row, rowNumber) => {
+				if (rowNumber > 1) {
+					const values: any[] = (row.values as any).slice(1);
+					const headers = {};
+					values.forEach((value, i) => {
+						headers[setting.columns[i].key!] = value;
+					});
+					data.push(headers);
+				}
+			});
+
+			return data as any;
+		} catch (error) {
+			throw new Error(`Error reading Excel file: ${error.message}`);
+		}
+	}
 }

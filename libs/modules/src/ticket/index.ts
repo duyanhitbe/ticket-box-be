@@ -1,6 +1,7 @@
 export * from './dto/create-ticket.dto';
 export * from './dto/filter-ticket.dto';
 export * from './dto/update-ticket.dto';
+export * from './dto/import-ticket-data.dto';
 
 export * from './entities/ticket.typeorm.entity';
 export * from './entities/ticket.entity.abstract';

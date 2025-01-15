@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	Post,
+	Query,
+	Res,
+	UploadedFile,
+	UseInterceptors
+} from '@nestjs/common';
 import { CreateTicketDto, FilterTicketDto, TicketEntity } from '@lib/modules/ticket';
 import { CreateTicketUseCase } from './usecases/create-ticket.usecase';
 import { FindTicketUseCase } from './usecases/find-ticket.usecase';
@@ -12,6 +22,8 @@ import {
 import { PaginationResponse } from '@lib/base/dto';
 import { GetImportTicketTemplateUseCase } from './usecases/get-import-ticket-template.usecase';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImportTicketUseCase } from './usecases/import-ticket.usecase';
 
 @Controller('tickets')
 @UseAuth({ isPublic: true })
@@ -20,7 +32,8 @@ export class TicketController {
 		private readonly createTicketUseCase: CreateTicketUseCase,
 		private readonly findTicketUseCase: FindTicketUseCase,
 		private readonly detailTicketUseCase: DetailTicketUseCase,
-		private readonly getImportTicketTemplateUseCase: GetImportTicketTemplateUseCase
+		private readonly getImportTicketTemplateUseCase: GetImportTicketTemplateUseCase,
+		private readonly importTicketUseCase: ImportTicketUseCase
 	) {}
 
 	/**
@@ -68,5 +81,11 @@ export class TicketController {
 	@SwaggerOkResponse({ summary: 'Detail ticket', type: TicketEntity })
 	findOne(@Param('id') id: string): Promise<TicketEntity> {
 		return this.detailTicketUseCase.query(id);
+	}
+
+	@Post('upload')
+	@UseInterceptors(FileInterceptor('file'))
+	uploadFile(@UploadedFile() file: Express.Multer.File) {
+		return this.importTicketUseCase.execute(file);
 	}
 }
