@@ -4,5 +4,6 @@
   "EventEntity": "Sự kiện",
   "EventTypeormEntity": "Sự kiện",
   "CustomerEntity": "Người dùng",
-  "CustomerTypeormEntity": "Người dùng"
+  "CustomerTypeormEntity": "Người dùng",
+  "TicketInfoTypeormEntity": "Thông tin vé"
 }
