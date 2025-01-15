@@ -24,6 +24,7 @@ import { GetImportTicketTemplateUseCase } from './usecases/get-import-ticket-tem
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImportTicketUseCase } from './usecases/import-ticket.usecase';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('tickets')
 @UseAuth({ isPublic: true })
@@ -85,6 +86,18 @@ export class TicketController {
 
 	@Post('upload')
 	@UseInterceptors(FileInterceptor('file'))
+	@ApiConsumes('multipart/form-data')
+	@ApiBody({
+		schema: {
+			type: 'object',
+			properties: {
+				file: {
+					type: 'string',
+					format: 'binary'
+				}
+			}
+		}
+	})
 	uploadFile(@UploadedFile() file: Express.Multer.File) {
 		return this.importTicketUseCase.execute(file);
 	}
