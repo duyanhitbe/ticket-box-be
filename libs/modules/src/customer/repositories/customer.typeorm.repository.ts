@@ -2,8 +2,10 @@ import { CustomerRepository } from './customer.repository.abstract';
 import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { CustomerTypeormEntity } from '../entities/customer.typeorm.entity';
-import { CustomerEntity } from '@lib/modules/customer';
+import { CustomerEntity, FilterCustomerDto } from '@lib/modules/customer';
 import { Argon2Service } from '@lib/core/hash';
+import { PaginationResponse } from '@lib/base/dto';
+import { getMeta } from '@lib/common/helpers';
 
 @Repository(CustomerTypeormEntity)
 export class CustomerTypeormRepository
@@ -47,5 +49,41 @@ export class CustomerTypeormRepository
 		this.logger.log('Created a new customer');
 		this.logger.debug(newCustomer.raw[0]);
 		return newCustomer.raw[0];
+	}
+
+	async findPaginated(
+		filter: FilterCustomerDto
+	): Promise<PaginationResponse<CustomerTypeormEntity>> {
+		const { searchFields, search } = filter;
+
+		const queryBuilder = this.repository
+			.createQueryBuilder('c')
+			.select([
+				'c.id as "id"',
+				'c.created_at as "createdAt"',
+				'c.updated_at as "updatedAt"',
+				'c.status as "status"',
+				'c.customer_role_id as "customerRoleId"',
+				'c.name as "name"',
+				'c.phone as "phone"',
+				'c.email as "email"',
+				'c.allow_debt_purchase as "allowDebtPurchase"',
+				'r.name as "customerRoleName"'
+			])
+			.leftJoin('customer_roles', 'r', 'r.id = c.customer_role_id');
+		const countQueryBuilder = this.repository.createQueryBuilder('c');
+
+		this.addSearchFields(queryBuilder, 'c', searchFields, search);
+		this.addSearchFields(countQueryBuilder, 'c', searchFields, search);
+
+		const [data, count] = await Promise.all([
+			queryBuilder.getRawMany(),
+			countQueryBuilder.getCount()
+		]);
+		const meta = getMeta(filter, count);
+		return {
+			data,
+			meta
+		};
 	}
 }

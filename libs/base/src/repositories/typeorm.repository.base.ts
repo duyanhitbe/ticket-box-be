@@ -41,16 +41,18 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 	protected addSearchFields(
 		queryBuilder: SelectQueryBuilder<T>,
 		alias: string,
-		searchFields: string[],
-		search: string
+		searchFields?: string[],
+		search?: string
 	): void {
-		queryBuilder.andWhere(
-			new Brackets((qb) => {
-				searchFields.forEach((field) => {
-					qb.orWhere(`${alias}.${field} ILIKE '%${search}%'`);
-				});
-			})
-		);
+		if (searchFields && search) {
+			queryBuilder.andWhere(
+				new Brackets((qb) => {
+					searchFields.forEach((field) => {
+						qb.orWhere(`${alias}.${field} ILIKE '%${search}%'`);
+					});
+				})
+			);
+		}
 	}
 
 	async create(options: CreateOptions<T>): Promise<T> {
