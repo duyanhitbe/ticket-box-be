@@ -5,6 +5,8 @@ import { TypeormColumn, TypeormManyToOne, TypeormUnique } from '@lib/common/deco
 import { CustomerRoleTypeormEntity } from '@lib/modules/customer-role';
 import { Argon2Service } from '@lib/core/hash';
 import { Exclude } from 'class-transformer';
+import { AgencyLevelTypeormEntity } from '../../agency-level';
+import { AgencyTypeormEntity } from '../../agency';
 
 @Entity('customers')
 export class CustomerTypeormEntity extends BaseTypeormEntity implements CustomerEntity {
@@ -25,13 +27,28 @@ export class CustomerTypeormEntity extends BaseTypeormEntity implements Customer
 	@Exclude()
 	password!: string;
 
-	@TypeormColumn({ nullable: true })
+	@TypeormColumn({ default: false })
 	allowDebtPurchase!: boolean;
+
+	@TypeormColumn({ nullable: true })
+	agencyLevelId?: string;
+
+	@TypeormColumn({ nullable: true })
+	agencyId?: string;
+
+	@TypeormColumn({ default: false })
+	isAgency!: boolean;
 
 	/* ========== Relations ========== */
 
 	@TypeormManyToOne(() => CustomerRoleTypeormEntity)
 	customerRole?: CustomerRoleTypeormEntity;
+
+	@TypeormManyToOne(() => AgencyLevelTypeormEntity, undefined, { nullable: true })
+	agencyLevel?: AgencyLevelTypeormEntity;
+
+	@TypeormManyToOne(() => AgencyTypeormEntity, undefined, { nullable: true })
+	agency?: AgencyTypeormEntity;
 
 	/* ========== Hooks ========== */
 

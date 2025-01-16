@@ -53,6 +53,7 @@ import {
 	AgencyTypeormEntity,
 	AgencyTypeormRepository
 } from '@lib/modules/agency';
+import { AgencyUserRepository, AgencyUserTypeormRepository } from '@lib/modules/agency-user';
 
 @Module({
 	imports: [
@@ -124,6 +125,10 @@ import {
 				{
 					provide: AgencyRepository,
 					useClass: AgencyTypeormRepository
+				},
+				{
+					provide: AgencyUserRepository,
+					useClass: AgencyUserTypeormRepository
 				}
 			]
 		})

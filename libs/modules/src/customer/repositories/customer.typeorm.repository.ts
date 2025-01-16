@@ -70,8 +70,12 @@ export class CustomerTypeormRepository
 				'c.allow_debt_purchase as "allowDebtPurchase"',
 				'r.name as "customerRoleName"'
 			])
-			.leftJoin('customer_roles', 'r', 'r.id = c.customer_role_id');
-		const countQueryBuilder = this.repository.createQueryBuilder('c');
+			.leftJoin('customer_roles', 'r', 'r.id = c.customer_role_id')
+			.where('c.is_agency = FALSE');
+
+		const countQueryBuilder = this.repository
+			.createQueryBuilder('c')
+			.where('c.is_agency = FALSE');
 
 		this.addSearchFields(queryBuilder, 'c', searchFields, search);
 		this.addSearchFields(countQueryBuilder, 'c', searchFields, search);

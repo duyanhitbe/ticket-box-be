@@ -21,6 +21,7 @@ import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 import { ExcelModule } from '@lib/core/excel/excel.module';
 import { AgencyLevelModule } from './agency-level/agency-level.module';
 import { AgencyModule } from './agency/agency.module';
+import { AgencyUserModule } from './agency-user/agency-user.module';
 
 @Module({
 	imports: [
@@ -54,7 +55,8 @@ import { AgencyModule } from './agency/agency.module';
 		AppTransportModule,
 		TicketGroupDateModule,
 		AgencyLevelModule,
-		AgencyModule
+		AgencyModule,
+		AgencyUserModule
 	],
 	controllers: [AppController],
 	providers: [
