@@ -33,7 +33,7 @@ export class LoginUserUseCase extends ExecuteHandler<LoginUserEntity> {
 		}
 
 		const expiresIn = ACCESS_TOKEN_EXPIRES;
-		const accessToken = await this.jwtService.sign(user.id, ENUM_TOKEN_ROLE.USER, 60);
+		const accessToken = await this.jwtService.sign(user.id, ENUM_TOKEN_ROLE.USER, expiresIn);
 
 		return {
 			accessToken,
