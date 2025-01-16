@@ -43,6 +43,11 @@ import {
 	TicketGroupDateTypeormEntity,
 	TicketGroupDateTypeormRepository
 } from '@lib/modules/ticket-group-date';
+import {
+	AgencyLevelRepository,
+	AgencyLevelTypeormEntity,
+	AgencyLevelTypeormRepository
+} from '@lib/modules/agency-level';
 
 @Module({
 	imports: [
@@ -58,7 +63,8 @@ import {
 				TicketGroupDateTypeormEntity,
 				TicketInfoTypeormEntity,
 				TicketPriceTypeormEntity,
-				UserTypeormEntity
+				UserTypeormEntity,
+				AgencyLevelTypeormEntity
 			],
 			repositories: [
 				{
@@ -104,6 +110,10 @@ import {
 				{
 					provide: UserRepository,
 					useClass: UserTypeormRepository
+				},
+				{
+					provide: AgencyLevelRepository,
+					useClass: AgencyLevelTypeormRepository
 				}
 			]
 		})

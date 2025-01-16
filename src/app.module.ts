@@ -19,6 +19,7 @@ import { EventModule } from '@lib/core/event/event.module';
 import { LoggerMiddleware } from '@lib/core/middlewares';
 import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 import { ExcelModule } from '@lib/core/excel/excel.module';
+import { AgencyLevelModule } from './agency-level/agency-level.module';
 
 @Module({
 	imports: [
@@ -50,7 +51,8 @@ import { ExcelModule } from '@lib/core/excel/excel.module';
 		NodemailerModule.forRoot(),
 		AppRepositoryModule,
 		AppTransportModule,
-		TicketGroupDateModule
+		TicketGroupDateModule,
+		AgencyLevelModule
 	],
 	controllers: [AppController],
 	providers: [
