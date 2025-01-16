@@ -1,8 +1,9 @@
 import { AgencyEntity } from './agency.entity.abstract';
 import { BaseTypeormEntity } from '@lib/base/entities';
-import { Entity } from 'typeorm';
+import { Entity, JoinTable, ManyToMany } from 'typeorm';
 import { TypeormColumn, TypeormManyToOne } from '@lib/common/decorators';
 import { AgencyLevelTypeormEntity } from '../../agency-level';
+import { EventTypeormEntity } from '../../event';
 
 @Entity('agencies')
 export class AgencyTypeormEntity extends BaseTypeormEntity implements AgencyEntity {
@@ -20,4 +21,16 @@ export class AgencyTypeormEntity extends BaseTypeormEntity implements AgencyEnti
 
 	@TypeormManyToOne(() => AgencyLevelTypeormEntity)
 	agencyLevel?: AgencyLevelTypeormEntity;
+
+	@ManyToMany(() => EventTypeormEntity)
+	@JoinTable({
+		name: 'agency_event',
+		joinColumn: {
+			name: 'agency_id'
+		},
+		inverseJoinColumn: {
+			name: 'event_id'
+		}
+	})
+	events?: EventTypeormEntity[];
 }

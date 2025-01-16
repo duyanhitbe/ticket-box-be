@@ -1,4 +1,10 @@
-import { I18nIsString, I18nIsUUID, Property, SwaggerProperty } from '@lib/common/decorators';
+import {
+	I18nIsArray,
+	I18nIsString,
+	I18nIsUUID,
+	Property,
+	SwaggerProperty
+} from '@lib/common/decorators';
 import { IsOptional } from 'class-validator';
 
 export class CreateAgencyDto {
@@ -23,4 +29,9 @@ export class CreateAgencyDto {
 	@SwaggerProperty()
 	@Property('Mã cấp đại lý')
 	agencyLevelId!: string;
+
+	@I18nIsArray()
+	@SwaggerProperty()
+	@Property('Mã sự kiện')
+	eventIds!: string[];
 }
