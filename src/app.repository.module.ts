@@ -48,6 +48,11 @@ import {
 	AgencyLevelTypeormEntity,
 	AgencyLevelTypeormRepository
 } from '@lib/modules/agency-level';
+import {
+	AgencyRepository,
+	AgencyTypeormEntity,
+	AgencyTypeormRepository
+} from '@lib/modules/agency';
 
 @Module({
 	imports: [
@@ -64,7 +69,8 @@ import {
 				TicketInfoTypeormEntity,
 				TicketPriceTypeormEntity,
 				UserTypeormEntity,
-				AgencyLevelTypeormEntity
+				AgencyLevelTypeormEntity,
+				AgencyTypeormEntity
 			],
 			repositories: [
 				{
@@ -114,6 +120,10 @@ import {
 				{
 					provide: AgencyLevelRepository,
 					useClass: AgencyLevelTypeormRepository
+				},
+				{
+					provide: AgencyRepository,
+					useClass: AgencyTypeormRepository
 				}
 			]
 		})

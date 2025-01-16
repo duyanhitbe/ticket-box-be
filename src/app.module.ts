@@ -20,6 +20,7 @@ import { LoggerMiddleware } from '@lib/core/middlewares';
 import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 import { ExcelModule } from '@lib/core/excel/excel.module';
 import { AgencyLevelModule } from './agency-level/agency-level.module';
+import { AgencyModule } from './agency/agency.module';
 
 @Module({
 	imports: [
@@ -52,7 +53,8 @@ import { AgencyLevelModule } from './agency-level/agency-level.module';
 		AppRepositoryModule,
 		AppTransportModule,
 		TicketGroupDateModule,
-		AgencyLevelModule
+		AgencyLevelModule,
+		AgencyModule
 	],
 	controllers: [AppController],
 	providers: [
