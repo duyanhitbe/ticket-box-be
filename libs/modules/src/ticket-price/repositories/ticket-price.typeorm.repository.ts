@@ -14,7 +14,7 @@ export class TicketPriceTypeormRepository
 	async findPaginated(
 		filter: FilterTicketPriceDto
 	): Promise<PaginationResponse<TicketPriceTypeormEntity>> {
-		const { eventId, ticketGroupId, customerRoleId, ticketInfoId } = filter;
+		const { eventId, ticketGroupId, agencyLevelId, ticketInfoId } = filter;
 		const { limit, offset } = getPageLimitOffset(filter);
 
 		const queryBuilder = this.repository
@@ -31,12 +31,13 @@ export class TicketPriceTypeormRepository
 				'e.name AS "eventName"',
 				'tg.name AS "ticketGroupName"',
 				'tf.name AS "ticketInfoName"',
-				'c.name AS "customerRoleName"'
+				'a.name AS "agencyLevelName"',
+				'a.level AS "agencyLevel"'
 			])
 			.leftJoin('events', 'e', 'e.id = p.event_id')
 			.leftJoin('ticket_groups', 'tg', 'tg.id = p.ticket_group_id')
 			.leftJoin('ticket_infos', 'tf', 'tf.id = p.ticket_info_id')
-			.leftJoin('customer_roles', 'c', 'c.id = p.customer_role_id')
+			.leftJoin('agency_levels', 'a', 'a.id = p.agency_level_id')
 			.limit(limit)
 			.offset(offset);
 		const countQueryBuilder = this.repository.createQueryBuilder('p');
@@ -53,9 +54,9 @@ export class TicketPriceTypeormRepository
 			queryBuilder.andWhere('p.ticket_info_id = :ticketInfoId', { ticketInfoId });
 			countQueryBuilder.andWhere('p.ticket_info_id = :ticketInfoId', { ticketInfoId });
 		}
-		if (customerRoleId) {
-			queryBuilder.andWhere('p.customer_role_id = :customerRoleId', { customerRoleId });
-			countQueryBuilder.andWhere('p.customer_role_id = :customerRoleId', { customerRoleId });
+		if (agencyLevelId) {
+			queryBuilder.andWhere('p.agency_level_id = :agencyLevelId', { agencyLevelId });
+			countQueryBuilder.andWhere('p.agency_level_id = :agencyLevelId', { agencyLevelId });
 		}
 
 		const [data, count] = await Promise.all([

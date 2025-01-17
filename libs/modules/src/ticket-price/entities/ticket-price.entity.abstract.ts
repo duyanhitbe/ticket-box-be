@@ -2,9 +2,9 @@ import { BaseEntity } from '@lib/base/entities';
 import { ENUM_DISCOUNT_TYPE } from '@lib/modules/common';
 import { EventEntity } from '@lib/modules/event';
 import { TicketInfoEntity } from '@lib/modules/ticket-info';
-import { CustomerRoleEntity } from '@lib/modules/customer-role';
 import { TicketGroupEntity } from '@lib/modules/ticket-group';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
+import { AgencyLevelEntity } from '../../agency-level';
 
 export abstract class TicketPriceEntity extends BaseEntity {
 	/**
@@ -15,11 +15,11 @@ export abstract class TicketPriceEntity extends BaseEntity {
 	ticketInfoId!: string;
 
 	/**
-	 * Mã nhóm quyền
+	 * Mã cấp đại lý
 	 */
 	@SwaggerProperty()
-	@Property('Mã nhóm quyền')
-	customerRoleId!: string;
+	@Property('Mã cấp đại lý')
+	agencyLevelId!: string;
 
 	/**
 	 * Mã sự kiện
@@ -80,12 +80,12 @@ export abstract class TicketPriceEntity extends BaseEntity {
 	ticketInfo?: TicketInfoEntity;
 
 	/**
-	 * Nhóm quyền
-	 */
-	customerRole?: CustomerRoleEntity;
-
-	/**
 	 * Nhóm vé
 	 */
 	ticketGroup?: TicketGroupEntity;
+
+	/**
+	 * Cấp đại lý
+	 */
+	agencyLevel?: AgencyLevelEntity;
 }

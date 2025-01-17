@@ -1,10 +1,4 @@
 import { Logging } from '@lib/common/decorators';
-import {
-	CUSTOMER_ROLE_EVENTS,
-	CustomerRoleCreatedPayload,
-	CustomerRoleDeletedPayload,
-	CustomerRoleRepository
-} from '@lib/modules/customer-role';
 import { EventRepository } from '@lib/modules/event';
 import {
 	TICKET_INFO_EVENTS,
@@ -16,6 +10,12 @@ import { Controller, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { In } from 'typeorm';
 import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
+import {
+	AGENCY_LEVEL_EVENTS,
+	AgencyLevelCreatedPayload,
+	AgencyLevelDeletedPayload,
+	AgencyLevelRepository
+} from '@lib/modules/agency-level';
 
 @Controller()
 @Logging()
@@ -23,10 +23,10 @@ export class TicketPriceConsumer {
 	private readonly logger = new Logger(this.constructor.name);
 
 	constructor(
-		private readonly customerRoleRepository: CustomerRoleRepository,
 		private readonly eventRepository: EventRepository,
 		private readonly ticketInfoRepository: TicketInfoRepository,
 		private readonly ticketPriceRepository: TicketPriceRepository,
+		private readonly agencyLevelRepository: AgencyLevelRepository,
 		private readonly createTicketPriceUsecase: CreateTicketPriceUseCase
 	) {}
 
@@ -34,29 +34,29 @@ export class TicketPriceConsumer {
 	async onTicketInfoCreated(payload: TicketInfoCreatedPayload) {
 		const { ticketInfoId, price } = payload;
 
-		const customerRoles = await this.customerRoleRepository.find({
+		const agencyLevels = await this.agencyLevelRepository.find({
 			select: ['id']
 		});
 
 		try {
 			return await Promise.all(
-				customerRoles.map((customerRole) => {
+				agencyLevels.map((agencyLevel) => {
 					const data: CreateTicketPriceDto = {
 						ticketInfoId,
 						basePrice: price,
-						customerRoleId: customerRole.id
+						agencyLevelId: agencyLevel.id
 					};
 					return this.createTicketPriceUsecase.execute(data);
 				})
 			);
 		} finally {
-			this.logger.log(`${customerRoles.length} ticket price was created successfully!`);
+			this.logger.log(`${agencyLevels.length} ticket price was created successfully!`);
 		}
 	}
 
-	@OnEvent(CUSTOMER_ROLE_EVENTS.CREATED)
-	async onCustomerRoleCreated(payload: CustomerRoleCreatedPayload) {
-		const { customerRoleId } = payload;
+	@OnEvent(AGENCY_LEVEL_EVENTS.CREATED)
+	async onCustomerRoleCreated(payload: AgencyLevelCreatedPayload) {
+		const { agencyLevelId } = payload;
 		const events = await this.eventRepository.find({
 			select: ['id']
 		});
@@ -73,7 +73,7 @@ export class TicketPriceConsumer {
 							count += 1;
 							return this.ticketPriceRepository.create({
 								data: {
-									customerRoleId,
+									agencyLevelId,
 									eventId,
 									ticketInfoId,
 									ticketGroupId,
@@ -90,9 +90,9 @@ export class TicketPriceConsumer {
 		}
 	}
 
-	@OnEvent(CUSTOMER_ROLE_EVENTS.DELETED)
-	async onCustomerRoleDeleted(payload: CustomerRoleDeletedPayload) {
-		const { customerRoleId } = payload;
+	@OnEvent(AGENCY_LEVEL_EVENTS.DELETED)
+	async onCustomerRoleDeleted(payload: AgencyLevelDeletedPayload) {
+		const { agencyLevelId } = payload;
 		const events = await this.eventRepository.find({
 			select: ['id']
 		});
@@ -100,7 +100,7 @@ export class TicketPriceConsumer {
 		try {
 			return this.ticketPriceRepository.delete({
 				where: {
-					customerRoleId,
+					agencyLevelId,
 					eventId: In(eventIds)
 				}
 			});

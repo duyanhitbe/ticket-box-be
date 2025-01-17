@@ -1,20 +1,13 @@
 import { PaginationResponse } from '@lib/base/dto';
+import { SwaggerListResponse, SwaggerOkResponse, UseAuth } from '@lib/common/decorators';
 import {
-	SwaggerCreatedResponse,
-	SwaggerListResponse,
-	SwaggerOkResponse,
-	UseAuth
-} from '@lib/common/decorators';
-import {
-	CreateTicketPriceDto,
 	FilterTicketPriceDto,
 	ListTicketPriceEntity,
 	TicketPriceEntity,
 	UpdateManyTicketPriceDto,
 	UpdateTicketPriceDto
 } from '@lib/modules/ticket-price';
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
 import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase';
 import { FindTicketPriceUseCase } from './usecases/find-ticket-price.usecase';
@@ -31,18 +24,6 @@ export class TicketPriceController {
 		private readonly findTicketPriceUseCase: FindTicketPriceUseCase,
 		private readonly detailTicketPriceUseCase: DetailTicketPriceUseCase
 	) {}
-
-	/**
-	 * @path POST /api/v1/ticket-prices
-	 * @param data {CreateTicketPriceDto}
-	 * @returns {Promise<TicketPriceEntity>}
-	 */
-	@Post()
-	@SwaggerCreatedResponse({ summary: 'Create ticket-price', type: TicketPriceEntity })
-	@ApiExcludeEndpoint()
-	create(@Body() data: CreateTicketPriceDto): Promise<TicketPriceEntity> {
-		return this.createTicketPriceUseCase.execute(data);
-	}
 
 	/**
 	 * @path GET /api/v1/ticket-prices/many/:id

@@ -5,17 +5,17 @@ import { Entity } from 'typeorm';
 import { TypeormColumn, TypeormManyToOne, TypeormUniqueMulti } from '@lib/common/decorators';
 import { EventTypeormEntity } from '@lib/modules/event';
 import { TicketInfoTypeormEntity } from '@lib/modules/ticket-info';
-import { CustomerRoleTypeormEntity } from '@lib/modules/customer-role';
 import { TicketGroupTypeormEntity } from '@lib/modules/ticket-group';
+import { AgencyLevelTypeormEntity } from '../../agency-level';
 
 @Entity('ticket_prices')
-@TypeormUniqueMulti<TicketPriceTypeormEntity>(['ticketInfoId', 'customerRoleId'])
+@TypeormUniqueMulti<TicketPriceTypeormEntity>(['ticketInfoId', 'agencyLevelId'])
 export class TicketPriceTypeormEntity extends BaseTypeormEntity implements TicketPriceEntity {
 	@TypeormColumn()
 	ticketInfoId!: string;
 
 	@TypeormColumn()
-	customerRoleId!: string;
+	agencyLevelId!: string;
 
 	@TypeormColumn()
 	eventId!: string;
@@ -48,9 +48,9 @@ export class TicketPriceTypeormEntity extends BaseTypeormEntity implements Ticke
 	@TypeormManyToOne(() => TicketInfoTypeormEntity)
 	ticketInfo?: TicketInfoTypeormEntity;
 
-	@TypeormManyToOne(() => CustomerRoleTypeormEntity)
-	customerRole?: CustomerRoleTypeormEntity;
-
 	@TypeormManyToOne(() => TicketGroupTypeormEntity)
 	ticketGroup?: TicketGroupTypeormEntity;
+
+	@TypeormManyToOne(() => AgencyLevelTypeormEntity)
+	agencyLevel?: AgencyLevelTypeormEntity;
 }

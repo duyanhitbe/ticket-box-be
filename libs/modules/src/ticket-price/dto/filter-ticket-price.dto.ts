@@ -32,11 +32,11 @@ export class FilterTicketPriceDto extends BaseFilterDto<TicketPriceEntity> {
 	ticketInfoId?: string;
 
 	/**
-	 * Mã nhóm quyền
+	 * Mã cấp đại lý
 	 */
 	@IsOptional()
 	@I18nIsUUID()
 	@SwaggerProperty({ required: false })
-	@Property('Mã nhóm quyền')
-	customerRoleId?: string;
+	@Property('Mã cấp đại lý')
+	agencyLevelId?: string;
 }

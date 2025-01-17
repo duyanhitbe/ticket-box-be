@@ -24,6 +24,9 @@ export class ListTicketPriceEntity extends BaseEntity implements TicketPriceEnti
 	customerRoleId!: string;
 
 	@ApiHideProperty()
+	agencyLevelId!: string;
+
+	@ApiHideProperty()
 	eventId!: string;
 
 	@ApiHideProperty()

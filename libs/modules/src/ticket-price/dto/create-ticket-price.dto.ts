@@ -18,12 +18,12 @@ export class CreateTicketPriceDto {
 	ticketInfoId!: string;
 
 	/**
-	 * Mã nhóm quyền
+	 * Mã cấp đại lý
 	 */
 	@I18nIsUUID()
 	@SwaggerProperty()
-	@Property('Mã nhóm quyền')
-	customerRoleId!: string;
+	@Property('Mã cấp đại lý')
+	agencyLevelId!: string;
 
 	/**
 	 * Giá gốc

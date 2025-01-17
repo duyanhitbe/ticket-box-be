@@ -5,7 +5,7 @@ import { I18nIsEnum, Property, SwaggerProperty } from '@lib/common/decorators';
 import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 
 export class UpdateTicketPriceDto extends PartialType(
-	OmitType(CreateTicketPriceDto, ['ticketInfoId', 'customerRoleId'])
+	OmitType(CreateTicketPriceDto, ['ticketInfoId', 'agencyLevelId'])
 ) {
 	@IsOptional()
 	@I18nIsEnum(ENUM_STATUS)
