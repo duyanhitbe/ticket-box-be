@@ -6,33 +6,20 @@ import {
 	TicketGroupRepository
 } from '@lib/modules/ticket-group';
 import { QueryHandler } from '@lib/common/abstracts';
-import { CustomerRoleRepository } from '@lib/modules/customer-role';
 
 @Injectable()
 export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEventEntity[]> {
-	constructor(
-		private readonly ticketGroupRepository: TicketGroupRepository,
-		private readonly customerRoleRepository: CustomerRoleRepository
-		// private readonly redisService: RedisService
-	) {
+	constructor(private readonly ticketGroupRepository: TicketGroupRepository) {
 		super();
 	}
 
 	async query(
 		filter: FilterTicketGroupByEventDto,
-		userRoleId?: string
+		agencyLevelId?: string
 	): Promise<TicketGroupByEventEntity[]> {
-		const { eventId, date } = filter;
-		// const cachedData = await this.redisService.get({
-		// 	prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
-		// 	key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')]
-		// });
-		// if (cachedData) return cachedData;
-
-		const customerRoleId = await this.customerRoleRepository.getCustomerRoleId(userRoleId);
 		const rawTicketGroups = await this.ticketGroupRepository.findPaginatedByEvent(
 			filter,
-			customerRoleId
+			agencyLevelId
 		);
 
 		const pushTicketInfo = (
@@ -58,10 +45,9 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 					order: item.ticketInfoOrder!
 				});
 			}
-			// res.ticketInfos = res.ticketInfos.sort((a, b) => a.order - b.order);
 		};
 
-		const result = rawTicketGroups.reduce((prev: TicketGroupByEventEntity[], next) => {
+		return rawTicketGroups.reduce((prev: TicketGroupByEventEntity[], next) => {
 			const exist = prev.find((item) => item.id === next.id);
 			this.logger.debug(exist);
 			if (!exist) {
@@ -81,12 +67,5 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 
 			return prev;
 		}, []);
-
-		// this.redisService.setNx({
-		// 	prefix: REDIS_PREFIX_KEY.TICKET_GROUP.EVENT,
-		// 	key: [eventId, formatDate(new Date(date), 'DD-MM-YYYY')],
-		// 	value: result
-		// });
-		return result;
 	}
 }

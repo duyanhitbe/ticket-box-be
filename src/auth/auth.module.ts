@@ -5,10 +5,11 @@ import { LoginCustomerUseCase } from './usecases/login-customer.usecase';
 import { CustomerModule } from '../customer/customer.module';
 import { UserModule } from '../user/user.module';
 import { LoginUseCase } from './usecases/login.usecase';
+import { LoginAgencyUseCase } from './usecases/login-agency.usecase';
 
 @Module({
 	imports: [CustomerModule, UserModule],
 	controllers: [AuthController],
-	providers: [LoginUserUseCase, LoginCustomerUseCase, LoginUseCase]
+	providers: [LoginUserUseCase, LoginCustomerUseCase, LoginUseCase, LoginAgencyUseCase]
 })
 export class AuthModule {}

@@ -4,21 +4,12 @@ import {
 	I18nIsNotEmpty,
 	I18nIsNumberString,
 	I18nIsString,
-	I18nIsUUID,
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
 import { IsOptional } from 'class-validator';
 
 export class CreateCustomerDto {
-	/**
-	 * Mã nhóm quyền
-	 */
-	@I18nIsUUID()
-	@SwaggerProperty()
-	@Property('Mã nhóm quyền')
-	customerRoleId!: string;
-
 	/**
 	 * Tên khách hàng
 	 */

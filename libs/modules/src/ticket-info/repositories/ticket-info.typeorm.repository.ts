@@ -21,7 +21,7 @@ export class TicketInfoTypeormRepository
 {
 	async findAllWithPriceByGroup(
 		ticketGroupId: string,
-		customerRoleId: string
+		agencyLevelId?: string
 	): Promise<TicketInfoByGroupEntity[]> {
 		const queryBuilder = this.repository
 			.createQueryBuilder('t')
@@ -35,10 +35,7 @@ export class TicketInfoTypeormRepository
 			.leftJoin(
 				'ticket_prices',
 				'tp',
-				'tp.ticket_info_id = t.id AND tp.customer_role_id = :customerRoleId',
-				{
-					customerRoleId
-				}
+				`tp.ticket_info_id = t.id AND ${agencyLevelId ? `tp.agency_level_id = '${agencyLevelId}'` : `tp.agency_level_id IS NULL`}`
 			)
 			.where('t.ticket_group_id = :ticketGroupId', { ticketGroupId })
 			.andWhere('t.status = :status', { status: ENUM_STATUS.ACTIVE });
@@ -166,8 +163,8 @@ export class TicketInfoTypeormRepository
 
 	async findAllWithPriceByIds(
 		ids: string[],
-		customerRoleId: string,
-		queryRunner: QueryRunner
+		queryRunner: QueryRunner,
+		agencyLevelId?: string
 	): Promise<TicketInfoByIdsEntity[]> {
 		const queryBuilder = queryRunner.manager
 			.createQueryBuilder(TicketInfoTypeormEntity, 't')
@@ -186,10 +183,7 @@ export class TicketInfoTypeormRepository
 			.leftJoin(
 				'ticket_prices',
 				'tp',
-				'tp.ticket_info_id = t.id AND tp.customer_role_id = :customerRoleId',
-				{
-					customerRoleId
-				}
+				`tp.ticket_info_id = t.id AND ${agencyLevelId ? `tp.agency_level_id = '${agencyLevelId}'` : `tp.agency_level_id IS NULL`}`
 			)
 			.leftJoin('events', 'e', 'e.id = t.event_id')
 			.where('t.id IN (:...ids)', { ids });

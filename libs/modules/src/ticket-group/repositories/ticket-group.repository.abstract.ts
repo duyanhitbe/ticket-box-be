@@ -17,7 +17,7 @@ export abstract class TicketGroupRepository extends BaseRepository<TicketGroupEn
 
 	abstract findPaginatedByEvent(
 		filter: FilterTicketGroupDto,
-		customerRoleId: string
+		agencyLevelId?: string
 	): Promise<RawTicketGroupByEventEntity[]>;
 
 	abstract detail(id: string): Promise<TicketGroupDetailEntity>;

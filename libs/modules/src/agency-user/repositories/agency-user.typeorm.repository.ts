@@ -1,9 +1,9 @@
-import { AgencyUserRepository } from './agency-user.repository.abstract';
+import { PaginationResponse } from '@lib/base/dto';
 import { BaseTypeormRepository } from '@lib/base/repositories';
+import { getMeta } from '@lib/common/helpers';
 import { Repository } from '@lib/core/typeorm';
 import { CustomerTypeormEntity, FilterCustomerDto } from '../../customer';
-import { PaginationResponse } from '@lib/base/dto';
-import { getMeta } from '@lib/common/helpers';
+import { AgencyUserRepository } from './agency-user.repository.abstract';
 
 @Repository(CustomerTypeormEntity)
 export class AgencyUserTypeormRepository
@@ -22,7 +22,6 @@ export class AgencyUserTypeormRepository
 				'c.created_at as "createdAt"',
 				'c.updated_at as "updatedAt"',
 				'c.status as "status"',
-				'c.customer_role_id as "customerRoleId"',
 				'c.name as "name"',
 				'c.phone as "phone"',
 				'c.email as "email"',

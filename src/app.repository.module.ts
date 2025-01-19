@@ -7,11 +7,6 @@ import {
 	CustomerTypeormEntity,
 	CustomerTypeormRepository
 } from '@lib/modules/customer';
-import {
-	CustomerRoleRepository,
-	CustomerRoleTypeormEntity,
-	CustomerRoleTypeormRepository
-} from '@lib/modules/customer-role';
 import { OrderRepository, OrderTypeormEntity, OrderTypeormRepository } from '@lib/modules/order';
 import {
 	OrderDetailRepository,
@@ -60,7 +55,6 @@ import { AgencyUserRepository, AgencyUserTypeormRepository } from '@lib/modules/
 		TypeormModule.forFeatures({
 			entities: [
 				CustomerTypeormEntity,
-				CustomerRoleTypeormEntity,
 				EventTypeormEntity,
 				OrderTypeormEntity,
 				OrderDetailTypeormEntity,
@@ -77,10 +71,6 @@ import { AgencyUserRepository, AgencyUserTypeormRepository } from '@lib/modules/
 				{
 					provide: CustomerRepository,
 					useClass: CustomerTypeormRepository
-				},
-				{
-					provide: CustomerRoleRepository,
-					useClass: CustomerRoleTypeormRepository
 				},
 				{
 					provide: EventRepository,

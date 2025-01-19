@@ -1,11 +1,12 @@
-import { CustomerRepository } from './customer.repository.abstract';
-import { BaseTypeormRepository } from '@lib/base/repositories';
-import { Repository } from '@lib/core/typeorm';
-import { CustomerTypeormEntity } from '../entities/customer.typeorm.entity';
-import { CustomerEntity, FilterCustomerDto } from '@lib/modules/customer';
-import { Argon2Service } from '@lib/core/hash';
 import { PaginationResponse } from '@lib/base/dto';
+import { BaseTypeormRepository } from '@lib/base/repositories';
 import { getMeta } from '@lib/common/helpers';
+import { Argon2Service } from '@lib/core/hash';
+import { Repository } from '@lib/core/typeorm';
+import { CustomerEntity, FilterCustomerDto } from '@lib/modules/customer';
+import { IsNull, Not } from 'typeorm';
+import { CustomerTypeormEntity } from '../entities/customer.typeorm.entity';
+import { CustomerRepository } from './customer.repository.abstract';
 
 @Repository(CustomerTypeormEntity)
 export class CustomerTypeormRepository
@@ -13,9 +14,9 @@ export class CustomerTypeormRepository
 	implements CustomerRepository
 {
 	async getCustomerForCreateOrder(
-		data: Pick<CustomerEntity, 'name' | 'phone' | 'email' | 'customerRoleId'>
+		data: Pick<CustomerEntity, 'name' | 'phone' | 'email' | 'agencyLevelId'>
 	): Promise<CustomerEntity> {
-		const { name, phone, email, customerRoleId } = data;
+		const { name, phone, email, agencyLevelId } = data;
 
 		const exist = await this.findOne({
 			where: { phone },
@@ -40,7 +41,7 @@ export class CustomerTypeormRepository
 				phone,
 				password,
 				email,
-				customerRoleId
+				agencyLevelId
 			})
 			.returning('id, name, phone, email') // Add RETURNING clause
 			.execute();
@@ -63,7 +64,6 @@ export class CustomerTypeormRepository
 				'c.created_at as "createdAt"',
 				'c.updated_at as "updatedAt"',
 				'c.status as "status"',
-				'c.customer_role_id as "customerRoleId"',
 				'c.name as "name"',
 				'c.phone as "phone"',
 				'c.email as "email"',
@@ -89,5 +89,11 @@ export class CustomerTypeormRepository
 			data,
 			meta
 		};
+	}
+
+	async findAgencyByPhone(phone: string): Promise<CustomerEntity> {
+		return this.findOneOrThrow({
+			where: { phone, agencyId: Not(IsNull()), agencyLevelId: Not(IsNull()) }
+		});
 	}
 }

@@ -14,7 +14,7 @@ export class TicketPriceTypeormEntity extends BaseTypeormEntity implements Ticke
 	@TypeormColumn()
 	ticketInfoId!: string;
 
-	@TypeormColumn()
+	@TypeormColumn({ nullable: true })
 	agencyLevelId!: string;
 
 	@TypeormColumn()
@@ -51,6 +51,6 @@ export class TicketPriceTypeormEntity extends BaseTypeormEntity implements Ticke
 	@TypeormManyToOne(() => TicketGroupTypeormEntity)
 	ticketGroup?: TicketGroupTypeormEntity;
 
-	@TypeormManyToOne(() => AgencyLevelTypeormEntity)
+	@TypeormManyToOne(() => AgencyLevelTypeormEntity, undefined, { nullable: true })
 	agencyLevel?: AgencyLevelTypeormEntity;
 }

@@ -1,7 +1,5 @@
 import { ExecuteHandler } from '@lib/common/abstracts';
-import { RequestUser } from '@lib/common/interfaces';
 import { CustomerEntity, CustomerRepository } from '@lib/modules/customer';
-import { CustomerRoleRepository } from '@lib/modules/customer-role'; // totalPrice
 import { CreateOrderEventPayload, ENUM_ORDER_STATUS, OrderRepository } from '@lib/modules/order';
 import { CreateOrderDetailDto, OrderDetailTypeormEntity } from '@lib/modules/order-detail';
 import { TicketTypeormEntity } from '@lib/modules/ticket';
@@ -32,7 +30,6 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 		private readonly mailClient: RMQClientProxy,
 		private readonly orderRepository: OrderRepository,
 		private readonly customerRepository: CustomerRepository,
-		private readonly customerRoleRepository: CustomerRoleRepository,
 		private readonly ticketInfoRepository: TicketInfoRepository
 	) {
 		super();
@@ -40,12 +37,10 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 
 	async execute(data: CreateOrderEventPayload) {
 		const { orderId, orderCode, user, details } = data;
-
-		//Lấy role của user, nếu đang không đăng nhập thì lấy role NORMAL_CUSTOMER
-		const customerRoleId = await this.getCustomerRoleId(user);
+		const agencyLevelId = user?.agencyLevelId;
 
 		//Lấy thông tin khách hàng
-		const customer = await this.getCustomer(data, customerRoleId);
+		const customer = await this.getCustomer(data, agencyLevelId);
 		const customerId = customer.id;
 		const customerName = customer.name;
 		const customerPhone = customer.phone;
@@ -63,8 +58,8 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 			const ticketInfoIds = details.map((detail) => detail.ticketInfoId);
 			const ticketInfos = await this.ticketInfoRepository.findAllWithPriceByIds(
 				ticketInfoIds,
-				customerRoleId,
-				queryRunner
+				queryRunner,
+				agencyLevelId
 			);
 			eventId = ticketInfos[0].eventId;
 			eventName = ticketInfos[0].eventName;
@@ -134,23 +129,8 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 		});
 	}
 
-	//Lấy thông tin role của khách hàng
-	private async getCustomerRoleId(user?: RequestUser) {
-		let customerRoleId = user?.customerRoleId;
-		if (!customerRoleId) {
-			try {
-				customerRoleId = await this.customerRoleRepository.getNormalCustomerRoleId();
-			} catch (err) {
-				this.logger.error(err.message);
-				this.logger.error('Can not find NORMAL_CUSTOMER role');
-				throw new Error('Lỗi dữ liệu nhóm quyền.');
-			}
-		}
-		return customerRoleId;
-	}
-
 	//Lấy hoặc tạo khách hàng
-	private async getCustomer(data: CreateOrderEventPayload, customerRoleId: string) {
+	private async getCustomer(data: CreateOrderEventPayload, agencyLevelId?: string) {
 		const { customerName, customerPhone, customerEmail } = data;
 
 		let customer: CustomerEntity | null = null;
@@ -159,7 +139,7 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 				name: customerName,
 				phone: customerPhone,
 				email: customerEmail,
-				customerRoleId
+				agencyLevelId
 			});
 		} catch (err) {
 			this.logger.error(err.message);

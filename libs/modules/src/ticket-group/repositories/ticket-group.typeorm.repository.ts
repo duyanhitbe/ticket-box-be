@@ -69,7 +69,7 @@ export class TicketGroupTypeormRepository
 	//prettier-ignore
 	async findPaginatedByEvent(
 		filter: FilterTicketGroupByEventDto,
-		customerRoleId: string
+		agencyLevelId?: string
 	): Promise<RawTicketGroupByEventEntity[]> {
 		const { eventId, date } = filter;
 		const { startOfDay, endOfDay } = getStartAndEndOfDay(date);
@@ -78,7 +78,7 @@ export class TicketGroupTypeormRepository
             WITH ticket_info AS (
             	SELECT t.id, t.name, t.quantity, t.ticket_group_id, tp.base_price, tp.discounted_price, t.order
                 FROM ticket_infos t
-                LEFT JOIN ticket_prices tp ON tp.ticket_info_id = t.id AND tp.customer_role_id = '${customerRoleId}' AND tp.deleted_at IS NULL
+                LEFT JOIN ticket_prices tp ON tp.ticket_info_id = t.id AND ${agencyLevelId ? `tp.agency_level_id = '${agencyLevelId}'` : `tp.agency_level_id IS NULL`} AND tp.deleted_at IS NULL
 				WHERE t.deleted_at IS NULL AND t.status = '${ENUM_STATUS.ACTIVE}'
 			)
             SELECT tg.id, tg.name, tg.description, tf.id AS "ticketInfoId", tf.order::int AS "ticketInfoOrder", tf.name AS "ticketInfoName", tf.quantity::int AS "ticketInfoQuantity", tf.base_price::int AS "ticketInfoBasePrice", tf.discounted_price::int AS "ticketInfoDiscountedPrice"

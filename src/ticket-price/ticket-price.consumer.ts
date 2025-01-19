@@ -38,6 +38,9 @@ export class TicketPriceConsumer {
 			select: ['id']
 		});
 
+		//For normal customer
+		agencyLevels.push({ id: null } as any);
+
 		try {
 			return await Promise.all(
 				agencyLevels.map((agencyLevel) => {

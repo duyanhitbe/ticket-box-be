@@ -8,9 +8,9 @@ import {
 } from '@nestjs/common';
 import { ENUM_TOKEN_ROLE, JwtService } from '@lib/core/jwt';
 import { I18nExceptionService } from '@lib/core/i18n';
-import { UserEntity, UserRepository } from '@lib/modules/user';
+import { UserRepository } from '@lib/modules/user';
 import { RequestUser } from '@lib/common/interfaces';
-import { CustomerEntity, CustomerRepository } from '@lib/modules/customer';
+import { CustomerRepository } from '@lib/modules/customer';
 import { Reflector } from '@nestjs/core';
 
 export const PUBLIC_METADATA_KEY = 'PUBLIC_METADATA_KEY';
@@ -78,44 +78,34 @@ export class AuthenticationGuard implements CanActivate {
 	}
 
 	private async getUserByRole(userId: string, role: ENUM_TOKEN_ROLE): Promise<RequestUser> {
-		// const cachedData = await this.redisService.get<RequestUser>({
-		// 	prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
-		// 	key: userId
-		// });
-		// if (cachedData) return cachedData;
-
 		switch (role) {
 			case ENUM_TOKEN_ROLE.USER:
-				const user = await this.userRepository.findById({
+				const user = await this.userRepository.findByIdOrThrow({
 					id: userId,
 					select: ['id', 'username']
 				});
-				if (!user) this.i18nExceptionService.throwNotFoundEntity(UserEntity.name);
-				const resultUser = { id: user.id, username: user.username, role: role };
-				// this.redisService.setNx({
-				// 	prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
-				// 	key: userId,
-				// 	value: resultUser
-				// });
-				return resultUser;
+				return { id: user.id, username: user.username, role: role };
 			case ENUM_TOKEN_ROLE.CUSTOMER:
-				const customer = await this.customerRepository.findById({
+				const customer = await this.customerRepository.findByIdOrThrow({
 					id: userId,
-					select: ['id', 'phone', 'customerRoleId']
+					select: ['id', 'phone']
 				});
-				if (!customer) this.i18nExceptionService.throwNotFoundEntity(CustomerEntity.name);
-				const resultCustomer = {
+				return {
 					id: customer.id,
 					phone: customer.phone,
-					role: role,
-					customerRoleId: customer.customerRoleId
+					role: role
 				};
-				// this.redisService.setNx({
-				// 	prefix: REDIS_PREFIX_KEY.AUTHENTICATION.REQUEST_USER,
-				// 	key: userId,
-				// 	value: resultCustomer
-				// });
-				return resultCustomer;
+			case ENUM_TOKEN_ROLE.AGENCY:
+				const agency = await this.customerRepository.findByIdOrThrow({
+					id: userId,
+					select: ['id', 'phone', 'agencyLevelId']
+				});
+				return {
+					id: agency.id,
+					phone: agency.phone,
+					role: role,
+					agencyLevelId: agency.agencyLevelId
+				};
 		}
 	}
 }

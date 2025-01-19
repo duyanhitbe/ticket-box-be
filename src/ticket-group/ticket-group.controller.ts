@@ -103,7 +103,7 @@ export class TicketGroupController {
 		@Query() filter: FilterTicketGroupByEventDto,
 		@User() user: RequestUser
 	): Promise<TicketGroupByEventEntity[]> {
-		return this.findTicketGroupByEventUseCase.query(filter, user?.customerRoleId);
+		return this.findTicketGroupByEventUseCase.query(filter, user?.agencyLevelId);
 	}
 
 	/**

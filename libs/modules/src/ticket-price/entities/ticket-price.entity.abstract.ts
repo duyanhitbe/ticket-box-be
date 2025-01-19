@@ -17,9 +17,9 @@ export abstract class TicketPriceEntity extends BaseEntity {
 	/**
 	 * Mã cấp đại lý
 	 */
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Mã cấp đại lý')
-	agencyLevelId!: string;
+	agencyLevelId?: string;
 
 	/**
 	 * Mã sự kiện

@@ -6,7 +6,7 @@ import { DataSource, QueryRunner } from 'typeorm';
 export abstract class TicketInfoRepository extends BaseRepository<TicketInfoEntity> {
 	abstract findAllWithPriceByGroup(
 		ticketGroupId: string,
-		customerRoleId: string
+		agencyLevelId?: string
 	): Promise<TicketInfoByGroupEntity[]>;
 
 	abstract findByIdForCreateTicket(
@@ -16,7 +16,7 @@ export abstract class TicketInfoRepository extends BaseRepository<TicketInfoEnti
 
 	abstract findAllWithPriceByIds(
 		ids: string[],
-		customerRoleId: string,
-		queryRunner: QueryRunner
+		queryRunner: QueryRunner,
+		agencyLevelId?: string
 	): Promise<TicketInfoByIdsEntity[]>;
 }

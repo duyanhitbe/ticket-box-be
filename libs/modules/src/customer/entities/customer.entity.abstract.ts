@@ -1,17 +1,9 @@
 import { BaseEntity } from '@lib/base/entities';
-import { CustomerRoleEntity } from '@lib/modules/customer-role';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
-import { AgencyLevelEntity } from '../../agency-level';
 import { AgencyEntity } from '../../agency';
+import { AgencyLevelEntity } from '../../agency-level';
 
 export abstract class CustomerEntity extends BaseEntity {
-	/**
-	 * Mã nhóm quyền
-	 */
-	@SwaggerProperty()
-	@Property('Mã nhóm quyền')
-	customerRoleId!: string;
-
 	/**
 	 * Tên khách hàng
 	 */
@@ -68,11 +60,6 @@ export abstract class CustomerEntity extends BaseEntity {
 	isAgency!: boolean;
 
 	/* ========== Relations ========== */
-
-	/**
-	 * Nhóm quyền
-	 */
-	customerRole?: CustomerRoleEntity;
 
 	/**
 	 * Mã cấp độ đại lý

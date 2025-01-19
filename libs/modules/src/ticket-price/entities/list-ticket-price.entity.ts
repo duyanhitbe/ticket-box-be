@@ -1,8 +1,8 @@
+import { BaseEntity } from '@lib/base/entities';
 import { Property, SwaggerProperty } from '@lib/common/decorators';
-import { TicketPriceEntity } from './ticket-price.entity.abstract';
 import { ApiHideProperty } from '@nestjs/swagger';
 import { ENUM_DISCOUNT_TYPE } from '../../common';
-import { BaseEntity } from '@lib/base/entities';
+import { TicketPriceEntity } from './ticket-price.entity.abstract';
 
 export class ListTicketPriceEntity extends BaseEntity implements TicketPriceEntity {
 	@SwaggerProperty()
@@ -19,9 +19,6 @@ export class ListTicketPriceEntity extends BaseEntity implements TicketPriceEnti
 
 	@ApiHideProperty()
 	ticketInfoId!: string;
-
-	@ApiHideProperty()
-	customerRoleId!: string;
 
 	@ApiHideProperty()
 	agencyLevelId!: string;

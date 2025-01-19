@@ -4,6 +4,6 @@ export type RequestUser = {
 	id: string;
 	username?: string;
 	phone?: string;
-	customerRoleId?: string;
+	agencyLevelId?: string;
 	role: ENUM_TOKEN_ROLE;
 } | null;

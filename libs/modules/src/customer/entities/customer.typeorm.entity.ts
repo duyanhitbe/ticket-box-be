@@ -1,18 +1,14 @@
-import { CustomerEntity } from './customer.entity.abstract';
 import { BaseTypeormEntity } from '@lib/base/entities';
-import { BeforeInsert, Entity } from 'typeorm';
 import { TypeormColumn, TypeormManyToOne, TypeormUnique } from '@lib/common/decorators';
-import { CustomerRoleTypeormEntity } from '@lib/modules/customer-role';
 import { Argon2Service } from '@lib/core/hash';
 import { Exclude } from 'class-transformer';
-import { AgencyLevelTypeormEntity } from '../../agency-level';
+import { BeforeInsert, Entity } from 'typeorm';
 import { AgencyTypeormEntity } from '../../agency';
+import { AgencyLevelTypeormEntity } from '../../agency-level';
+import { CustomerEntity } from './customer.entity.abstract';
 
 @Entity('customers')
 export class CustomerTypeormEntity extends BaseTypeormEntity implements CustomerEntity {
-	@TypeormColumn()
-	customerRoleId!: string;
-
 	@TypeormColumn()
 	name!: string;
 
@@ -40,9 +36,6 @@ export class CustomerTypeormEntity extends BaseTypeormEntity implements Customer
 	isAgency!: boolean;
 
 	/* ========== Relations ========== */
-
-	@TypeormManyToOne(() => CustomerRoleTypeormEntity)
-	customerRole?: CustomerRoleTypeormEntity;
 
 	@TypeormManyToOne(() => AgencyLevelTypeormEntity, undefined, { nullable: true })
 	agencyLevel?: AgencyLevelTypeormEntity;
