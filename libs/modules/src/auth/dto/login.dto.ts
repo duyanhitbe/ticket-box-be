@@ -5,16 +5,16 @@ import {
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
-import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
+import { ENUM_ADMIN_TOKEN_ROLE } from '@lib/core/jwt';
 
 export class LoginDto {
 	@SwaggerProperty({
-		enum: ENUM_TOKEN_ROLE,
-		enumName: 'ENUM_TOKEN_ROLE'
+		enum: ENUM_ADMIN_TOKEN_ROLE,
+		enumName: 'ENUM_ADMIN_TOKEN_ROLE'
 	})
-	@I18nIsEnum(ENUM_TOKEN_ROLE)
+	@I18nIsEnum(ENUM_ADMIN_TOKEN_ROLE)
 	@Property('Loại tài khoản')
-	type!: ENUM_TOKEN_ROLE;
+	type!: ENUM_ADMIN_TOKEN_ROLE;
 
 	@SwaggerProperty()
 	@I18nIsString()

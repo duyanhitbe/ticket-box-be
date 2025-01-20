@@ -5,7 +5,6 @@ import { I18nExceptionService } from '@lib/core/i18n';
 import { HashService } from '@lib/core/hash';
 import { ExecuteHandler } from '@lib/common/abstracts';
 import { CustomerEntity, CustomerRepository } from '@lib/modules/customer';
-import { IsNull } from 'typeorm';
 
 @Injectable()
 export class LoginCustomerUseCase extends ExecuteHandler<LoginCustomerEntity> {
@@ -22,7 +21,8 @@ export class LoginCustomerUseCase extends ExecuteHandler<LoginCustomerEntity> {
 		const { phone, password } = data;
 
 		const customer = await this.customerRepository.findOne({
-			where: { phone, agencyId: IsNull(), agencyLevelId: IsNull() }
+			where: { phone },
+			select: ['id', 'password', 'agencyId']
 		});
 		if (!customer) {
 			this.i18nExceptionService.throwNotFoundEntity(CustomerEntity.name);
@@ -34,11 +34,8 @@ export class LoginCustomerUseCase extends ExecuteHandler<LoginCustomerEntity> {
 		}
 
 		const expiresIn = ACCESS_TOKEN_EXPIRES;
-		const accessToken = await this.jwtService.sign(
-			customer.id,
-			ENUM_TOKEN_ROLE.CUSTOMER,
-			expiresIn
-		);
+		const role = customer.agencyId ? ENUM_TOKEN_ROLE.AGENCY : ENUM_TOKEN_ROLE.CUSTOMER;
+		const accessToken = await this.jwtService.sign(customer.id, role, expiresIn);
 
 		return {
 			accessToken,

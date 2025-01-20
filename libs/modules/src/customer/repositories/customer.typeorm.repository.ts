@@ -93,7 +93,8 @@ export class CustomerTypeormRepository
 
 	async findAgencyByPhone(phone: string): Promise<CustomerEntity> {
 		return this.findOneOrThrow({
-			where: { phone, agencyId: Not(IsNull()), agencyLevelId: Not(IsNull()) }
+			where: { phone, agencyId: Not(IsNull()), agencyLevelId: Not(IsNull()) },
+			select: ['id', 'password']
 		});
 	}
 }
