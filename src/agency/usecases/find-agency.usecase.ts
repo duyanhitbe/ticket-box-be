@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { AgencyEntity, AgencyRepository, FilterAgencyDto } from '@lib/modules/agency';
+import { AgencyRepository, FilterAgencyDto, ListAgencyEntity } from '@lib/modules/agency';
 import { PaginationResponse } from '@lib/base/dto';
 import { QueryHandler } from '@lib/common/abstracts';
 import { set } from 'lodash';
 
 @Injectable()
-export class FindAgencyUseCase extends QueryHandler<PaginationResponse<AgencyEntity>> {
+export class FindAgencyUseCase extends QueryHandler<PaginationResponse<ListAgencyEntity>> {
 	constructor(private readonly agencyRepository: AgencyRepository) {
 		super();
 	}
 
-	async query(filter: FilterAgencyDto): Promise<PaginationResponse<AgencyEntity>> {
+	async query(filter: FilterAgencyDto): Promise<PaginationResponse<ListAgencyEntity>> {
 		filter.searchFields = ['name', 'phone'];
 		if (filter.agencyLevelId) {
 			set(filter, 'where.agencyLevelId', filter.agencyLevelId);
 		}
-		return this.agencyRepository.findPaginated(filter);
+		return (await this.agencyRepository.findPaginated(filter)) as any;
 	}
 }

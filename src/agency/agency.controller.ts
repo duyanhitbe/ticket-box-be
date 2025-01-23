@@ -3,6 +3,7 @@ import {
 	AgencyEntity,
 	CreateAgencyDto,
 	FilterAgencyDto,
+	ListAgencyEntity,
 	UpdateAgencyDto
 } from '@lib/modules/agency';
 import { CreateAgencyUseCase } from './usecases/create-agency.usecase';
@@ -28,7 +29,7 @@ export class AgencyController {
 	) {}
 
 	/**
-	 * @path POST /api/v1/agencys
+	 * @path POST /api/v1/agencies
 	 * @param data {CreateAgencyDto}
 	 * @returns {Promise<AgencyEntity>}
 	 */
@@ -39,7 +40,7 @@ export class AgencyController {
 	}
 
 	/**
-	 * @path GET /api/v1/agencys/:id
+	 * @path GET /api/v1/agencies/:id
 	 * @param id {string}
 	 * @param data {UpdateAgencyDto}
 	 * @returns {Promise<AgencyEntity>}
@@ -51,7 +52,7 @@ export class AgencyController {
 	}
 
 	/**
-	 * @path DELETE /api/v1/agencys/:id
+	 * @path DELETE /api/v1/agencies/:id
 	 * @param id {string}
 	 * @returns {Promise<AgencyEntity>}
 	 */
@@ -62,18 +63,18 @@ export class AgencyController {
 	}
 
 	/**
-	 * @path GET /api/v1/agencys
+	 * @path GET /api/v1/agencies
 	 * @param filter {FilterAgencyDto}
-	 * @returns {Promise<PaginationResponse<AgencyEntity>>}
+	 * @returns {Promise<PaginationResponse<ListAgencyEntity>>}
 	 */
 	@Get()
-	@SwaggerListResponse({ summary: 'List agency', type: AgencyEntity })
-	findAll(@Query() filter: FilterAgencyDto): Promise<PaginationResponse<AgencyEntity>> {
+	@SwaggerListResponse({ summary: 'List agency', type: ListAgencyEntity })
+	findAll(@Query() filter: FilterAgencyDto): Promise<PaginationResponse<ListAgencyEntity>> {
 		return this.findAgencyUseCase.query(filter);
 	}
 
 	/**
-	 * @path GET /api/v1/agencys/:id
+	 * @path GET /api/v1/agencies/:id
 	 * @param id {string}
 	 * @returns {Promise<AgencyEntity>}
 	 */
