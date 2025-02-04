@@ -67,10 +67,8 @@ export class CustomerTypeormRepository
 				'c.name as "name"',
 				'c.phone as "phone"',
 				'c.email as "email"',
-				'c.allow_debt_purchase as "allowDebtPurchase"',
-				'r.name as "customerRoleName"'
+				'c.allow_debt_purchase as "allowDebtPurchase"'
 			])
-			.leftJoin('customer_roles', 'r', 'r.id = c.customer_role_id')
 			.where('c.is_agency = FALSE');
 
 		const countQueryBuilder = this.repository
