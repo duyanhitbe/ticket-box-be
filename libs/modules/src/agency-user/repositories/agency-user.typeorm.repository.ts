@@ -26,6 +26,7 @@ export class AgencyUserTypeormRepository
 				'c.phone as "phone"',
 				'c.email as "email"',
 				'c.allow_debt_purchase as "allowDebtPurchase"',
+				'c.agency_id as "agencyId"',
 				'a.name as "agencyName"',
 				'l.level as "agencyLevel"',
 				'l.name as "agencyLevelName"'
