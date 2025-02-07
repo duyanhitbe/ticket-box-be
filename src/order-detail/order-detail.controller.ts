@@ -6,7 +6,7 @@ import { SwaggerListResponse, SwaggerOkResponse, UseAuth } from '@lib/common/dec
 import { PaginationResponse } from '@lib/base/dto';
 
 @Controller('order-details')
-@UseAuth({ isPublic: true })
+@UseAuth()
 export class OrderDetailController {
 	constructor(
 		private readonly findOrderDetailUseCase: FindOrderDetailUseCase,

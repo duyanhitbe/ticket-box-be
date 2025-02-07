@@ -26,7 +26,6 @@ import { FindTicketGroupByEventUseCase } from './usecases/find-ticket-group-by-e
 import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('ticket-groups')
-@UseAuth({ isPublic: true })
 export class TicketGroupController {
 	constructor(
 		private readonly createTicketGroupUseCase: CreateTicketGroupUseCase,
@@ -42,6 +41,7 @@ export class TicketGroupController {
 	 * @param data {CreateTicketGroupDto}
 	 * @returns {Promise<TicketGroupEntity>}
 	 */
+	@UseAuth()
 	@Post()
 	@SwaggerCreatedResponse({ summary: 'Create ticket-group', type: TicketGroupEntity })
 	create(@Body() data: CreateTicketGroupDto): Promise<TicketGroupEntity> {
@@ -54,6 +54,7 @@ export class TicketGroupController {
 	 * @param data {UpdateTicketGroupDto}
 	 * @returns {Promise<TicketGroupEntity>}
 	 */
+	@UseAuth()
 	@Patch(':id')
 	@SwaggerOkResponse({ summary: 'Update ticket-group', type: TicketGroupEntity })
 	update(
@@ -68,6 +69,7 @@ export class TicketGroupController {
 	 * @param id {string}
 	 * @returns {Promise<TicketGroupEntity>}
 	 */
+	@UseAuth()
 	@Delete(':id')
 	@SwaggerOkResponse({ summary: 'Remove ticket-group', type: TicketGroupEntity })
 	remove(@Param('id') id: string): Promise<TicketGroupEntity> {
@@ -79,6 +81,7 @@ export class TicketGroupController {
 	 * @param filter {FilterTicketGroupDto}
 	 * @returns {Promise<PaginationResponse<TicketGroupListEntity>>}
 	 */
+	@UseAuth()
 	@Get()
 	@SwaggerListResponse({ summary: 'List ticket-group', type: TicketGroupListEntity })
 	findAll(
@@ -93,6 +96,7 @@ export class TicketGroupController {
 	 * @param user
 	 * @returns {Promise<TicketGroupByEventEntity[]>}
 	 */
+	@UseAuth({ isPublic: true })
 	@Get('event')
 	@SwaggerListResponse({
 		summary: 'List ticket-group by event',
@@ -111,6 +115,7 @@ export class TicketGroupController {
 	 * @param id {string}
 	 * @returns {Promise<TicketGroupDetailEntity>}
 	 */
+	@UseAuth()
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail ticket-group', type: TicketGroupDetailEntity })
 	findOne(@Param('id') id: string): Promise<TicketGroupDetailEntity> {

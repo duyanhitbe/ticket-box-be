@@ -12,12 +12,14 @@ import { DetailAgencyUserUseCase } from './usecases/detail-agency-user.usecase';
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { CustomerEntity } from '@lib/modules/customer';
 
 @Controller('agency-users')
+@UseAuth()
 export class AgencyUserController {
 	constructor(
 		private readonly createAgencyUserUseCase: CreateAgencyUserUseCase,

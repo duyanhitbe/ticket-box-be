@@ -13,11 +13,13 @@ import { DetailAgencyLevelUseCase } from './usecases/detail-agency-level.usecase
 import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
-	SwaggerOkResponse
+	SwaggerOkResponse,
+	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 
 @Controller('agency-levels')
+@UseAuth()
 export class AgencyLevelController {
 	constructor(
 		private readonly createAgencyLevelUseCase: CreateAgencyLevelUseCase,

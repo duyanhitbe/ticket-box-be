@@ -27,7 +27,7 @@ import { ImportTicketUseCase } from './usecases/import-ticket.usecase';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('tickets')
-@UseAuth({ isPublic: true })
+@UseAuth()
 export class TicketController {
 	constructor(
 		private readonly createTicketUseCase: CreateTicketUseCase,

@@ -63,6 +63,7 @@ export class OrderController {
 	 * @param data {UpdateOrderDto}
 	 * @returns {Promise<OrderEntity>}
 	 */
+	@UseAuth()
 	@Patch(':id')
 	@SwaggerOkResponse({ summary: 'Update order', type: OrderUpdatedEntity })
 	update(@Param('id') id: string, @Body() data: UpdateOrderDto): Promise<OrderUpdatedEntity> {
@@ -74,6 +75,7 @@ export class OrderController {
 	 * @param filter {FilterOrderDto}
 	 * @returns {Promise<PaginationResponse<OrderEntity>>}
 	 */
+	@UseAuth()
 	@Get()
 	@SwaggerListResponse({ summary: 'List order', type: ListOrderEntity })
 	findAll(@Query() filter: FilterOrderDto): Promise<PaginationResponse<ListOrderEntity>> {
@@ -85,6 +87,7 @@ export class OrderController {
 	 * @param id {string}
 	 * @returns {Promise<OrderEntity>}
 	 */
+	@UseAuth()
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail order', type: OrderEntity })
 	findOne(@Param('id') id: string): Promise<OrderEntity> {

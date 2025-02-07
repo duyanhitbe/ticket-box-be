@@ -24,7 +24,6 @@ import { FindTicketInfoUseCase } from './usecases/find-ticket-info.usecase';
 import { UpdateTicketInfoUseCase } from './usecases/update-ticket-info.usecase';
 
 @Controller('ticket-infos')
-@UseAuth({ isPublic: true })
 export class TicketInfoController {
 	constructor(
 		private readonly createTicketInfoUseCase: CreateTicketInfoUseCase,
@@ -40,6 +39,7 @@ export class TicketInfoController {
 	 * @param data {CreateTicketInfoDto}
 	 * @returns {Promise<TicketInfoEntity>}
 	 */
+	@UseAuth()
 	@Post()
 	@SwaggerCreatedResponse({ summary: 'Create ticket-info', type: TicketInfoEntity })
 	create(@Body() data: CreateTicketInfoDto): Promise<TicketInfoEntity> {
@@ -52,6 +52,7 @@ export class TicketInfoController {
 	 * @param data {UpdateTicketInfoDto}
 	 * @returns {Promise<TicketInfoEntity>}
 	 */
+	@UseAuth()
 	@Patch(':id')
 	@SwaggerOkResponse({ summary: 'Update ticket-info', type: TicketInfoEntity })
 	update(@Param('id') id: string, @Body() data: UpdateTicketInfoDto): Promise<TicketInfoEntity> {
@@ -63,6 +64,7 @@ export class TicketInfoController {
 	 * @param id {string}
 	 * @returns {Promise<TicketInfoEntity>}
 	 */
+	@UseAuth()
 	@Delete(':id')
 	@SwaggerOkResponse({ summary: 'Remove ticket-info', type: TicketInfoEntity })
 	remove(@Param('id') id: string): Promise<TicketInfoEntity> {
@@ -74,6 +76,7 @@ export class TicketInfoController {
 	 * @param filter {FilterTicketInfoDto}
 	 * @returns {Promise<PaginationResponse<TicketInfoEntity>>}
 	 */
+	@UseAuth()
 	@Get()
 	@SwaggerListResponse({ summary: 'List ticket-info', type: TicketInfoEntity })
 	findAll(@Query() filter: FilterTicketInfoDto): Promise<PaginationResponse<TicketInfoEntity>> {
@@ -86,6 +89,7 @@ export class TicketInfoController {
 	 * @param user {RequestUser}
 	 * @returns {Promise<TicketInfoByGroupEntity[]>}
 	 */
+	@UseAuth({ isPublic: true })
 	@Get('group')
 	@SwaggerListResponse({
 		summary: 'List ticket-info by group',
@@ -104,6 +108,7 @@ export class TicketInfoController {
 	 * @param id {string}
 	 * @returns {Promise<TicketInfoEntity>}
 	 */
+	@UseAuth()
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail ticket-info', type: TicketInfoEntity })
 	findOne(@Param('id') id: string): Promise<TicketInfoEntity> {

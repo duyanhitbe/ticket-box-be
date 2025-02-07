@@ -14,7 +14,7 @@ import {
 import { PaginationResponse } from '@lib/base/dto';
 
 @Controller('users')
-@UseAuth({ isPublic: true })
+@UseAuth()
 export class UserController {
 	constructor(
 		private readonly createUserUseCase: CreateUserUseCase,

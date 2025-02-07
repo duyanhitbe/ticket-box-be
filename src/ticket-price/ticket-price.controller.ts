@@ -8,17 +8,15 @@ import {
 	UpdateTicketPriceDto
 } from '@lib/modules/ticket-price';
 import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
-import { CreateTicketPriceUseCase } from './usecases/create-ticket-price.usecase';
 import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase';
 import { FindTicketPriceUseCase } from './usecases/find-ticket-price.usecase';
 import { UpdateManyTicketPriceUseCase } from './usecases/update-many-ticket-price.usecase';
 import { UpdateTicketPriceUseCase } from './usecases/update-ticket-price.usecase';
 
 @Controller('ticket-prices')
-@UseAuth({ isPublic: true })
+@UseAuth()
 export class TicketPriceController {
 	constructor(
-		private readonly createTicketPriceUseCase: CreateTicketPriceUseCase,
 		private readonly updateTicketPriceUseCase: UpdateTicketPriceUseCase,
 		private readonly updateManyTicketPriceUseCase: UpdateManyTicketPriceUseCase,
 		private readonly findTicketPriceUseCase: FindTicketPriceUseCase,

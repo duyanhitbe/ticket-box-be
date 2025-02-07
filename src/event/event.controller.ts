@@ -21,7 +21,6 @@ import { PaginationResponse } from '@lib/base/dto';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
 
 @Controller('events')
-@UseAuth({ isPublic: true })
 export class EventController {
 	constructor(
 		private readonly createEventUseCase: CreateEventUseCase,
@@ -37,6 +36,7 @@ export class EventController {
 	 * @param data {CreateEventDto}
 	 * @returns {Promise<EventEntity>}
 	 */
+	@UseAuth()
 	@Post()
 	@SwaggerCreatedResponse({ summary: 'Create event', type: EventEntity })
 	create(@Body() data: CreateEventDto): Promise<EventEntity> {
@@ -49,6 +49,7 @@ export class EventController {
 	 * @param data {UpdateEventDto}
 	 * @returns {Promise<EventEntity>}
 	 */
+	@UseAuth()
 	@Patch(':id')
 	@SwaggerOkResponse({ summary: 'Update event', type: EventEntity })
 	update(@Param('id') id: string, @Body() data: UpdateEventDto): Promise<EventEntity> {
@@ -60,6 +61,7 @@ export class EventController {
 	 * @param id {string}
 	 * @returns {Promise<EventEntity>}
 	 */
+	@UseAuth()
 	@Delete(':id')
 	@SwaggerOkResponse({ summary: 'Remove event', type: EventEntity })
 	remove(@Param('id') id: string): Promise<EventEntity> {
@@ -71,6 +73,7 @@ export class EventController {
 	 * @param filter {FilterEventDto}
 	 * @returns {Promise<PaginationResponse<EventEntity>>}
 	 */
+	@UseAuth({ isPublic: true })
 	@Get()
 	@SwaggerListResponse({ summary: 'List event', type: EventEntity })
 	findAll(@Query() filter: FilterEventDto): Promise<PaginationResponse<EventEntity>> {
@@ -81,6 +84,7 @@ export class EventController {
 	 * @path GET /api/v1/events/event-type
 	 * @returns {ENUM_EVENT_TYPE[]}
 	 */
+	@UseAuth({ isPublic: true })
 	@Get('event-type')
 	@SwaggerListResponse({
 		summary: 'List event type',
@@ -97,6 +101,7 @@ export class EventController {
 	 * @path GET /api/v1/events/banner
 	 * @returns {EventEntity[]}
 	 */
+	@UseAuth({ isPublic: true })
 	@Get('banner')
 	@SwaggerListResponse({
 		summary: 'List banner',
@@ -112,6 +117,7 @@ export class EventController {
 	 * @param id {string}
 	 * @returns {Promise<EventEntity>}
 	 */
+	@UseAuth({ isPublic: true })
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail event', type: EventEntity })
 	findOne(@Param('id') id: string): Promise<EventEntity> {
