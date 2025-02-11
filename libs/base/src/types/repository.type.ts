@@ -1,5 +1,4 @@
 import { BaseEntity } from '../entities';
-import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 
 export type Where<T extends BaseEntity> = {
 	[P in keyof T]?: any;
@@ -73,7 +72,6 @@ export type FindPaginatedOptions<T extends BaseEntity> = {
 	search?: string;
 	searchFields?: string[];
 	alias?: string;
-	status?: ENUM_STATUS;
 };
 
 export type FindByIdOptions<T extends BaseEntity> = {

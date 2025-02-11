@@ -23,7 +23,6 @@ import {
 	UpdateManyOptions,
 	UpdateOneOptions
 } from '../types';
-import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 
 export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseRepository<T> {
 	protected readonly logger = new Logger(this.constructor.name);
@@ -75,19 +74,14 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 			relations,
 			where,
 			search,
-			searchFields,
-			status = ENUM_STATUS.ACTIVE
+			searchFields
 		} = options;
 
 		set(options, 'order.created_at', 'DESC');
 
 		const { limit, offset } = getPageLimitOffset(options);
-		const queryBuilder = this.repository
-			.createQueryBuilder(alias)
-			.where(`${alias}.status = :status`, { status });
-		const countQueryBuilder = this.repository
-			.createQueryBuilder(alias)
-			.where(`${alias}.status = :status`, { status });
+		const queryBuilder = this.repository.createQueryBuilder(alias);
+		const countQueryBuilder = this.repository.createQueryBuilder(alias);
 
 		if (relations) {
 			relations.forEach((relation) => {
