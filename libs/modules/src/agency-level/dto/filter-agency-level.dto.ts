@@ -5,7 +5,7 @@ import { IsOptional } from 'class-validator';
 export class FilterAgencyLevelDto extends BaseFilterDto {
 	@IsOptional()
 	@I18nIsNumber()
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Cấp độ đại lý')
 	level?: number;
 }

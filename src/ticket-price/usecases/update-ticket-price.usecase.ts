@@ -35,7 +35,8 @@ export class UpdateTicketPriceUseCase extends ExecuteHandler<TicketPriceEntity> 
 				basePrice: ticketPrice.basePrice,
 				discountType: ticketPrice.discountType,
 				discountValue: ticketPrice.discountValue,
-				discountedPrice: ticketPrice.discountedPrice
+				discountedPrice: ticketPrice.discountedPrice,
+				status: data.status
 			}
 		});
 

@@ -14,7 +14,7 @@ export class TicketPriceTypeormRepository
 	async findPaginated(
 		filter: FilterTicketPriceDto
 	): Promise<PaginationResponse<TicketPriceTypeormEntity>> {
-		const { eventId, ticketGroupId, agencyLevelId, ticketInfoId } = filter;
+		const { eventId, ticketGroupId, agencyLevelId, ticketInfoId, status } = filter;
 		const { limit, offset } = getPageLimitOffset(filter);
 
 		const queryBuilder = this.repository
@@ -57,6 +57,10 @@ export class TicketPriceTypeormRepository
 		if (agencyLevelId) {
 			queryBuilder.andWhere('p.agency_level_id = :agencyLevelId', { agencyLevelId });
 			countQueryBuilder.andWhere('p.agency_level_id = :agencyLevelId', { agencyLevelId });
+		}
+		if (status) {
+			queryBuilder.andWhere('p.status = :status', { status });
+			countQueryBuilder.andWhere('p.status = :status', { status });
 		}
 
 		const [data, count] = await Promise.all([

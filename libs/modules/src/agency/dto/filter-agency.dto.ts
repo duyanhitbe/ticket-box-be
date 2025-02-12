@@ -5,7 +5,7 @@ import { IsOptional } from 'class-validator';
 export class FilterAgencyDto extends BaseFilterDto {
 	@IsOptional()
 	@I18nIsUUID()
-	@SwaggerProperty()
+	@SwaggerProperty({ required: false })
 	@Property('Mã cấp đại lý')
 	agencyLevelId?: string;
 }

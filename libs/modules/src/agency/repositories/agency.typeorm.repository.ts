@@ -29,7 +29,7 @@ export class AgencyTypeormRepository
 	}
 
 	async findPaginated(filter: FilterAgencyDto): Promise<PaginationResponse<AgencyTypeormEntity>> {
-		const { searchFields, search, agencyLevelId } = filter;
+		const { searchFields, search, agencyLevelId, status } = filter;
 
 		const queryBuilder = this.repository
 			.createQueryBuilder('a')
@@ -57,6 +57,11 @@ export class AgencyTypeormRepository
 		if (agencyLevelId) {
 			queryBuilder.where('a.agency_level_id = :agencyLevelId', { agencyLevelId });
 			countQueryBuilder.where('a.agency_level_id = :agencyLevelId', { agencyLevelId });
+		}
+
+		if (status) {
+			queryBuilder.andWhere('a.status = :status', { status });
+			countQueryBuilder.andWhere('a.status = :status', { status });
 		}
 
 		this.addSearchFields(queryBuilder, 'a', searchFields, search);

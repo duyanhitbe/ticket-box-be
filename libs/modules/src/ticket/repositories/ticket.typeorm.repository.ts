@@ -11,8 +11,16 @@ export class TicketTypeormRepository
 	implements TicketRepository
 {
 	async findPaginated(filter: FilterTicketDto) {
-		const { ticketGroupId, eventId, ticketInfoId, customerId, orderId, search, searchFields } =
-			filter;
+		const {
+			ticketGroupId,
+			eventId,
+			ticketInfoId,
+			customerId,
+			orderId,
+			search,
+			searchFields,
+			status
+		} = filter;
 		const { limit, page, offset } = getPageLimitOffset(filter);
 
 		const queryBuilder = this.repository
@@ -66,6 +74,11 @@ export class TicketTypeormRepository
 		if (orderId) {
 			queryBuilder.where('t.order_id = :orderId', { orderId });
 			countQueryBuilder.where('t.order_id = :orderId', { orderId });
+		}
+
+		if (status) {
+			queryBuilder.andWhere('t.status = :status', { status });
+			countQueryBuilder.andWhere('t.status = :status', { status });
 		}
 
 		if (search && searchFields) {

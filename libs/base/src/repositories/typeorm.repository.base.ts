@@ -74,7 +74,8 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 			relations,
 			where,
 			search,
-			searchFields
+			searchFields,
+			status
 		} = options;
 
 		set(options, 'order.created_at', 'DESC');
@@ -92,6 +93,11 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 		if (where) {
 			queryBuilder.andWhere(where);
 			countQueryBuilder.andWhere(where);
+		}
+
+		if (status) {
+			queryBuilder.andWhere({ status });
+			countQueryBuilder.andWhere({ status });
 		}
 
 		if (select) {

@@ -13,7 +13,7 @@ export class AgencyUserTypeormRepository
 	async findPaginated(
 		filter: FilterCustomerDto
 	): Promise<PaginationResponse<CustomerTypeormEntity>> {
-		const { searchFields, search } = filter;
+		const { searchFields, search, status } = filter;
 
 		const queryBuilder = this.repository
 			.createQueryBuilder('c')
@@ -38,6 +38,11 @@ export class AgencyUserTypeormRepository
 		const countQueryBuilder = this.repository
 			.createQueryBuilder('c')
 			.where('c.is_agency = TRUE');
+
+		if (status) {
+			queryBuilder.andWhere('c.status = :status', { status });
+			countQueryBuilder.andWhere('c.status = :status', { status });
+		}
 
 		this.addSearchFields(queryBuilder, 'c', searchFields, search);
 		this.addSearchFields(countQueryBuilder, 'c', searchFields, search);
