@@ -16,7 +16,7 @@ export class TicketGroupDateTypeormRepository
 			.andWhere('date >= :startOfDay', { startOfDay: startOfDay.toISOString() })
 			.orderBy('date')
 			.groupBy('date')
-			.getMany()
+			.getRawMany()
 			.then((res) => res.map((item) => item.date));
 	}
 }
