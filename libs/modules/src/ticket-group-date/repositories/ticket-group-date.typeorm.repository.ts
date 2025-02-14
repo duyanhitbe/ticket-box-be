@@ -2,7 +2,6 @@ import { TicketGroupDateRepository } from './ticket-group-date.repository.abstra
 import { BaseTypeormRepository } from '@lib/base/repositories';
 import { Repository } from '@lib/core/typeorm';
 import { TicketGroupDateTypeormEntity } from '../entities/ticket-group-date.typeorm.entity';
-import { MoreThanOrEqual } from 'typeorm';
 
 @Repository(TicketGroupDateTypeormEntity)
 export class TicketGroupDateTypeormRepository
@@ -13,10 +12,8 @@ export class TicketGroupDateTypeormRepository
 		return this.repository
 			.createQueryBuilder()
 			.select('date')
-			.where({
-				eventId,
-				date: MoreThanOrEqual(startOfDay)
-			})
+			.where('event_id = :eventId', { eventId })
+			.andWhere('date >= :startOfDay', { startOfDay: startOfDay.toISOString() })
 			.orderBy('date')
 			.groupBy('date')
 			.getMany()
