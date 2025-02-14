@@ -15,4 +15,8 @@ export type TicketInfoCreatedPayload = {
 	 * Giá vé
 	 */
 	price: number;
+	/**
+	 * Bỏ qua cập nhật số lượng
+	 */
+	skipUpdateTicketInfo?: boolean;
 };

@@ -13,10 +13,14 @@ export class TicketConsumer {
 
 	@OnEvent(TICKET_INFO_EVENTS.CREATED)
 	async onTicketInfoCreated(payload: TicketInfoCreatedPayload) {
-		const { ticketInfoId, quantity } = payload;
+		const { ticketInfoId, quantity, skipUpdateTicketInfo } = payload;
 		if (quantity > 0) {
 			try {
-				await this.createTicketUseCase.execute({ ticketInfoId, quantity });
+				await this.createTicketUseCase.execute({
+					ticketInfoId,
+					quantity,
+					skipUpdateTicketInfo
+				});
 				this.logger.log(`${quantity} ticket was created successfully`);
 			} catch (e) {
 				this.logger.error(e);

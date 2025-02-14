@@ -16,4 +16,6 @@ export class CreateTicketDto {
 	@SwaggerProperty()
 	@Property('Mã thông tin vé')
 	quantity!: number;
+
+	skipUpdateTicketInfo?: boolean;
 }

@@ -25,7 +25,7 @@ export class CreateTicketUseCase extends ExecuteHandler<string[]> {
 	}
 
 	async execute(data: CreateTicketDto): Promise<string[]> {
-		const { ticketInfoId, quantity } = data;
+		const { ticketInfoId, quantity, skipUpdateTicketInfo } = data;
 
 		const ticketInfo = await this.ticketInfoRepository.findByIdForCreateTicket(ticketInfoId);
 		if (!ticketInfo) {
@@ -41,12 +41,14 @@ export class CreateTicketUseCase extends ExecuteHandler<string[]> {
 				const ticket = await this.ticketService.createByTicketInfo(ticketInfo, queryRunner);
 				tickets.push(ticket);
 			}
-			await queryRunner.manager.increment(
-				TicketInfoTypeormEntity,
-				{ id: ticketInfoId },
-				'quantity',
-				quantity
-			);
+			if (!skipUpdateTicketInfo) {
+				await queryRunner.manager.increment(
+					TicketInfoTypeormEntity,
+					{ id: ticketInfoId },
+					'quantity',
+					quantity
+				);
+			}
 			await queryRunner.commitTransaction();
 			return tickets.map((item) => item.id);
 		} catch (err) {
