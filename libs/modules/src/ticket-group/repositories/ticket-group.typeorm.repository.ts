@@ -87,8 +87,8 @@ export class TicketGroupTypeormRepository
 			LEFT JOIN ticket_info tf ON tf.ticket_group_id = tg.id
             WHERE (
                 tg.event_id = '${eventId}' AND tg.status = '${ENUM_STATUS.ACTIVE}' AND
-                (tg.from_date <= '${startOfDay.toISOString()}' AND tg.to_date >= '${startOfDay.toISOString()}') OR
-                (tgd.date BETWEEN '${startOfDay.toISOString()}' AND '${endOfDay.toISOString()}')
+                ((tg.from_date <= '${startOfDay.toISOString()}' AND tg.to_date >= '${startOfDay.toISOString()}') OR
+                (tgd.date BETWEEN '${startOfDay.toISOString()}' AND '${endOfDay.toISOString()}'))
             ) AND (tg.deleted_at IS NULL)
             ORDER BY tg.created_at DESC, "ticketInfoOrder" ASC;
 		`)
