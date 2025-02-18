@@ -74,6 +74,7 @@ export class CreateOrderDto {
 	/**
 	 * Ngày đặt vé
 	 */
+	@SwaggerProperty()
 	@I18nIsDateString()
 	@Property('Ngày đặt vé')
 	date!: Date;
