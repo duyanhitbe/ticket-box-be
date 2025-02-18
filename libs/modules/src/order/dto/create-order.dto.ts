@@ -1,5 +1,6 @@
 import {
 	I18nIsArray,
+	I18nIsDateString,
 	I18nIsEmail,
 	I18nIsEnum,
 	I18nIsNotEmpty,
@@ -69,4 +70,11 @@ export class CreateOrderDto {
 	@SwaggerProperty({ type: [CreateOrderDetailDto] })
 	@Property('Chi tiết đơn hàng')
 	details!: CreateOrderDetailDto[];
+
+	/**
+	 * Ngày đặt vé
+	 */
+	@I18nIsDateString()
+	@Property('Ngày đặt vé')
+	date!: Date;
 }

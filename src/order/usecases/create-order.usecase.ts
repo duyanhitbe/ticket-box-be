@@ -36,7 +36,7 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 	}
 
 	async execute(data: CreateOrderEventPayload) {
-		const { orderId, orderCode, user, details } = data;
+		const { orderId, orderCode, user, details, date } = data;
 		const agencyLevelId = user?.agencyLevelId;
 
 		//Lấy thông tin khách hàng
@@ -72,7 +72,13 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 			]);
 
 			//Create order details
-			totalPrice = await this.createDetails(orderId, customerId, mappedDetails, queryRunner);
+			totalPrice = await this.createDetails(
+				orderId,
+				customerId,
+				date,
+				mappedDetails,
+				queryRunner
+			);
 
 			await queryRunner.commitTransaction();
 			const sendMailPayload: SendMailOrderEventPayload = {
@@ -225,6 +231,7 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 	private async createDetails(
 		orderId: string,
 		customerId: string,
+		date: Date,
 		mappedTicketInfos: TicketInfoByIdsEntity[],
 		queryRunner: QueryRunner
 	) {
@@ -286,7 +293,8 @@ export class CreateOrderUseCase extends ExecuteHandler<any> {
 					basePrice: ticketBasePrice,
 					discountType: ticketDiscountType,
 					discountValue: ticketDiscountValue,
-					discountedPrice: ticketDiscountedPrice
+					discountedPrice: ticketDiscountedPrice,
+					useAt: date
 				}
 			);
 
