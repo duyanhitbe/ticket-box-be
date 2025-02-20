@@ -39,7 +39,8 @@ export class OrderTypeormRepository
 		const order = await this.findByIdOrThrow({ id, relations });
 
 		if (orderStatus) {
-			const isAllowUpdateStatus = order.orderStatus === ENUM_ORDER_STATUS.RESERVED;
+			const isAllowUpdateStatus =
+				order.orderStatus === ENUM_ORDER_STATUS.RESERVED || order.orderStatus === null;
 			const isUpdateSameStatus = order.orderStatus === data.orderStatus;
 
 			if (!isAllowUpdateStatus || isUpdateSameStatus) {
