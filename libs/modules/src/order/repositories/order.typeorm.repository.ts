@@ -43,6 +43,7 @@ export class OrderTypeormRepository
 			const isUpdateSameStatus = order.orderStatus === data.orderStatus;
 
 			if (!isAllowUpdateStatus || isUpdateSameStatus) {
+				this.logger.debug({ data, order });
 				throw new BadRequestException('Can not update order status');
 			}
 		}
