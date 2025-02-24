@@ -27,7 +27,6 @@ import { ImportTicketUseCase } from './usecases/import-ticket.usecase';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('tickets')
-@UseAuth()
 export class TicketController {
 	constructor(
 		private readonly createTicketUseCase: CreateTicketUseCase,
@@ -43,6 +42,7 @@ export class TicketController {
 	 * @returns {Promise<string[]>}
 	 */
 	@Post()
+	@UseAuth()
 	@SwaggerCreatedResponse({ summary: 'Create more ticket', type: String, isArray: true })
 	create(@Body() data: CreateTicketDto): Promise<string[]> {
 		return this.createTicketUseCase.execute(data);
@@ -54,6 +54,7 @@ export class TicketController {
 	 * @returns {Promise<PaginationResponse<TicketEntity>>}
 	 */
 	@Get()
+	@UseAuth()
 	@SwaggerListResponse({ summary: 'List ticket', type: TicketEntity })
 	findAll(@Query() filter: FilterTicketDto): Promise<PaginationResponse<TicketEntity>> {
 		return this.findTicketUseCase.query(filter);
@@ -79,6 +80,7 @@ export class TicketController {
 	 * @returns {Promise<TicketEntity>}
 	 */
 	@Get(':id')
+	@UseAuth()
 	@SwaggerOkResponse({ summary: 'Detail ticket', type: TicketEntity })
 	findOne(@Param('id') id: string): Promise<TicketEntity> {
 		return this.detailTicketUseCase.query(id);
