@@ -5,25 +5,19 @@ import { QueryHandler } from '@lib/common/abstracts';
 import { FindTicketGroupDateForEventUseCase } from '../../ticket-group-date/usecases/find-ticket-group-date-for-event.usecase';
 import { set } from 'lodash';
 import { ENUM_STATUS } from '@lib/base/enums/status.enum';
+import { In } from 'typeorm';
 
 @Injectable()
 export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntity>> {
 	constructor(
 		private readonly eventRepository: EventRepository,
-		// private readonly redisService: RedisService,
 		private readonly findTicketGroupDateForEventUseCase: FindTicketGroupDateForEventUseCase
 	) {
 		super();
 	}
 
 	async query(filter: FilterEventDto): Promise<PaginationResponse<EventEntity>> {
-		const { eventType, isWebClient } = filter;
-		// const { limit, page } = getPageLimitOffset(filter);
-		// const cachedData = await this.redisService.get<PaginationResponse<EventEntity>>({
-		// 	prefix: REDIS_PREFIX_KEY.EVENT.LIST,
-		// 	key: [limit, page, eventType]
-		// });
-		// if (cachedData) return cachedData;
+		const { eventType, isWebClient, eventIds } = filter;
 
 		filter.searchFields = ['name', 'location'];
 		if (eventType) {
@@ -32,6 +26,8 @@ export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntit
 
 		if (isWebClient === 'true') {
 			set(filter, 'where.status', ENUM_STATUS.ACTIVE);
+		} else if (eventIds?.length) {
+			set(filter, 'where.id', In(eventIds));
 		}
 
 		const result = await this.eventRepository.findPaginated(filter);
@@ -50,11 +46,6 @@ export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntit
 			);
 		}
 
-		// this.redisService.setNx({
-		// 	prefix: REDIS_PREFIX_KEY.EVENT.LIST,
-		// 	key: [limit, page, eventType],
-		// 	value: result
-		// });
 		return result;
 	}
 }

@@ -25,4 +25,6 @@ export class FilterEventDto extends BaseFilterDto {
 	@SwaggerProperty({ required: false })
 	@Property('Thao tác trên client')
 	isWebClient?: 'true' | 'false';
+
+	eventIds?: string[];
 }

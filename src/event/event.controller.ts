@@ -15,10 +15,12 @@ import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
-	UseAuth
+	UseAuth,
+	User
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
+import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('events')
 export class EventController {
@@ -71,12 +73,17 @@ export class EventController {
 	/**
 	 * @path GET /api/v1/events
 	 * @param filter {FilterEventDto}
+	 * @param user
 	 * @returns {Promise<PaginationResponse<EventEntity>>}
 	 */
 	@UseAuth({ isPublic: true })
 	@Get()
 	@SwaggerListResponse({ summary: 'List event', type: EventEntity })
-	findAll(@Query() filter: FilterEventDto): Promise<PaginationResponse<EventEntity>> {
+	findAll(
+		@Query() filter: FilterEventDto,
+		@User() user: RequestUser
+	): Promise<PaginationResponse<EventEntity>> {
+		filter.eventIds = user?.eventIds;
 		return this.findEventUseCase.query(filter);
 	}
 

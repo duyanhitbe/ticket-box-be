@@ -6,4 +6,5 @@ export type RequestUser = {
 	phone?: string;
 	agencyLevelId?: string;
 	role: ENUM_TOKEN_ROLE;
+	eventIds?: string[];
 } | null;

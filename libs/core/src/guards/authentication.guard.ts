@@ -51,12 +51,12 @@ export class AuthenticationGuard implements CanActivate {
 			const start = performance.now();
 			console.log();
 			this.logger.log('Authenticating incoming user');
-			let userId = '';
+			let sub = '';
 			let role: ENUM_TOKEN_ROLE | null = null;
 
 			try {
 				const payload = await this.jwtService.verify(accessToken);
-				userId = payload.sub;
+				sub = payload.sub;
 				role = payload.role;
 			} catch (err) {
 				this.logger.error('Invalid access token');
@@ -64,11 +64,11 @@ export class AuthenticationGuard implements CanActivate {
 				this.i18nExceptionService.throwInvalidAuthorization();
 			}
 
-			if (userId === '' || !role) {
+			if (sub === '' || !role) {
 				this.i18nExceptionService.throwInvalidAuthorization();
 			}
 
-			request['user'] = await this.getUserByRole(userId, role);
+			request['user'] = await this.getUserByRole(sub, role);
 			const end = performance.now();
 			const duration = (end - start).toFixed();
 			this.logger.log(`Authenticated incoming user took ${duration}ms`);
@@ -77,17 +77,17 @@ export class AuthenticationGuard implements CanActivate {
 		return true;
 	}
 
-	private async getUserByRole(userId: string, role: ENUM_TOKEN_ROLE): Promise<RequestUser> {
+	private async getUserByRole(sub: string, role: ENUM_TOKEN_ROLE): Promise<RequestUser> {
 		switch (role) {
 			case ENUM_TOKEN_ROLE.USER:
 				const user = await this.userRepository.findByIdOrThrow({
-					id: userId,
+					id: sub,
 					select: ['id', 'username']
 				});
 				return { id: user.id, username: user.username, role: role };
 			case ENUM_TOKEN_ROLE.CUSTOMER:
 				const customer = await this.customerRepository.findByIdOrThrow({
-					id: userId,
+					id: sub,
 					select: ['id', 'phone']
 				});
 				return {
@@ -97,14 +97,26 @@ export class AuthenticationGuard implements CanActivate {
 				};
 			case ENUM_TOKEN_ROLE.AGENCY:
 				const agency = await this.customerRepository.findByIdOrThrow({
-					id: userId,
-					select: ['id', 'phone', 'agencyLevelId']
+					id: sub,
+					relations: ['agency', 'agency.events'],
+					select: {
+						id: true,
+						phone: true,
+						agencyLevelId: true,
+						agency: {
+							id: true,
+							events: {
+								id: true
+							}
+						}
+					}
 				});
 				return {
 					id: agency.id,
 					phone: agency.phone,
 					role: role,
-					agencyLevelId: agency.agencyLevelId
+					agencyLevelId: agency.agencyLevelId,
+					eventIds: agency.agency?.events?.map((event) => event.id)
 				};
 		}
 	}
