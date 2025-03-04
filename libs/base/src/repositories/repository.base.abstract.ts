@@ -8,6 +8,7 @@ import {
 	FindOneOptions,
 	FindOptions,
 	FindPaginatedOptions,
+	IncrementOptions,
 	SoftDeleteByIdOptions,
 	SoftDeleteManyOptions,
 	SoftDeleteOneOptions,
@@ -52,4 +53,6 @@ export abstract class BaseRepository<T extends BaseEntity> {
 	abstract softDeleteById(options: SoftDeleteByIdOptions<T>): Promise<T>;
 
 	abstract exists(options: ExistOptions<T>): Promise<boolean>;
+
+	abstract increment(options: IncrementOptions<T>): Promise<number>;
 }

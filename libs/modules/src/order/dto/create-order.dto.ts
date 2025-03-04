@@ -5,6 +5,7 @@ import {
 	I18nIsEnum,
 	I18nIsNotEmpty,
 	I18nIsString,
+	I18nIsVNPhoneNumber,
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
@@ -36,7 +37,7 @@ export class CreateOrderDto {
 	/**
 	 * SĐT khách hàng
 	 */
-	@I18nIsString()
+	@I18nIsVNPhoneNumber()
 	@I18nIsNotEmpty()
 	@SwaggerProperty()
 	@Property('SĐT khách hàng')

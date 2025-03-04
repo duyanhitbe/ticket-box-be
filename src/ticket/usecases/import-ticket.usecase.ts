@@ -51,17 +51,22 @@ export class ImportTicketUseCase extends ExecuteHandler {
 	}
 
 	private async saveTicket(data: [TicketInfoEntity, string][]) {
-		return await Promise.all(
-			data.map(async ([{ id: ticketInfoId, eventId, ticketGroupId }, code]) =>
-				this.ticketRepository.create({
+		await Promise.all(
+			data.map(async ([{ id: ticketInfoId, eventId, ticketGroupId }, code]) => {
+				await this.ticketRepository.create({
 					data: {
 						ticketInfoId,
 						eventId,
 						ticketGroupId,
 						code
 					}
-				})
-			)
+				});
+				await this.ticketInfoRepository.increment({
+					where: { id: ticketInfoId },
+					column: 'quantity',
+					value: 1
+				});
+			})
 		);
 	}
 }

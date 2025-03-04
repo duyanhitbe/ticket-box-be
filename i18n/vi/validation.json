@@ -1,5 +1,6 @@
 {
   "IS_STRING": "{property} bắt buộc phải một chuỗi",
+  "IS_VN_PHONE_NUMBER": "{property} bắt buộc phải là một số điện thoại",
   "IS_NUMBER_STRING": "{property} bắt buộc phải một chuỗi số",
   "IS_UUID": "{property} bắt buộc phải một uuid",
   "IS_EMAIL": "{property} bắt buộc có dạng email",

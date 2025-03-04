@@ -16,6 +16,7 @@ import {
 	FindOneOptions,
 	FindOptions,
 	FindPaginatedOptions,
+	IncrementOptions,
 	SoftDeleteByIdOptions,
 	SoftDeleteManyOptions,
 	SoftDeleteOneOptions,
@@ -279,5 +280,11 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 	async exists(options: FindOneOptions<T>): Promise<boolean> {
 		const { where } = options;
 		return this.repository.exists({ where });
+	}
+
+	async increment(options: IncrementOptions<T>): Promise<number> {
+		return this.repository
+			.increment(options.where, options.column as any, options.value)
+			.then((res) => res.affected || 0);
 	}
 }
