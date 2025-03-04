@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import {
 	CreateAgencyUserDto,
 	FilterAgencyUserDto,
@@ -10,6 +10,7 @@ import { DeleteAgencyUserUseCase } from './usecases/delete-agency-user.usecase';
 import { FindAgencyUserUseCase } from './usecases/find-agency-user.usecase';
 import { DetailAgencyUserUseCase } from './usecases/detail-agency-user.usecase';
 import {
+	QueryWithUser,
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
@@ -70,7 +71,9 @@ export class AgencyUserController {
 	 */
 	@Get()
 	@SwaggerListResponse({ summary: 'List agency-user', type: CustomerEntity })
-	findAll(@Query() filter: FilterAgencyUserDto): Promise<PaginationResponse<CustomerEntity>> {
+	findAll(
+		@QueryWithUser() filter: FilterAgencyUserDto
+	): Promise<PaginationResponse<CustomerEntity>> {
 		return this.findAgencyUserUseCase.query(filter);
 	}
 

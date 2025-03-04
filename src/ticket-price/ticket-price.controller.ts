@@ -1,5 +1,10 @@
 import { PaginationResponse } from '@lib/base/dto';
-import { SwaggerListResponse, SwaggerOkResponse, UseAuth } from '@lib/common/decorators';
+import {
+	QueryWithUser,
+	SwaggerListResponse,
+	SwaggerOkResponse,
+	UseAuth
+} from '@lib/common/decorators';
 import {
 	FilterTicketPriceDto,
 	ListTicketPriceEntity,
@@ -7,7 +12,7 @@ import {
 	UpdateManyTicketPriceDto,
 	UpdateTicketPriceDto
 } from '@lib/modules/ticket-price';
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { DetailTicketPriceUseCase } from './usecases/detail-ticket-price.usecase';
 import { FindTicketPriceUseCase } from './usecases/find-ticket-price.usecase';
 import { UpdateManyTicketPriceUseCase } from './usecases/update-many-ticket-price.usecase';
@@ -62,7 +67,7 @@ export class TicketPriceController {
 	@Get()
 	@SwaggerListResponse({ summary: 'List ticket-price', type: ListTicketPriceEntity })
 	findAll(
-		@Query() filter: FilterTicketPriceDto
+		@QueryWithUser() filter: FilterTicketPriceDto
 	): Promise<PaginationResponse<ListTicketPriceEntity>> {
 		return this.findTicketPriceUseCase.query(filter);
 	}

@@ -12,9 +12,10 @@ import {
 	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 
 @Controller('users')
-@UseAuth()
+@UseAuth({ roles: [ENUM_TOKEN_ROLE.USER] })
 export class UserController {
 	constructor(
 		private readonly createUserUseCase: CreateUserUseCase,

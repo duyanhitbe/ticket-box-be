@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import {
 	AgencyEntity,
 	CreateAgencyDto,
@@ -12,15 +12,16 @@ import { DeleteAgencyUseCase } from './usecases/delete-agency.usecase';
 import { FindAgencyUseCase } from './usecases/find-agency.usecase';
 import { DetailAgencyUseCase } from './usecases/detail-agency.usecase';
 import {
+	QueryWithUser,
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
 	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 
 @Controller('agencies')
-@UseAuth()
 export class AgencyController {
 	constructor(
 		private readonly createAgencyUseCase: CreateAgencyUseCase,
@@ -35,6 +36,7 @@ export class AgencyController {
 	 * @param data {CreateAgencyDto}
 	 * @returns {Promise<AgencyEntity>}
 	 */
+	@UseAuth({ roles: [ENUM_TOKEN_ROLE.USER] })
 	@Post()
 	@SwaggerCreatedResponse({ summary: 'Create agency', type: AgencyEntity })
 	create(@Body() data: CreateAgencyDto): Promise<AgencyEntity> {
@@ -47,6 +49,7 @@ export class AgencyController {
 	 * @param data {UpdateAgencyDto}
 	 * @returns {Promise<AgencyEntity>}
 	 */
+	@UseAuth()
 	@Patch(':id')
 	@SwaggerOkResponse({ summary: 'Update agency', type: AgencyEntity })
 	update(@Param('id') id: string, @Body() data: UpdateAgencyDto): Promise<AgencyEntity> {
@@ -58,6 +61,7 @@ export class AgencyController {
 	 * @param id {string}
 	 * @returns {Promise<AgencyEntity>}
 	 */
+	@UseAuth({ roles: [ENUM_TOKEN_ROLE.USER] })
 	@Delete(':id')
 	@SwaggerOkResponse({ summary: 'Remove agency', type: AgencyEntity })
 	remove(@Param('id') id: string): Promise<AgencyEntity> {
@@ -69,9 +73,12 @@ export class AgencyController {
 	 * @param filter {FilterAgencyDto}
 	 * @returns {Promise<PaginationResponse<ListAgencyEntity>>}
 	 */
+	@UseAuth()
 	@Get()
 	@SwaggerListResponse({ summary: 'List agency', type: ListAgencyEntity })
-	findAll(@Query() filter: FilterAgencyDto): Promise<PaginationResponse<ListAgencyEntity>> {
+	findAll(
+		@QueryWithUser() filter: FilterAgencyDto
+	): Promise<PaginationResponse<ListAgencyEntity>> {
 		return this.findAgencyUseCase.query(filter);
 	}
 
@@ -80,6 +87,7 @@ export class AgencyController {
 	 * @param id {string}
 	 * @returns {Promise<AgencyEntity>}
 	 */
+	@UseAuth()
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail agency', type: AgencyEntity })
 	findOne(@Param('id') id: string): Promise<AgencyEntity> {

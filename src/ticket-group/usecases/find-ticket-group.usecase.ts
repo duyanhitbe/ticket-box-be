@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
 	FilterTicketGroupDto,
 	TicketGroupListEntity,
@@ -7,6 +7,8 @@ import {
 import { PaginationResponse } from '@lib/base/dto';
 import { QueryHandler } from '@lib/common/abstracts';
 import { set } from 'lodash';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
+import { In } from 'typeorm';
 
 @Injectable()
 export class FindTicketGroupUseCase extends QueryHandler<
@@ -17,8 +19,18 @@ export class FindTicketGroupUseCase extends QueryHandler<
 	}
 
 	async query(filter: FilterTicketGroupDto): Promise<PaginationResponse<TicketGroupListEntity>> {
+		const { user } = filter;
+		const eventIds = user?.eventIds || [];
 		filter.relations = ['dates', 'event'];
 		filter.searchFields = ['name'];
+
+		if (user?.role === ENUM_TOKEN_ROLE.AGENCY && eventIds.length) {
+			if (filter.eventId && !eventIds.includes(filter.eventId)) {
+				throw new BadRequestException('Invalid event id');
+			}
+
+			set(filter, 'where.eventId', In(eventIds));
+		}
 
 		if (filter.eventId) {
 			set(filter, 'where.eventId', filter.eventId);

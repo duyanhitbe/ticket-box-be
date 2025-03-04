@@ -4,7 +4,6 @@ import {
 	Get,
 	Param,
 	Post,
-	Query,
 	Res,
 	UploadedFile,
 	UseInterceptors
@@ -14,6 +13,7 @@ import { CreateTicketUseCase } from './usecases/create-ticket.usecase';
 import { FindTicketUseCase } from './usecases/find-ticket.usecase';
 import { DetailTicketUseCase } from './usecases/detail-ticket.usecase';
 import {
+	QueryWithUser,
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
@@ -56,7 +56,7 @@ export class TicketController {
 	@Get()
 	@UseAuth()
 	@SwaggerListResponse({ summary: 'List ticket', type: TicketEntity })
-	findAll(@Query() filter: FilterTicketDto): Promise<PaginationResponse<TicketEntity>> {
+	findAll(@QueryWithUser() filter: FilterTicketDto): Promise<PaginationResponse<TicketEntity>> {
 		return this.findTicketUseCase.query(filter);
 	}
 

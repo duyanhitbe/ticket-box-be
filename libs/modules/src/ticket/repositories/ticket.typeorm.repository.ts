@@ -4,6 +4,8 @@ import { Repository } from '@lib/core/typeorm';
 import { TicketTypeormEntity } from '../entities/ticket.typeorm.entity';
 import { getMeta, getPageLimitOffset } from '@lib/common/helpers';
 import { FilterTicketDto } from '../dto/filter-ticket.dto';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
+import { BadRequestException } from '@nestjs/common';
 
 @Repository(TicketTypeormEntity)
 export class TicketTypeormRepository
@@ -19,7 +21,8 @@ export class TicketTypeormRepository
 			orderId,
 			search,
 			searchFields,
-			status
+			status,
+			user
 		} = filter;
 		const { limit, page, offset } = getPageLimitOffset(filter);
 
@@ -50,6 +53,15 @@ export class TicketTypeormRepository
 			.leftJoin('orders', 'o', 'o.id = t.order_id')
 			.orderBy('t.created_at', 'DESC');
 		const countQueryBuilder = this.repository.createQueryBuilder('t');
+
+		if (user?.role === ENUM_TOKEN_ROLE.AGENCY && user?.eventIds?.length) {
+			if (eventId && !user.eventIds.includes(eventId)) {
+				throw new BadRequestException('Invalid event id');
+			}
+
+			queryBuilder.where('t.event_id IN (:...eventIds)', { eventIds: user.eventIds });
+			countQueryBuilder.where('t.event_id IN (:...eventIds)', { eventIds: user.eventIds });
+		}
 
 		if (eventId) {
 			queryBuilder.where('t.event_id = :eventId', { eventId });

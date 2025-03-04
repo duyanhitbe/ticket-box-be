@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import {
 	CreateOrderDto,
 	FilterOrderDto,
@@ -12,6 +12,7 @@ import { UpdateOrderUseCase } from './usecases/update-order.usecase';
 import { FindOrderUseCase } from './usecases/find-order.usecase';
 import { DetailOrderUseCase } from './usecases/detail-order.usecase';
 import {
+	QueryWithUser,
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
@@ -78,7 +79,7 @@ export class OrderController {
 	@UseAuth()
 	@Get()
 	@SwaggerListResponse({ summary: 'List order', type: ListOrderEntity })
-	findAll(@Query() filter: FilterOrderDto): Promise<PaginationResponse<ListOrderEntity>> {
+	findAll(@QueryWithUser() filter: FilterOrderDto): Promise<PaginationResponse<ListOrderEntity>> {
 		return this.findOrderUseCase.query(filter);
 	}
 

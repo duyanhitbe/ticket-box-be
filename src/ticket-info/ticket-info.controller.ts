@@ -1,5 +1,6 @@
 import { PaginationResponse } from '@lib/base/dto';
 import {
+	QueryWithUser,
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
@@ -79,7 +80,9 @@ export class TicketInfoController {
 	@UseAuth()
 	@Get()
 	@SwaggerListResponse({ summary: 'List ticket-info', type: TicketInfoEntity })
-	findAll(@Query() filter: FilterTicketInfoDto): Promise<PaginationResponse<TicketInfoEntity>> {
+	findAll(
+		@QueryWithUser() filter: FilterTicketInfoDto
+	): Promise<PaginationResponse<TicketInfoEntity>> {
 		return this.findTicketInfoUseCase.query(filter);
 	}
 

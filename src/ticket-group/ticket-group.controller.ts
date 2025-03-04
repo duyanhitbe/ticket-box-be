@@ -15,6 +15,7 @@ import { DeleteTicketGroupUseCase } from './usecases/delete-ticket-group.usecase
 import { FindTicketGroupUseCase } from './usecases/find-ticket-group.usecase';
 import { DetailTicketGroupUseCase } from './usecases/detail-ticket-group.usecase';
 import {
+	QueryWithUser,
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
@@ -85,7 +86,7 @@ export class TicketGroupController {
 	@Get()
 	@SwaggerListResponse({ summary: 'List ticket-group', type: TicketGroupListEntity })
 	findAll(
-		@Query() filter: FilterTicketGroupDto
+		@QueryWithUser() filter: FilterTicketGroupDto
 	): Promise<PaginationResponse<TicketGroupListEntity>> {
 		return this.findTicketGroupUseCase.query(filter);
 	}

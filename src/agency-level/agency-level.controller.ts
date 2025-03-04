@@ -17,9 +17,10 @@ import {
 	UseAuth
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 
 @Controller('agency-levels')
-@UseAuth()
+@UseAuth({ roles: [ENUM_TOKEN_ROLE.USER] })
 export class AgencyLevelController {
 	constructor(
 		private readonly createAgencyLevelUseCase: CreateAgencyLevelUseCase,

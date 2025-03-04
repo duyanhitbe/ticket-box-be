@@ -7,4 +7,5 @@ export type RequestUser = {
 	agencyLevelId?: string;
 	role: ENUM_TOKEN_ROLE;
 	eventIds?: string[];
+	agencyId?: string;
 } | null;

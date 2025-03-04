@@ -13,6 +13,8 @@ import { getMeta, getPageLimitOffset, randomString } from '@lib/common/helpers';
 import { PaginationResponse } from '@lib/base/dto';
 import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 import { QueryRunner } from 'typeorm';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
+import { BadRequestException } from '@nestjs/common';
 
 @Repository(TicketInfoTypeormEntity)
 export class TicketInfoTypeormRepository
@@ -109,7 +111,7 @@ export class TicketInfoTypeormRepository
 	async findPaginated(
 		filter: FilterTicketInfoDto
 	): Promise<PaginationResponse<TicketInfoTypeormEntity>> {
-		const { ticketGroupId, eventId, search, searchFields, status } = filter;
+		const { ticketGroupId, eventId, search, searchFields, status, user } = filter;
 		const { limit, page, offset } = getPageLimitOffset(filter);
 
 		const queryBuilder = this.repository
@@ -134,6 +136,15 @@ export class TicketInfoTypeormRepository
 		if (ticketGroupId) {
 			queryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
 			countQueryBuilder.where('tf.ticket_group_id = :ticketGroupId', { ticketGroupId });
+		}
+
+		if (user?.role === ENUM_TOKEN_ROLE.AGENCY && user?.eventIds?.length) {
+			if (eventId && !user.eventIds.includes(eventId)) {
+				throw new BadRequestException('Invalid event id');
+			}
+
+			queryBuilder.where('tf.event_id IN (:...eventIds)', { eventIds: user.eventIds });
+			countQueryBuilder.where('tf.event_id IN (:...eventIds)', { eventIds: user.eventIds });
 		}
 
 		if (eventId) {

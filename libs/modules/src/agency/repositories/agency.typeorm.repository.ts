@@ -6,6 +6,7 @@ import { PaginationResponse } from '@lib/base/dto';
 import { getMeta } from '@lib/common/helpers';
 import { FilterAgencyDto } from '../dto/filter-agency.dto';
 import { FindByIdOptions } from '@lib/base/types';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 
 @Repository(AgencyTypeormEntity)
 export class AgencyTypeormRepository
@@ -29,7 +30,7 @@ export class AgencyTypeormRepository
 	}
 
 	async findPaginated(filter: FilterAgencyDto): Promise<PaginationResponse<AgencyTypeormEntity>> {
-		const { searchFields, search, agencyLevelId, status } = filter;
+		const { searchFields, search, agencyLevelId, status, user } = filter;
 
 		const queryBuilder = this.repository
 			.createQueryBuilder('a')
@@ -53,6 +54,11 @@ export class AgencyTypeormRepository
 			);
 
 		const countQueryBuilder = this.repository.createQueryBuilder('a');
+
+		if (user?.role === ENUM_TOKEN_ROLE.AGENCY && user?.agencyId) {
+			queryBuilder.where('a.id = :agencyId', { agencyId: user.agencyId });
+			countQueryBuilder.where('a.id = :agencyId', { agencyId: user.agencyId });
+		}
 
 		if (agencyLevelId) {
 			queryBuilder.where('a.agency_level_id = :agencyLevelId', { agencyLevelId });

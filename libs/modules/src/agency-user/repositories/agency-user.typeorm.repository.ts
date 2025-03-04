@@ -4,6 +4,7 @@ import { getMeta } from '@lib/common/helpers';
 import { Repository } from '@lib/core/typeorm';
 import { CustomerTypeormEntity, FilterCustomerDto } from '../../customer';
 import { AgencyUserRepository } from './agency-user.repository.abstract';
+import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 
 @Repository(CustomerTypeormEntity)
 export class AgencyUserTypeormRepository
@@ -13,7 +14,7 @@ export class AgencyUserTypeormRepository
 	async findPaginated(
 		filter: FilterCustomerDto
 	): Promise<PaginationResponse<CustomerTypeormEntity>> {
-		const { searchFields, search, status } = filter;
+		const { searchFields, search, status, user } = filter;
 
 		const queryBuilder = this.repository
 			.createQueryBuilder('c')
@@ -42,6 +43,11 @@ export class AgencyUserTypeormRepository
 		if (status) {
 			queryBuilder.andWhere('c.status = :status', { status });
 			countQueryBuilder.andWhere('c.status = :status', { status });
+		}
+
+		if (user?.role === ENUM_TOKEN_ROLE.AGENCY && user?.agencyId) {
+			queryBuilder.andWhere('c.agency_id = :agencyId', { agencyId: user.agencyId });
+			countQueryBuilder.andWhere('c.agency_id = :agencyId', { agencyId: user.agencyId });
 		}
 
 		this.addSearchFields(queryBuilder, 'c', searchFields, search);

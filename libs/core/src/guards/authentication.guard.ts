@@ -116,7 +116,8 @@ export class AuthenticationGuard implements CanActivate {
 					phone: agency.phone,
 					role: role,
 					agencyLevelId: agency.agencyLevelId,
-					eventIds: agency.agency?.events?.map((event) => event.id)
+					eventIds: agency.agency?.events?.map((event) => event.id),
+					agencyId: agency.agency?.id
 				};
 		}
 	}
