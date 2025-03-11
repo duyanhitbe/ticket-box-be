@@ -6,3 +6,7 @@ export type CreateOrderEventPayload = CreateOrderDto & {
 	orderCode: string;
 	user?: RequestUser;
 };
+
+export type CancelOrderEventPayload = {
+	orderId: string;
+};

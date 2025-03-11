@@ -4,13 +4,20 @@ import { ExcelService } from '@lib/core/excel';
 import { Workbook } from 'exceljs';
 import { ImportTicketDataDto, TicketRepository } from '@lib/modules/ticket';
 import { TicketInfoEntity, TicketInfoRepository } from '@lib/modules/ticket-info';
+import { TicketService } from '../ticket.service';
+
+type Ticket = {
+	ticketInfo: TicketInfoEntity;
+	ticketCode: string;
+};
 
 @Injectable()
 export class ImportTicketUseCase extends ExecuteHandler {
 	constructor(
 		private readonly excelService: ExcelService,
 		private readonly ticketInfoRepository: TicketInfoRepository,
-		private readonly ticketRepository: TicketRepository
+		private readonly ticketRepository: TicketRepository,
+		private readonly ticketService: TicketService
 	) {
 		super();
 	}
@@ -29,13 +36,11 @@ export class ImportTicketUseCase extends ExecuteHandler {
 		return data;
 	}
 
-	private async validate(data: ImportTicketDataDto[]): Promise<[TicketInfoEntity, string][]> {
+	private async validate(data: ImportTicketDataDto[]): Promise<Ticket[]> {
 		return await Promise.all(
 			data.map(async ({ ticketInfoCode, ticketCode }, i) => {
-				const ticketInfo = await this.ticketInfoRepository.findOneOrThrow({
-					where: { code: ticketInfoCode },
-					select: ['id', 'code', 'eventId', 'ticketGroupId']
-				});
+				const ticketInfo =
+					await this.ticketInfoRepository.findByCodeForCreateTicket(ticketInfoCode);
 				const existTicket = await this.ticketRepository.findOne({
 					where: {
 						eventId: ticketInfo.eventId,
@@ -45,20 +50,26 @@ export class ImportTicketUseCase extends ExecuteHandler {
 				if (existTicket) {
 					throw new BadRequestException(`Mã vé đã tồn tại ở dòng thứ ${i + 2}`);
 				}
-				return [ticketInfo, ticketCode];
+				return {
+					ticketInfo,
+					ticketCode
+				};
 			})
 		);
 	}
 
-	private async saveTicket(data: [TicketInfoEntity, string][]) {
+	private async saveTicket(data: Ticket[]) {
 		await Promise.all(
-			data.map(async ([{ id: ticketInfoId, eventId, ticketGroupId }, code]) => {
+			data.map(async ({ ticketInfo, ticketCode }) => {
+				const { id: ticketInfoId, eventId, ticketGroupId } = ticketInfo;
+				const expiresAt = this.ticketService.getTicketExpireDate(ticketInfo.ticketGroup);
 				await this.ticketRepository.create({
 					data: {
 						ticketInfoId,
 						eventId,
 						ticketGroupId,
-						code
+						code: ticketCode,
+						expiresAt
 					}
 				});
 				await this.ticketInfoRepository.increment({

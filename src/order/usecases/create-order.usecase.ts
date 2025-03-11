@@ -22,7 +22,7 @@ import { SendMailOrderEventPayload } from '@lib/modules/mail'; // totalPrice
 // totalPrice
 
 @Injectable()
-export class CreateOrderUseCase extends ExecuteHandler<any> {
+export class CreateOrderUseCase extends ExecuteHandler {
 	constructor(
 		@InjectDataSource()
 		private readonly dataSource: DataSource,

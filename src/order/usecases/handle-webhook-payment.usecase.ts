@@ -4,7 +4,7 @@ import { ENUM_RABBITMQ_CLIENT, InjectClientRMQ, RABBITMQ_PATTERNS } from '@lib/c
 import { RabbitmqService } from '@lib/core/rabbitmq/rabbitmq.service.abstract';
 
 @Injectable()
-export class HandleWebhookPaymentUseCase extends ExecuteHandler<any> {
+export class HandleWebhookPaymentUseCase extends ExecuteHandler {
 	constructor(
 		@InjectClientRMQ(ENUM_RABBITMQ_CLIENT.ORDER)
 		private readonly orderClient: RabbitmqService

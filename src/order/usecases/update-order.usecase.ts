@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+	CancelOrderEventPayload,
 	ENUM_ORDER_STATUS,
 	OrderEntity,
 	OrderRepository,
@@ -20,6 +21,8 @@ export class UpdateOrderUseCase extends ExecuteHandler<OrderUpdatedEntity> {
 	constructor(
 		@InjectClientRMQ(ENUM_RABBITMQ_CLIENT.MAIL)
 		private readonly mailClient: RMQClientProxy,
+		@InjectClientRMQ(ENUM_RABBITMQ_CLIENT.ORDER)
+		private readonly orderClient: RMQClientProxy,
 		private readonly orderRepository: OrderRepository
 	) {
 		super();
@@ -51,6 +54,12 @@ export class UpdateOrderUseCase extends ExecuteHandler<OrderUpdatedEntity> {
 				}))
 			};
 			this.mailClient.emit(RABBITMQ_PATTERNS.SEND_MAIL_ORDER, eventPayload);
+		}
+		if (order.orderStatus === ENUM_ORDER_STATUS.CANCELLED) {
+			const payload: CancelOrderEventPayload = {
+				orderId: order.id
+			};
+			this.orderClient.emit(RABBITMQ_PATTERNS.CANCEL_ORDER, payload);
 		}
 	}
 }

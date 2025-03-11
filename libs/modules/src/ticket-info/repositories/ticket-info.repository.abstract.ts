@@ -12,7 +12,9 @@ export abstract class TicketInfoRepository extends BaseRepository<TicketInfoEnti
 	abstract findByIdForCreateTicket(
 		id: string,
 		datasource?: DataSource
-	): Promise<TicketInfoEntity | null>;
+	): Promise<TicketInfoEntity>;
+
+	abstract findByCodeForCreateTicket(id: string): Promise<TicketInfoEntity>;
 
 	abstract findAllWithPriceByIds(
 		ids: string[],

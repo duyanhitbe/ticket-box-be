@@ -5,6 +5,7 @@ import { TicketEntity, TicketTypeormEntity } from '@lib/modules/ticket';
 import { DeepPartial } from 'typeorm/common/DeepPartial';
 import { ENUM_DATE_TYPE } from '@lib/modules/common';
 import { randomString, sortDates } from '@lib/common/helpers';
+import { TicketGroupEntity } from '@lib/modules/ticket-group';
 
 @Injectable()
 export class TicketService {
@@ -24,23 +25,7 @@ export class TicketService {
 			ticketGroupId: ticketInfo.ticketGroupId
 		};
 
-		if (ticketInfo.ticketGroup.dateType === ENUM_DATE_TYPE.DURATION) {
-			if (!ticketInfo.ticketGroup.toDate) {
-				this.logger.error('"toDate" is null');
-				throw new Error('"toDate" is null');
-			}
-			creationData.expiresAt = ticketInfo.ticketGroup.toDate;
-		} else {
-			if (!ticketInfo.ticketGroup.dates) {
-				throw new Error('"dates" is null');
-			}
-			const dates = sortDates(
-				ticketInfo.ticketGroup?.dates?.map((item) => item.date) || [],
-				'desc'
-			);
-			creationData.expiresAt = dates[0];
-		}
-
+		creationData.expiresAt = this.getTicketExpireDate(ticketInfo.ticketGroup);
 		creationData.code = await this.getCode(queryRunner);
 
 		const ticket = new TicketTypeormEntity();
@@ -56,5 +41,24 @@ export class TicketService {
 		});
 		if (exists) return this.getCode(queryRunner);
 		return code;
+	}
+
+	getTicketExpireDate(
+		ticketGroup?: Pick<TicketGroupEntity, 'dateType' | 'dates' | 'toDate'>
+	): Date | undefined {
+		if (!ticketGroup) return;
+		if (ticketGroup.dateType === ENUM_DATE_TYPE.DURATION) {
+			if (!ticketGroup.toDate) {
+				this.logger.error('"toDate" is null');
+				throw new Error('"toDate" is null');
+			}
+			return ticketGroup.toDate;
+		} else {
+			if (!ticketGroup.dates) {
+				throw new Error('"dates" is null');
+			}
+			const dates = sortDates(ticketGroup.dates?.map((item) => item.date) || [], 'desc');
+			return dates[0];
+		}
 	}
 }

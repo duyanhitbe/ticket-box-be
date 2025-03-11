@@ -45,7 +45,7 @@ export class TicketInfoTypeormRepository
 		return queryBuilder.getRawMany();
 	}
 
-	async findByIdForCreateTicket(id: string): Promise<TicketInfoEntity | null> {
+	async findByIdForCreateTicket(id: string): Promise<TicketInfoEntity> {
 		const ticketInfo = await this.findById({
 			id,
 			relations: ['ticketGroup', 'ticketGroup.dates'],
@@ -63,22 +63,56 @@ export class TicketInfoTypeormRepository
 			}
 		});
 
+		const errorMessage = this.validateTicketInfo(ticketInfo);
+		if (errorMessage) {
+			this.logger.error(errorMessage);
+			throw new BadRequestException(errorMessage);
+		}
+
+		return ticketInfo!;
+	}
+
+	async findByCodeForCreateTicket(code: string): Promise<TicketInfoEntity> {
+		const ticketInfo = await this.findOne({
+			where: { code },
+			relations: ['ticketGroup', 'ticketGroup.dates'],
+			select: {
+				id: true,
+				eventId: true,
+				ticketGroupId: true,
+				ticketGroup: {
+					dateType: true,
+					toDate: true,
+					dates: {
+						date: true
+					}
+				}
+			}
+		});
+
+		const errorMessage = this.validateTicketInfo(ticketInfo);
+		if (errorMessage) {
+			this.logger.error(errorMessage);
+			throw new BadRequestException(errorMessage);
+		}
+
+		return ticketInfo!;
+	}
+
+	private validateTicketInfo(ticketInfo: TicketInfoEntity | null): string | null {
 		if (!ticketInfo) {
-			this.logger.error('TicketInfo not found');
-			return null;
+			return 'TicketInfo not found';
 		}
 
 		if (!ticketInfo.ticketGroup) {
-			this.logger.error('Can not find TicketGroup');
-			return null;
+			return 'Can not find TicketGroup';
 		}
 
 		if (!ticketInfo.ticketGroup.dates) {
-			this.logger.error('Can not find TicketGroupDate');
-			return null;
+			return 'Can not find TicketGroupDate';
 		}
 
-		return ticketInfo;
+		return null;
 	}
 
 	async create(

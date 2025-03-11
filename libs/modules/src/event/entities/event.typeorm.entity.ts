@@ -19,6 +19,9 @@ export class EventTypeormEntity extends BaseTypeormEntity implements EventEntity
 	@TypeormColumn()
 	image!: string;
 
+	@TypeormColumn({ type: 'simple-array', default: [] })
+	images!: string[];
+
 	@TypeormColumn()
 	thumbnail!: string;
 

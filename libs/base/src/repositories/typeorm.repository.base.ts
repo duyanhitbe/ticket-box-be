@@ -9,6 +9,7 @@ import { BaseTypeormEntity } from '../entities';
 import { BaseRepository } from '../repositories/repository.base.abstract';
 import {
 	CreateOptions,
+	DecrementOptions,
 	DeleteByIdOptions,
 	DeleteManyOptions,
 	DeleteOneOptions,
@@ -285,6 +286,12 @@ export class BaseTypeormRepository<T extends BaseTypeormEntity> implements BaseR
 	async increment(options: IncrementOptions<T>): Promise<number> {
 		return this.repository
 			.increment(options.where, options.column as any, options.value)
+			.then((res) => res.affected || 0);
+	}
+
+	async decrement(options: DecrementOptions<T>): Promise<number> {
+		return this.repository
+			.decrement(options.where, options.column as any, options.value)
 			.then((res) => res.affected || 0);
 	}
 }

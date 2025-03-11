@@ -28,6 +28,13 @@ export abstract class EventEntity extends BaseEntity {
 	image!: string;
 
 	/**
+	 * Hình ảnh
+	 */
+	@SwaggerProperty({ type: [String] })
+	@Property('Hình ảnh')
+	images!: string[];
+
+	/**
 	 * Hình thumbnail
 	 */
 	@SwaggerProperty()

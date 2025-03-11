@@ -9,6 +9,7 @@ import { ProcessPaymentOrderUseCase } from './usecases/process-payment-order.use
 import { PlaceOrderUseCase } from './usecases/place-order.usecase';
 import { HandleWebhookPaymentUseCase } from './usecases/handle-webhook-payment.usecase';
 import { OrderService } from './order.service';
+import { CancelOrderUsecase } from './usecases/cancel-order.usecase';
 
 @Module({
 	controllers: [OrderController, OrderConsumer],
@@ -20,7 +21,8 @@ import { OrderService } from './order.service';
 		DetailOrderUseCase,
 		ProcessPaymentOrderUseCase,
 		PlaceOrderUseCase,
-		HandleWebhookPaymentUseCase
+		HandleWebhookPaymentUseCase,
+		CancelOrderUsecase
 	]
 })
 export class OrderModule {}

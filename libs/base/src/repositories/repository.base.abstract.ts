@@ -1,5 +1,6 @@
 import {
 	CreateOptions,
+	DecrementOptions,
 	DeleteByIdOptions,
 	DeleteManyOptions,
 	DeleteOneOptions,
@@ -55,4 +56,6 @@ export abstract class BaseRepository<T extends BaseEntity> {
 	abstract exists(options: ExistOptions<T>): Promise<boolean>;
 
 	abstract increment(options: IncrementOptions<T>): Promise<number>;
+
+	abstract decrement(options: DecrementOptions<T>): Promise<number>;
 }

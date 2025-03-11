@@ -1,4 +1,5 @@
 import {
+	I18nIsArray,
 	I18nIsBoolean,
 	I18nIsEnum,
 	I18nIsNotEmpty,
@@ -35,10 +36,20 @@ export class CreateEventDto {
 	/**
 	 * Hình ảnh
 	 */
+	@IsOptional()
 	@I18nIsUrl()
 	@SwaggerProperty()
 	@Property('Hình ảnh')
 	image!: string;
+
+	/**
+	 * Hình ảnh
+	 */
+	@I18nIsArray()
+	@I18nIsUrl({ each: true })
+	@SwaggerProperty({ type: [String] })
+	@Property('Hình ảnh')
+	images!: string[];
 
 	/**
 	 * Hình thumbnail

@@ -112,4 +112,19 @@ export class TicketTypeormRepository
 			meta
 		};
 	}
+
+	restockByOrderId(orderId: string) {
+		return this.update({
+			where: { orderId },
+			data: {
+				orderId: null,
+				customerId: null,
+				useAt: null,
+				basePrice: null,
+				discountType: null,
+				discountedPrice: null,
+				discountValue: null
+			}
+		});
+	}
 }
