@@ -74,14 +74,20 @@ export class TicketPriceConsumer {
 					return await Promise.all(
 						ticketInfos.map(async ({ id: ticketInfoId, ticketGroupId }) => {
 							count += 1;
+							const existTicketPrice =
+								await this.ticketPriceRepository.findNormalCustomerByTicketInfo(
+									ticketInfoId
+								);
 							return this.ticketPriceRepository.create({
 								data: {
 									agencyLevelId,
 									eventId,
 									ticketInfoId,
 									ticketGroupId,
-									basePrice: 0,
-									discountedPrice: 0
+									basePrice: existTicketPrice?.basePrice || 0,
+									discountedPrice: existTicketPrice?.discountedPrice || 0,
+									discountType: existTicketPrice?.discountType,
+									discountValue: existTicketPrice?.discountValue
 								}
 							});
 						})

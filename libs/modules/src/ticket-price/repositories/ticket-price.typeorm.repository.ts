@@ -7,6 +7,7 @@ import { FilterTicketPriceDto } from '@lib/modules/ticket-price';
 import { getMeta, getPageLimitOffset } from '@lib/common/helpers';
 import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 import { BadRequestException } from '@nestjs/common';
+import { IsNull } from 'typeorm';
 
 @Repository(TicketPriceTypeormEntity)
 export class TicketPriceTypeormRepository
@@ -81,5 +82,26 @@ export class TicketPriceTypeormRepository
 		const meta = getMeta(filter, count);
 
 		return { data, meta };
+	}
+
+	async findNormalCustomerByTicketInfo(
+		ticketInfoId: string
+	): Promise<Pick<
+		TicketPriceTypeormEntity,
+		'id' | 'basePrice' | 'discountedPrice' | 'discountType' | 'discountValue'
+	> | null> {
+		return this.findOne({
+			where: {
+				ticketInfoId,
+				agencyLevelId: IsNull()
+			},
+			select: {
+				id: true,
+				basePrice: true,
+				discountedPrice: true,
+				discountType: true,
+				discountValue: true
+			}
+		});
 	}
 }
