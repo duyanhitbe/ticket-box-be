@@ -7,7 +7,7 @@ import { DetailUserUseCase } from '../user/usecases/detail-user.usecase';
 import { UserEntity } from '@lib/modules/user';
 import { CustomerEntity } from '@lib/modules/customer';
 import { DetailCustomerUseCase } from '../customer/usecases/detail-customer.usecase';
-import { ONLY_CUSTOMER_ROLE, ONLY_USER_ROLE } from '@lib/core/jwt';
+import { AGENCY_AND_CUSTOMER_ROLE, ONLY_USER_ROLE } from '@lib/core/jwt';
 import { LoginUseCase } from './usecases/login.usecase';
 import { LoginCustomerUseCase } from './usecases/login-customer.usecase';
 import { RegisterCustomerUseCase } from './usecases/register-customer.usecase';
@@ -77,7 +77,7 @@ export class AuthController {
 	 * @path GET /api/v1/auth/customer
 	 * @returns Promise<CustomerEntity>
 	 */
-	@UseAuth({ roles: ONLY_CUSTOMER_ROLE })
+	@UseAuth({ roles: AGENCY_AND_CUSTOMER_ROLE })
 	@Get('customer')
 	@SwaggerOkResponse({ summary: 'Get customer info', type: CustomerEntity })
 	async getCustomerInfo(@User() user: RequestUser) {
