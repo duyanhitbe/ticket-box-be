@@ -159,6 +159,8 @@ export class TicketInfoTypeormRepository
 				'tf.quantity as "quantity"',
 				'tf.code as "code"',
 				'tf.order as "order"',
+				'tf.event_id as "eventId"',
+				'tf.ticket_group_id as "ticketGroupId"',
 				'e.name as "eventName"',
 				'tg.name as "ticketGroupName"'
 			])
