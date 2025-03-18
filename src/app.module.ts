@@ -14,14 +14,10 @@ import { join } from 'path';
 import { RabbitMQModule } from '@lib/core/rabbitmq/rabbitmq.module';
 import { ENUM_QUEUE, ENUM_RABBITMQ_CLIENT } from '@lib/core/rabbitmq';
 import { AppTransportModule } from './app.transport.module';
-import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.module';
 import { EventModule } from '@lib/core/event/event.module';
 import { LoggerMiddleware } from '@lib/core/middlewares';
 import { NodemailerModule } from '@lib/core/nodemailer/nodemailer.module';
 import { ExcelModule } from '@lib/core/excel/excel.module';
-import { AgencyLevelModule } from './agency-level/agency-level.module';
-import { AgencyModule } from './agency/agency.module';
-import { AgencyUserModule } from './agency-user/agency-user.module';
 
 @Module({
 	imports: [
@@ -52,11 +48,7 @@ import { AgencyUserModule } from './agency-user/agency-user.module';
 		ExcelModule,
 		NodemailerModule.forRoot(),
 		AppRepositoryModule,
-		AppTransportModule,
-		TicketGroupDateModule,
-		AgencyLevelModule,
-		AgencyModule,
-		AgencyUserModule
+		AppTransportModule
 	],
 	controllers: [AppController],
 	providers: [

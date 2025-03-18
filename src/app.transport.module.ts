@@ -11,6 +11,11 @@ import { CustomerModule } from './customer/customer.module';
 import { OrderModule } from './order/order.module';
 import { OrderDetailModule } from './order-detail/order-detail.module';
 import { LocationModule } from './location/location.module';
+import { TicketGroupDateModule } from './ticket-group-date/ticket-group-date.module';
+import { AgencyLevelModule } from './agency-level/agency-level.module';
+import { AgencyModule } from './agency/agency.module';
+import { AgencyUserModule } from './agency-user/agency-user.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
 	imports: [
@@ -25,7 +30,12 @@ import { LocationModule } from './location/location.module';
 		CustomerModule,
 		OrderModule,
 		OrderDetailModule,
-		LocationModule
+		LocationModule,
+		TicketGroupDateModule,
+		AgencyLevelModule,
+		AgencyModule,
+		AgencyUserModule,
+		NewsModule
 	]
 })
 export class AppTransportModule {}

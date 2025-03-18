@@ -49,6 +49,7 @@ import {
 	AgencyTypeormRepository
 } from '@lib/modules/agency';
 import { AgencyUserRepository, AgencyUserTypeormRepository } from '@lib/modules/agency-user';
+import { NewsRepository, NewsTypeormEntity, NewsTypeormRepository } from '@lib/modules/news';
 
 @Module({
 	imports: [
@@ -65,7 +66,8 @@ import { AgencyUserRepository, AgencyUserTypeormRepository } from '@lib/modules/
 				TicketPriceTypeormEntity,
 				UserTypeormEntity,
 				AgencyLevelTypeormEntity,
-				AgencyTypeormEntity
+				AgencyTypeormEntity,
+				NewsTypeormEntity
 			],
 			repositories: [
 				{
@@ -119,6 +121,10 @@ import { AgencyUserRepository, AgencyUserTypeormRepository } from '@lib/modules/
 				{
 					provide: AgencyUserRepository,
 					useClass: AgencyUserTypeormRepository
+				},
+				{
+					provide: NewsRepository,
+					useClass: NewsTypeormRepository
 				}
 			]
 		})
