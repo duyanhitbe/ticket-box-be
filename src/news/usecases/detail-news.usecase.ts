@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { NewsEntity, NewsRepository } from '@lib/modules/news';
+import { FilterDetailNewsDto, NewsEntity, NewsRepository } from '@lib/modules/news';
 import { QueryHandler } from '@lib/common/abstracts';
 
 @Injectable()
@@ -8,7 +8,13 @@ export class DetailNewsUseCase extends QueryHandler<NewsEntity> {
 		super();
 	}
 
-	async query(id: string): Promise<NewsEntity> {
+	async query(id: string, filter: FilterDetailNewsDto): Promise<NewsEntity> {
+		const { slug } = filter;
+
+		if (slug) {
+			return this.newsRepository.findOneBySlug(slug);
+		}
+
 		return this.newsRepository.findByIdOrThrow({ id });
 	}
 }

@@ -1,5 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { CreateNewsDto, FilterNewsDto, NewsEntity, UpdateNewsDto } from '@lib/modules/news';
+import {
+	CreateNewsDto,
+	FilterDetailNewsDto,
+	FilterNewsDto,
+	NewsEntity,
+	UpdateNewsDto
+} from '@lib/modules/news';
 import { CreateNewsUseCase } from './usecases/create-news.usecase';
 import { UpdateNewsUseCase } from './usecases/update-news.usecase';
 import { DeleteNewsUseCase } from './usecases/delete-news.usecase';
@@ -75,11 +81,12 @@ export class NewsController {
 	/**
 	 * @path GET /api/v1/newss/:id
 	 * @param id {string}
+	 * @param query
 	 * @returns {Promise<NewsEntity>}
 	 */
 	@Get(':id')
 	@SwaggerOkResponse({ summary: 'Detail news', type: NewsEntity })
-	findOne(@Param('id') id: string): Promise<NewsEntity> {
-		return this.detailNewsUseCase.query(id);
+	findOne(@Param('id') id: string, @Query() query: FilterDetailNewsDto): Promise<NewsEntity> {
+		return this.detailNewsUseCase.query(id, query);
 	}
 }
