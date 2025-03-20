@@ -16,4 +16,7 @@ export class NewsTypeormEntity extends BaseTypeormEntity implements NewsEntity {
 
 	@TypeormColumn()
 	order!: number;
+
+	@TypeormColumn({ nullable: true })
+	slug?: string;
 }

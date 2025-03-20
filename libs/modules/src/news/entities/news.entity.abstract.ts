@@ -29,4 +29,11 @@ export abstract class NewsEntity extends BaseEntity {
 	@SwaggerProperty()
 	@Property('Thứ tự hiển thị')
 	order!: number;
+
+	/**
+	 * Slug
+	 */
+	@SwaggerProperty({ required: false })
+	@Property('Slug')
+	slug?: string;
 }

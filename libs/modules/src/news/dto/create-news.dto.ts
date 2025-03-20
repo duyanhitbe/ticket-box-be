@@ -5,6 +5,7 @@ import {
 	Property,
 	SwaggerProperty
 } from '@lib/common/decorators';
+import { IsOptional } from 'class-validator';
 
 export class CreateNewsDto {
 	/**
@@ -41,4 +42,13 @@ export class CreateNewsDto {
 	@SwaggerProperty()
 	@Property('Thứ tự hiển thị')
 	order!: number;
+
+	/**
+	 * Slug
+	 */
+	@IsOptional()
+	@I18nIsString()
+	@SwaggerProperty({ nullable: true })
+	@Property('Slug')
+	slug?: string;
 }
