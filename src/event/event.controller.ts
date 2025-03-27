@@ -20,6 +20,7 @@ import {
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
+import { AGENCY_AND_CUSTOMER_ROLE } from '@lib/core/jwt';
 
 @Controller('events')
 export class EventController {
@@ -78,6 +79,21 @@ export class EventController {
 	@Get()
 	@SwaggerListResponse({ summary: 'List event', type: EventEntity })
 	findAll(@QueryWithUser() filter: FilterEventDto): Promise<PaginationResponse<EventEntity>> {
+		return this.findEventUseCase.query(filter);
+	}
+
+	/**
+	 * @path GET /api/v1/events/client
+	 * @param filter {FilterEventDto}
+	 * @returns {Promise<PaginationResponse<EventEntity>>}
+	 */
+	@UseAuth({ isPublic: true, roles: AGENCY_AND_CUSTOMER_ROLE })
+	@Get('client')
+	@SwaggerListResponse({ summary: 'List event', type: EventEntity })
+	findAllClient(
+		@QueryWithUser() filter: FilterEventDto
+	): Promise<PaginationResponse<EventEntity>> {
+		filter.isWebClient = 'true';
 		return this.findEventUseCase.query(filter);
 	}
 

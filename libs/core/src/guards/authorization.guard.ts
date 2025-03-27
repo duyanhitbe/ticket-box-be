@@ -2,7 +2,6 @@ import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/commo
 import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 import { I18nExceptionService } from '@lib/core/i18n';
 import { Reflector } from '@nestjs/core';
-import { PUBLIC_METADATA_KEY } from '@lib/core/guards/authentication.guard';
 import { RequestUser } from '@lib/common/interfaces';
 
 export const TOKEN_ROLE_METADATA_KEY = 'TOKEN_ROLE_METADATA_KEY';
@@ -20,22 +19,22 @@ export class AuthorizationGuard implements CanActivate {
 		const request = context.switchToHttp().getRequest();
 		const user = request.user as RequestUser;
 
-		const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_METADATA_KEY, [
-			context.getClass(),
-			context.getHandler()
-		]);
-		if (isPublic) return true;
+		// const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_METADATA_KEY, [
+		// 	context.getClass(),
+		// 	context.getHandler()
+		// ]);
+		// if (isPublic) return true;
 
 		const roles = this.reflector.getAllAndOverride<ENUM_TOKEN_ROLE[]>(TOKEN_ROLE_METADATA_KEY, [
 			context.getClass(),
 			context.getHandler()
 		]);
-		if (!roles || !roles.length) return true;
+		if (!roles || !roles.length || !user) return true;
 
-		if (!roles.includes(user!.role)) {
+		if (!roles.includes(user.role)) {
 			this.logger.error('Invalid role');
 			this.logger.debug(`Required roles: ${roles}`);
-			this.logger.debug(`User role: ${user!.role}`);
+			this.logger.debug(`User role: ${user.role}`);
 			this.i18nExceptionService.throwInvalidAuthorization();
 		}
 		return true;
