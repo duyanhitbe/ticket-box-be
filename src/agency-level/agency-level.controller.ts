@@ -14,13 +14,15 @@ import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
-	UseAuth
+	UseAuth,
+	User
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
+import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('agency-levels')
-@UseAuth({ roles: [ENUM_TOKEN_ROLE.USER] })
+@UseAuth({ roles: [ENUM_TOKEN_ROLE.USER, ENUM_TOKEN_ROLE.AGENCY] })
 export class AgencyLevelController {
 	constructor(
 		private readonly createAgencyLevelUseCase: CreateAgencyLevelUseCase,
@@ -70,11 +72,16 @@ export class AgencyLevelController {
 	/**
 	 * @path GET /api/v1/agency-levels
 	 * @param filter {FilterAgencyLevelDto}
+	 * @param user
 	 * @returns {Promise<PaginationResponse<AgencyLevelEntity>>}
 	 */
 	@Get()
 	@SwaggerListResponse({ summary: 'List agency-level', type: AgencyLevelEntity })
-	findAll(@Query() filter: FilterAgencyLevelDto): Promise<PaginationResponse<AgencyLevelEntity>> {
+	findAll(
+		@Query() filter: FilterAgencyLevelDto,
+		@User() user: RequestUser
+	): Promise<PaginationResponse<AgencyLevelEntity>> {
+		filter.id = user?.agencyLevelId;
 		return this.findAgencyLevelUseCase.query(filter);
 	}
 

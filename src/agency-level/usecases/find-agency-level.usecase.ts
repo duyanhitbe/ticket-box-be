@@ -16,6 +16,9 @@ export class FindAgencyLevelUseCase extends QueryHandler<PaginationResponse<Agen
 
 	async query(filter: FilterAgencyLevelDto): Promise<PaginationResponse<AgencyLevelEntity>> {
 		filter.searchFields = ['name'];
+		if (filter.id) {
+			set(filter, 'where.id', filter.id);
+		}
 		if (filter.level) {
 			set(filter, 'where.level', filter.level);
 		}

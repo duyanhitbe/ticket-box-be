@@ -3,10 +3,6 @@ import { EventEntity, EventRepository, FilterEventDto } from '@lib/modules/event
 import { PaginationResponse } from '@lib/base/dto';
 import { QueryHandler } from '@lib/common/abstracts';
 import { FindTicketGroupDateForEventUseCase } from '../../ticket-group-date/usecases/find-ticket-group-date-for-event.usecase';
-import { set } from 'lodash';
-import { ENUM_STATUS } from '@lib/base/enums/status.enum';
-import { In } from 'typeorm';
-import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 
 @Injectable()
 export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntity>> {
@@ -18,19 +14,7 @@ export class FindEventUseCase extends QueryHandler<PaginationResponse<EventEntit
 	}
 
 	async query(filter: FilterEventDto): Promise<PaginationResponse<EventEntity>> {
-		const { eventType, isWebClient, user } = filter;
-
-		filter.searchFields = ['name', 'location'];
-		if (eventType) {
-			set(filter, 'where.eventType', eventType);
-		}
-
-		if (isWebClient === 'true') {
-			set(filter, 'where.status', ENUM_STATUS.ACTIVE);
-		} else if (user?.role === ENUM_TOKEN_ROLE.AGENCY && user?.eventIds?.length) {
-			set(filter, 'where.id', In(user.eventIds));
-		}
-
+		const { isWebClient } = filter;
 		const result = await this.eventRepository.findPaginated(filter);
 
 		if (isWebClient !== 'true') {
