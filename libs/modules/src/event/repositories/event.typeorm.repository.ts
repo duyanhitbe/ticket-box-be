@@ -7,6 +7,7 @@ import { set } from 'lodash';
 import { ENUM_STATUS } from '@lib/base/enums/status.enum';
 import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
 import { In } from 'typeorm';
+import { Where } from '@lib/base/types';
 
 @Repository(EventTypeormEntity)
 export class EventTypeormRepository
@@ -42,5 +43,21 @@ export class EventTypeormRepository
 		}
 
 		return super.findPaginated(filter);
+	}
+
+	async findBanner(ids?: string[]): Promise<EventTypeormEntity[]> {
+		const where: Where<EventTypeormEntity> = {
+			isBanner: true
+		};
+		if (ids?.length) {
+			where['id'] = In(ids);
+		}
+
+		return this.find({
+			where,
+			order: {
+				order: 'asc'
+			}
+		});
 	}
 }

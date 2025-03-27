@@ -16,11 +16,13 @@ import {
 	SwaggerCreatedResponse,
 	SwaggerListResponse,
 	SwaggerOkResponse,
-	UseAuth
+	UseAuth,
+	User
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { FindBannerUseCase } from './usecases/find-banner.usecase';
 import { AGENCY_AND_CUSTOMER_ROLE } from '@lib/core/jwt';
+import { RequestUser } from '@lib/common/interfaces';
 
 @Controller('events')
 export class EventController {
@@ -125,8 +127,8 @@ export class EventController {
 		type: EventEntity,
 		paginated: false
 	})
-	findAllBanner(): Promise<EventEntity[]> {
-		return this.findBannerUseCase.query();
+	findAllBanner(@User() user: RequestUser): Promise<EventEntity[]> {
+		return this.findBannerUseCase.query(user?.eventIds);
 	}
 
 	/**

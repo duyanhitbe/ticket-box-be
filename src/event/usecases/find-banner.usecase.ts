@@ -8,14 +8,7 @@ export class FindBannerUseCase extends QueryHandler<EventEntity[]> {
 		super();
 	}
 
-	async query(): Promise<EventEntity[]> {
-		return this.eventRepository.find({
-			where: {
-				isBanner: true
-			},
-			order: {
-				order: 'asc'
-			}
-		});
+	async query(ids?: string[]): Promise<EventEntity[]> {
+		return this.eventRepository.findBanner(ids);
 	}
 }
