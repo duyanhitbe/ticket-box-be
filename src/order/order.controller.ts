@@ -21,7 +21,7 @@ import {
 } from '@lib/common/decorators';
 import { PaginationResponse } from '@lib/base/dto';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
-import { ENUM_TOKEN_ROLE } from '@lib/core/jwt';
+import { AGENCY_AND_CUSTOMER_ROLE } from '@lib/core/jwt';
 import { RequestUser } from '@lib/common/interfaces';
 import { PlaceOrderUseCase } from './usecases/place-order.usecase';
 import { HandleWebhookPaymentUseCase } from './usecases/handle-webhook-payment.usecase';
@@ -42,7 +42,7 @@ export class OrderController {
 	 * @param user
 	 * @returns {Promise<OrderCreatedEntity>}
 	 */
-	@UseAuth({ roles: [ENUM_TOKEN_ROLE.CUSTOMER], isPublic: true })
+	@UseAuth({ roles: AGENCY_AND_CUSTOMER_ROLE, isPublic: true })
 	@Post()
 	@SwaggerCreatedResponse({
 		summary: 'Create order',
