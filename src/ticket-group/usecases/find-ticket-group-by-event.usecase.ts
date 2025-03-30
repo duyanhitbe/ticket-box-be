@@ -47,7 +47,7 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 			}
 		};
 
-		return rawTicketGroups.reduce((prev: TicketGroupByEventEntity[], next) => {
+		const ticketGroups = rawTicketGroups.reduce((prev: TicketGroupByEventEntity[], next) => {
 			const exist = prev.find((item) => item.id === next.id);
 			this.logger.debug(exist);
 			if (!exist) {
@@ -67,5 +67,7 @@ export class FindTicketGroupByEventUseCase extends QueryHandler<TicketGroupByEve
 
 			return prev;
 		}, []);
+
+		return ticketGroups.filter((ticketGroup) => ticketGroup.ticketInfos.length);
 	}
 }
