@@ -15,6 +15,9 @@ export class OrderTypeormEntity extends BaseTypeormEntity implements OrderEntity
 	@TypeormColumn({ nullable: true })
 	customerId?: string;
 
+	@TypeormColumn({ nullable: true })
+	agencyId?: string;
+
 	@TypeormColumn()
 	code!: string;
 

@@ -40,11 +40,12 @@ export class CreateOrderUseCase extends ExecuteHandler {
 		const agencyLevelId = user?.agencyLevelId;
 
 		//Lấy thông tin khách hàng
-		const customer = await this.getCustomer(data, agencyLevelId);
+		const customer = await this.getCustomer(data);
 		const customerId = customer.id;
 		const customerName = customer.name;
 		const customerPhone = customer.phone;
 		const customerEmail = customer.email;
+		const agencyId = customer.agencyId;
 
 		const queryRunner = this.dataSource.createQueryRunner();
 		await queryRunner.startTransaction();
@@ -116,7 +117,8 @@ export class CreateOrderUseCase extends ExecuteHandler {
 					customerId,
 					customerName,
 					customerPhone,
-					customerEmail
+					customerEmail,
+					agencyId
 				}
 			});
 		} finally {
@@ -131,12 +133,13 @@ export class CreateOrderUseCase extends ExecuteHandler {
 			customerPhone,
 			customerEmail,
 			totalPrice,
+			agencyId,
 			orderStatus: ENUM_ORDER_STATUS.RESERVED
 		});
 	}
 
 	//Lấy hoặc tạo khách hàng
-	private async getCustomer(data: CreateOrderEventPayload, agencyLevelId?: string) {
+	private async getCustomer(data: CreateOrderEventPayload) {
 		const { customerName, customerPhone, customerEmail } = data;
 
 		let customer: CustomerEntity | null = null;
@@ -144,8 +147,7 @@ export class CreateOrderUseCase extends ExecuteHandler {
 			customer = await this.customerRepository.getCustomerForCreateOrder({
 				name: customerName,
 				phone: customerPhone,
-				email: customerEmail,
-				agencyLevelId
+				email: customerEmail
 			});
 		} catch (err) {
 			this.logger.error(err.message);

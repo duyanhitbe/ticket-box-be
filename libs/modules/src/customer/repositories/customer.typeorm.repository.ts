@@ -14,13 +14,13 @@ export class CustomerTypeormRepository
 	implements CustomerRepository
 {
 	async getCustomerForCreateOrder(
-		data: Pick<CustomerEntity, 'name' | 'phone' | 'email' | 'agencyLevelId'>
+		data: Pick<CustomerEntity, 'name' | 'phone' | 'email'>
 	): Promise<CustomerEntity> {
-		const { name, phone, email, agencyLevelId } = data;
+		const { name, phone, email } = data;
 
 		const exist = await this.findOne({
 			where: { phone },
-			select: ['id', 'name', 'phone', 'email']
+			select: ['id', 'name', 'phone', 'email', 'agencyId', 'agencyLevelId']
 		});
 		if (exist) {
 			const data = { name, email };
@@ -40,8 +40,7 @@ export class CustomerTypeormRepository
 				name,
 				phone,
 				password,
-				email,
-				agencyLevelId
+				email
 			})
 			.returning('id, name, phone, email') // Add RETURNING clause
 			.execute();

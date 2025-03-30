@@ -21,6 +21,13 @@ export abstract class OrderEntity extends BaseEntity {
 	customerId?: string;
 
 	/**
+	 * Mã đại lý
+	 */
+	@SwaggerProperty({ required: false })
+	@Property('Mã đại lý')
+	agencyId?: string;
+
+	/**
 	 * Mã đơn hàng
 	 */
 	@SwaggerProperty()

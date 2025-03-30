@@ -22,7 +22,7 @@ export class FindOrderUseCase extends QueryHandler<PaginationResponse<ListOrderE
 			if (eventId && user?.eventIds?.length && !user.eventIds.includes(eventId)) {
 				throw new BadRequestException('Invalid event id');
 			}
-			set(filter, 'where.customerId', user.id);
+			set(filter, 'where.agencyId', user.agencyId);
 		} else if (customerId) {
 			set(filter, 'where.customerId', customerId);
 		}
