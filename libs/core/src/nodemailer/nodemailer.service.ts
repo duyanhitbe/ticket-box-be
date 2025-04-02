@@ -39,6 +39,11 @@ export class NodemailerServiceImp extends NodemailerService {
 			[ENUM_ORDER_STATUS.PAID]: 'Xác nhận thanh toán',
 			[ENUM_ORDER_STATUS.CANCELLED]: 'Xác nhận huỷ vé'
 		};
+		const statusMap = {
+			[ENUM_ORDER_STATUS.RESERVED]: 'Đã được tiếp nhận',
+			[ENUM_ORDER_STATUS.PAID]: 'Đã thanh toán',
+			[ENUM_ORDER_STATUS.CANCELLED]: 'Đã huỷ'
+		};
 
 		const from = '"No Reply" <noreply@yourdomain.com>';
 		const subject = subjectMap[orderStatus];
@@ -50,7 +55,8 @@ export class NodemailerServiceImp extends NodemailerService {
 				price: toVND(detail.price),
 				totalPrice: toVND(detail.totalPrice)
 			})),
-			totalPrice: toVND(totalPrice || 0)
+			totalPrice: toVND(totalPrice || 0),
+			orderStatus: statusMap[orderStatus]
 		};
 		const html = this.loadTemplate(template, data);
 
